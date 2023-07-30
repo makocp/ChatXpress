@@ -5,5 +5,4 @@ class MyColors {
   static const greenDefaultColorDark = Color.fromARGB(255, 9, 103, 81);
   static const greenForNavigationBar= Color.fromARGB(255, 119, 197, 179);
   static const redForDeleteButton = Color.fromARGB(255, 239, 65, 70);
-
 }

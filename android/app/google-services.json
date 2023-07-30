@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "397781686047",
+    "project_id": "chatxpress-ff",
+    "storage_bucket": "chatxpress-ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397781686047:android:d2308ec240784cbbc9422a",
+        "android_client_info": {
+          "package_name": "com.chatxpress.chatxpress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397781686047-72hcmafal2n4la2h7007dveb9607s23j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAoQ4YVwDCr4IPMeTxUgU0yH-6B_Wtj-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397781686047-72hcmafal2n4la2h7007dveb9607s23j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397781686047-j5c49apntk089mj0r5k5rpk1elv7c3e7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chatxpress.chatxpress.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
