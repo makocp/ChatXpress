@@ -17,10 +17,23 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  intl: ^0.17.0
+  google_nav_bar: ^5.0.6
+  line_icons: ^2.0.2
   flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
+
+
+  fonts:
+    - family: IndieFlower
+      fonts:
+        - asset: fonts/IndieFlower-Regular.ttf
+    - family: Mulish
+      fonts:
+        - asset: fonts/Mulish-VariableFont_wght.ttf
+
 
   assets:
     - lib/assets/images/

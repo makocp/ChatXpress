@@ -1,0 +1,4 @@
+#Sun Jul 30 20:04:07 CEST 2023
+base.0=/Users/mohammadalamer/Desktop/S23/ChatXpress/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
