@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyTextfield extends StatelessWidget {
@@ -22,7 +23,7 @@ class MyTextfield extends StatelessWidget {
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(color: Colors.grey),
+            borderSide: BorderSide(color: MyColors.greenDefaultColorDark),
           ),
           focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
