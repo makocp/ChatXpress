@@ -1,12 +1,13 @@
 import 'Message.dart';
 
-
 class Chat {
   List<Message> messages;
   DateTime lastModification;
+  String ChatTitle;
 
-  Chat({this.messages = const []})
-      : lastModification = (messages.isNotEmpty) ? messages.last.timestamp : DateTime.now();
+  Chat({this.messages = const [], required this.ChatTitle})
+      : lastModification =
+            (messages.isNotEmpty) ? messages.last.timestamp : DateTime.now();
 
   void addMessage(Message message) {
     messages.add(message);

@@ -3,5 +3,8 @@ class Message {
   DateTime timestamp;
   bool isUserMessage;
 
-  Message({required this.content, required this.timestamp, required this.isUserMessage});
+  Message(
+      {required this.content,
+      required this.timestamp,
+      required this.isUserMessage});
 }

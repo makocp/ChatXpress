@@ -3,6 +3,4 @@ class ChatbotResponse {
   DateTime timestamp;
 
   ChatbotResponse({required this.content, required this.timestamp});
-
-
 }

@@ -1,6 +1,10 @@
 import 'package:chatXpress/components/Home.dart';
 import 'package:chatXpress/components/Settings.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_icons/line_icons.dart';
+
+import '../assets/colors/my_colors.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -11,31 +15,37 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
-  final navigationScreens = [Home(), Settings()];
+  final List<Widget> navigationScreens = [Home(), Settings()];
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: navigationScreens[_currentIndex],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.black,
-          backgroundColor: Color(0x77f00A67E),
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: "Settings"),
-          ],
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-        ),
-      ),
+          body: IndexedStack(
+            index: _currentIndex,
+            children: navigationScreens,
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3),
+            child: GNav(
+              tabBackgroundColor: MyColors.greenForNavigationBar,
+              onTabChange: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              tabs: [
+                GButton(
+                  icon: LineIcons.history,
+                  text: 'History',
+                ),
+                GButton(
+                  icon: LineIcons.cog,
+                  text: 'Settings',
+                )
+              ],
+            ),
+          )),
     );
   }
 }
