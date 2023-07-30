@@ -1,4 +1,0 @@
-#Sun Jul 30 21:43:22 CEST 2023
-base.0=/Users/makocp/Desktop/flutter_projects/ChatXpress/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
