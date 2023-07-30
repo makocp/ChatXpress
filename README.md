@@ -1,16 +1,15 @@
 # chatxpress
 
-A cross-platform Flutter project with chatGPT API.
+A cross-platform Flutter project with Firebase backend and ChatGPT API.
 
-## Getting Started
+## Developers
+- mako.codeproducer@gmail.com
+- jalal.codeproducer@gmail.com
 
-This project is a starting point for a Flutter application.
+## Purpose of this App
 
-A few resources to get you started if this is your first Flutter project:
+## Functionalities
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## References
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Thanks to our friend [Mitch Koko](https://www.youtube.com/@createdbykoko) from Youtube. Helped a lot.
