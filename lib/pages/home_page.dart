@@ -1,21 +1,21 @@
 import 'package:chatXpress/components/Home.dart';
-import 'package:chatXpress/components/Settings.dart';
+import 'package:chatXpress/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../assets/colors/my_colors.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  final List<Widget> navigationScreens = [Home(), Settings()];
+  final List<Widget> navigationScreens = [const Home(), const SettingsPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
                   _currentIndex = index;
                 });
               },
-              tabs: [
+              tabs: const [
                 GButton(
                   icon: LineIcons.history,
                   text: 'History',
