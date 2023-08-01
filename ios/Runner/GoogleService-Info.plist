@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>643981592953-9pm5qifk3k0l8e3u0uro76mf3v49i3o6.apps.googleusercontent.com</string>
+	<string>756455428985-dlj9vogdfbvlmj2vsi2osc12evhfraj9.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.643981592953-9pm5qifk3k0l8e3u0uro76mf3v49i3o6</string>
+	<string>com.googleusercontent.apps.756455428985-dlj9vogdfbvlmj2vsi2osc12evhfraj9</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>756455428985-888dfmqt86f9efcd5teh3fvomlett26a.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBQSLpfUcassytoVIBusn9Dqs14HzyTdOg</string>
+	<string>AIzaSyCgGwV-967ydQZBsdhQPaY1hXLWmIZx4ZU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>643981592953</string>
+	<string>756455428985</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.chatxpress.chatxpress</string>
 	<key>PROJECT_ID</key>
-	<string>ff-chatxpress</string>
+	<string>chatxpress-db</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ff-chatxpress.appspot.com</string>
+	<string>chatxpress-db.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:643981592953:ios:f3241209cfbc796dfe07a8</string>
+	<string>1:756455428985:ios:a652b1629661ee9f0495a8</string>
 </dict>
 </plist>

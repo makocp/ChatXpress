@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
@@ -5,6 +7,7 @@ import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
 import 'package:chatXpress/pages/home_page.dart';
 import 'package:chatXpress/pages/sign_up_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
@@ -65,7 +68,16 @@ class SignInPage extends StatelessWidget {
         const SizedBox(height: 25),
         MyButton(
           onTap: () => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()))
+            FirebaseAuth.instance
+                .signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text)
+                .then((value) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomePage()));
+            }).onError((error, stackTrace) {
+              log('Error ${error.toString()}');
+            })
           },
           buttonText: 'Login',
         ),

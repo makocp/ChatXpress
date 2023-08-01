@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:183583835985:ios:b585c79cc2aebe10a6f570",
-  "FIREBASE_PROJECT_ID": "chatxpress",
-  "GCM_SENDER_ID": "183583835985"
+  "GOOGLE_APP_ID": "1:756455428985:ios:a652b1629661ee9f0495a8",
+  "FIREBASE_PROJECT_ID": "chatxpress-db",
+  "GCM_SENDER_ID": "756455428985"
 }

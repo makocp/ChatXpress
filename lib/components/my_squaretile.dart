@@ -10,7 +10,7 @@ class MySquareTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(
           color: MyColors.greenDefaultColorDark,
         )

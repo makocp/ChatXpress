@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_textfield.dart';
+import 'package:chatXpress/pages/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -47,7 +51,24 @@ class SignUpPage extends StatelessWidget {
 
         const SizedBox(height: 50),
         MyButton(
-          onTap: () => {},
+          onTap: () => {
+            // Input Checks add, format UI, message Errors (usablity).
+            if (passwordController.text == passwordConfirmationController.text)
+              {
+                FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text)
+                    .then((value) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePage()));
+                }).onError((error, stackTrace) {
+                  log('Error ${error.toString()}');
+                })
+              },
+          },
           buttonText: 'Create Account',
         ),
 
