@@ -37,6 +37,13 @@
             {
               "client_id": "756455428985-13v183v4rrikpdlt2gbv6vnst77hah6k.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "756455428985-9j0qvhidkobmq91eidolvklgeic0hde4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chatxpress.chatxpress.RunnerTests"
+              }
             }
           ]
         }

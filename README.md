@@ -10,6 +10,13 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 
 ## Functionalities
 
+## Learnings
+### Firebase Authentication
+`flutterfire configure` is a good and convenient way to implement the Firebase connection, BUT it has some problems with Android. After some time I did it like this:
+- Implement Android configuration manually
+- Implement iOS/macOS/Web with flutterfire configure.
+- After each implementation (step by step for each OS), I checked, which files changed. With this method I could understand better what really happens respectively, which changes happen in the code, so in case of an error I could comprehend where it came from.
+
 ## References/Info
 
 - [Mitch Koko](https://www.youtube.com/@createdbykoko)

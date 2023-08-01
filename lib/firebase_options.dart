@@ -17,24 +17,15 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,6 +43,24 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBt7Qb19wP-dvQ2KgQO5yzMuaDC00tSHBI',
+    appId: '1:756455428985:web:03f351dd2b1464170495a8',
+    messagingSenderId: '756455428985',
+    projectId: 'chatxpress-db',
+    authDomain: 'chatxpress-db.firebaseapp.com',
+    storageBucket: 'chatxpress-db.appspot.com',
+    measurementId: 'G-HJKFV66WYD',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyAeY3qhOltwr4a_thkgdcHRygFJ882e84s',
+    appId: '1:756455428985:android:1344759334a0c57c0495a8',
+    messagingSenderId: '756455428985',
+    projectId: 'chatxpress-db',
+    storageBucket: 'chatxpress-db.appspot.com',
+  );
+
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCgGwV-967ydQZBsdhQPaY1hXLWmIZx4ZU',
     appId: '1:756455428985:ios:a652b1629661ee9f0495a8',
@@ -61,5 +70,16 @@ class DefaultFirebaseOptions {
     androidClientId: '756455428985-888dfmqt86f9efcd5teh3fvomlett26a.apps.googleusercontent.com',
     iosClientId: '756455428985-dlj9vogdfbvlmj2vsi2osc12evhfraj9.apps.googleusercontent.com',
     iosBundleId: 'com.chatxpress.chatxpress',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCgGwV-967ydQZBsdhQPaY1hXLWmIZx4ZU',
+    appId: '1:756455428985:ios:e59a3c9207e193a80495a8',
+    messagingSenderId: '756455428985',
+    projectId: 'chatxpress-db',
+    storageBucket: 'chatxpress-db.appspot.com',
+    androidClientId: '756455428985-888dfmqt86f9efcd5teh3fvomlett26a.apps.googleusercontent.com',
+    iosClientId: '756455428985-9j0qvhidkobmq91eidolvklgeic0hde4.apps.googleusercontent.com',
+    iosBundleId: 'com.chatxpress.chatxpress.RunnerTests',
   );
 }
