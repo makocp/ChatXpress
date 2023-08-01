@@ -10,9 +10,10 @@ class MySquareTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(color: MyColors.greenDefaultColorDark),
-        color: MyColors.greenDefaultColorDark,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        border: Border.all(
+          color: MyColors.greenDefaultColorDark,
+        )
       ),
       // child: Card(
       //   elevation: 20,
