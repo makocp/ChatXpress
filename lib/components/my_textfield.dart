@@ -5,12 +5,14 @@ class MyTextfield extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
+  final IconData icon;
 
   const MyTextfield({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
+    required this.icon,
   });
 
   @override
@@ -20,16 +22,22 @@ class MyTextfield extends StatelessWidget {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      enableSuggestions: !obscureText,
+      autocorrect: !obscureText,
       decoration: InputDecoration(
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(color: MyColors.greenDefaultColorDark),
+          prefixIcon: Icon(
+            icon,
+            color: Colors.grey[500]
           ),
-          focusedBorder: const OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(color: Colors.white),
           ),
-          fillColor: Colors.white,
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderSide: BorderSide(color: MyColors.greenDefaultColorDark),
+          ),
+          fillColor: Colors.white.withOpacity(0.8),
           filled: true,
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[500])),

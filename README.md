@@ -12,4 +12,5 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 
 ## References
 
-Thanks to our friend [Mitch Koko](https://www.youtube.com/@createdbykoko) from Youtube. Helped a lot.
+- Thanks to our friend [Mitch Koko](https://www.youtube.com/@createdbykoko) from Youtube. Helped a lot.
+- [Firebase Authentication with E-Mail and Password](https://firebase.google.com/docs/auth/flutter/password-auth)
