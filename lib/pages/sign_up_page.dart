@@ -52,20 +52,21 @@ class SignUpPage extends StatelessWidget {
         const SizedBox(height: 50),
         MyButton(
           onTap: () => {
+            // Input Checks add, format UI, message Errors (usablity).
             if (passwordController.text == passwordConfirmationController.text)
               {
                 FirebaseAuth.instance
                     .createUserWithEmailAndPassword(
                         email: emailController.text,
                         password: passwordController.text)
-                    .then(
-                      (value) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage())),
-                    )
-                    .onError((error, stackTrace) =>
-                        {log('Error ${error.toString()}')})
+                    .then((value) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePage()));
+                }).onError((error, stackTrace) {
+                  log('Error ${error.toString()}');
+                })
               },
           },
           buttonText: 'Create Account',
