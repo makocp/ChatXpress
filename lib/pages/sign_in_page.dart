@@ -65,7 +65,7 @@ class SignInPage extends StatelessWidget {
         const SizedBox(height: 25),
         MyButton(
           onTap: () => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()))
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()))
           },
           buttonText: 'Login',
         ),
