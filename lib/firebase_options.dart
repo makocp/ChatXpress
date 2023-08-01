@@ -44,39 +44,39 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAn75a5vqIaZjkvNaiRtCB0RbvR6p26HrM',
-    appId: '1:397781686047:web:0fd12ef544161ac9c9422a',
-    messagingSenderId: '397781686047',
-    projectId: 'chatxpress-ff',
-    authDomain: 'chatxpress-ff.firebaseapp.com',
-    storageBucket: 'chatxpress-ff.appspot.com',
+    apiKey: 'AIzaSyA6zEfuviPzmLRFaToZQN-Z55Ti5Y-hAgs',
+    appId: '1:183583835985:web:a4a96f3b61c6a2f4a6f570',
+    messagingSenderId: '183583835985',
+    projectId: 'chatxpress',
+    authDomain: 'chatxpress-c4b32.firebaseapp.com',
+    storageBucket: 'chatxpress.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBAoQ4YVwDCr4IPMeTxUgU0yH-6B_Wtj-o',
-    appId: '1:397781686047:android:d2308ec240784cbbc9422a',
-    messagingSenderId: '397781686047',
-    projectId: 'chatxpress-ff',
-    storageBucket: 'chatxpress-ff.appspot.com',
+    apiKey: 'AIzaSyCRKSLRmzB6M9IJqQVlWZCla-YTRxSlPUc',
+    appId: '1:183583835985:android:9d0e735eb225aa50a6f570',
+    messagingSenderId: '183583835985',
+    projectId: 'chatxpress',
+    storageBucket: 'chatxpress.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBJ6eaUBldl-jRzPmNpsOhAEl5badBdEPs',
-    appId: '1:397781686047:ios:793966b98578ecd7c9422a',
-    messagingSenderId: '397781686047',
-    projectId: 'chatxpress-ff',
-    storageBucket: 'chatxpress-ff.appspot.com',
-    iosClientId: '397781686047-olsto0ud2ucf411h2hd5ug2pjarqg8ef.apps.googleusercontent.com',
+    apiKey: 'AIzaSyABUO_h0cRugu2KUnSqHpnZWAb_HfAoZQk',
+    appId: '1:183583835985:ios:b585c79cc2aebe10a6f570',
+    messagingSenderId: '183583835985',
+    projectId: 'chatxpress',
+    storageBucket: 'chatxpress.appspot.com',
+    iosClientId: '183583835985-rddfjl7d51q7jjpbbtd3ffet10f5rqih.apps.googleusercontent.com',
     iosBundleId: 'com.chatxpress.chatxpress',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBJ6eaUBldl-jRzPmNpsOhAEl5badBdEPs',
-    appId: '1:397781686047:ios:1f237b11682fec7cc9422a',
-    messagingSenderId: '397781686047',
-    projectId: 'chatxpress-ff',
-    storageBucket: 'chatxpress-ff.appspot.com',
-    iosClientId: '397781686047-j5c49apntk089mj0r5k5rpk1elv7c3e7.apps.googleusercontent.com',
+    apiKey: 'AIzaSyABUO_h0cRugu2KUnSqHpnZWAb_HfAoZQk',
+    appId: '1:183583835985:ios:d50eef90e99b5946a6f570',
+    messagingSenderId: '183583835985',
+    projectId: 'chatxpress',
+    storageBucket: 'chatxpress.appspot.com',
+    iosClientId: '183583835985-vc6p2s238fds1vf7t2s1ecn3nfek1qkt.apps.googleusercontent.com',
     iosBundleId: 'com.chatxpress.chatxpress.RunnerTests',
   );
 }
