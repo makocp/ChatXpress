@@ -16,7 +16,8 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - Implement Android configuration manually
 - Implement iOS/macOS/Web with flutterfire configure.
 - After each implementation (step by step for each OS), I checked, which files changed. With this method I could understand better what really happens respectively, which changes happen in the code, so in case of an error I could comprehend where it came from.
-
+### Widget Tree / Inspector and Navigation
+The Widget Inspector is a good way to understand the Widget Tree of the App. Especially, if you want to implement Navigation and Routes. There you can get a good understanding how it works and to find bugs regarding navigation, if there are any.
 ## References/Info
 
 - [Mitch Koko](https://www.youtube.com/@createdbykoko)

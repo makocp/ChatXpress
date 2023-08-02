@@ -1,5 +1,5 @@
 import 'package:chatXpress/firebase_options.dart';
-import 'package:chatXpress/pages/sign_in_page.dart';
+import 'package:chatXpress/pages/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignInPage(),
+      home: StartPage(),
     );
   }
 }

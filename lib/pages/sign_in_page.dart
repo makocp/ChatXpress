@@ -74,8 +74,8 @@ class SignInPage extends StatelessWidget {
                     email: emailController.text,
                     password: passwordController.text)
                 .then((value) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => const HomePage()));
             }).onError((error, stackTrace) {
               log('Error ${error.toString()}');
             })
