@@ -69,15 +69,23 @@ class SignInPage extends StatelessWidget {
         const SizedBox(height: 25),
         MyButton(
           onTap: () => {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
             FirebaseAuth.instance
                 .signInWithEmailAndPassword(
                     email: emailController.text,
                     password: passwordController.text)
-                .then((value) {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => const HomePage()));
-            }).onError((error, stackTrace) {
+                .then((value) {})
+                .onError((error, stackTrace) {
               log('Error ${error.toString()}');
+              // Like finally block -> to pop the Indicator.
+            }).whenComplete(() {
+              Navigator.pop(context);
             })
           },
           buttonText: 'Login',
