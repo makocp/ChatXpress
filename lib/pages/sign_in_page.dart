@@ -7,6 +7,7 @@ import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
 import 'package:chatXpress/pages/home_page.dart';
 import 'package:chatXpress/pages/sign_up_page.dart';
+import 'package:chatXpress/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -97,14 +98,22 @@ class SignInPage extends StatelessWidget {
 
         // Alternative Logins
         const SizedBox(height: 25),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            MySquareTile(imagePath: 'lib/assets/images/google.png'),
-            SizedBox(
+            MySquareTile(
+              imagePath: 'lib/assets/images/google.png',
+              onTap: () {
+                AuthService().signInWithGoogle();
+              },
+            ),
+            const SizedBox(
               width: 20,
             ),
-            MySquareTile(imagePath: 'lib/assets/images/apple.png'),
+            MySquareTile(
+              imagePath: 'lib/assets/images/apple.png',
+              onTap: () {},
+            ),
           ],
         ),
 
