@@ -18,9 +18,32 @@ class _SettingsPageState extends State<SettingsPage> {
       MyButton(
         buttonText: 'Logout',
         onTap: () {
-          FirebaseAuth.instance.signOut().then((value) {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          });
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
+                  title: const Text('Confirmation'),
+                  actions: [
+                    MyButton(onTap: () {
+                      Navigator.pop(context);
+                    }, buttonText: 'Cancel'),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    MyButton(
+                        onTap: () {
+                          FirebaseAuth.instance.signOut().then((value) {
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          });
+                        },
+                        buttonText: 'Logout'),
+                  ],
+                );
+              });
         },
       ),
       const Expanded(child: SizedBox()),

@@ -60,10 +60,16 @@ class SignUpPage extends StatelessWidget {
                         email: emailController.text,
                         password: passwordController.text)
                     .then((value) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()));
+                  // If account creation was successfull, then the User gets Signed in.
+                  // -> This invokes the listener on the StartPage, which switches from LogInPage to HomePage.
+                  FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  // This pop method is necessary to pop the SignUpPage and get to the HomePage.
+                  // Otherwise the SignUpPage would "overwrite" the HomePage.
+                  // -> See Widget Tree in Widget inspector for details and better understanding.
+                  Navigator.pop(context);
                 }).onError((error, stackTrace) {
                   log('Error ${error.toString()}');
                 })

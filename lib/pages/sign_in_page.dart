@@ -7,6 +7,7 @@ import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
 import 'package:chatXpress/pages/home_page.dart';
 import 'package:chatXpress/pages/sign_up_page.dart';
+import 'package:chatXpress/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -68,15 +69,23 @@ class SignInPage extends StatelessWidget {
         const SizedBox(height: 25),
         MyButton(
           onTap: () => {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
             FirebaseAuth.instance
                 .signInWithEmailAndPassword(
                     email: emailController.text,
                     password: passwordController.text)
-                .then((value) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            }).onError((error, stackTrace) {
+                .then((value) {})
+                .onError((error, stackTrace) {
               log('Error ${error.toString()}');
+              // Like finally block -> to pop the Indicator.
+            }).whenComplete(() {
+              Navigator.pop(context);
             })
           },
           buttonText: 'Login',
@@ -97,14 +106,22 @@ class SignInPage extends StatelessWidget {
 
         // Alternative Logins
         const SizedBox(height: 25),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            MySquareTile(imagePath: 'lib/assets/images/google.png'),
-            SizedBox(
+            MySquareTile(
+              imagePath: 'lib/assets/images/google.png',
+              onTap: () {
+                AuthService().signInWithGoogle();
+              },
+            ),
+            const SizedBox(
               width: 20,
             ),
-            MySquareTile(imagePath: 'lib/assets/images/apple.png'),
+            MySquareTile(
+              imagePath: 'lib/assets/images/apple.png',
+              onTap: () {},
+            ),
           ],
         ),
 
