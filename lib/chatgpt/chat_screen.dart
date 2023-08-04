@@ -13,25 +13,31 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController controller = TextEditingController();
   final List<ChatMessage> _messages = [];
+  List<Messages> messages = [];
+
   final openAI = OpenAI.instance.build(token: "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",baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),enableLog: true);
   StreamSubscription? _subscription;
 
-  @override
-  void initState(){
-    super.initState();
+  void completeWithSSE(String prompt) async {
+      messages.add(Messages(
+        role: Role.user, // Replace with the appropriate role value from the enum
+        content: prompt,
+      ));
+
+      final request = ChatCompleteText(messages: messages, maxToken: 200, model: GptTurboChatModel());
+      final response = await openAI.onChatCompletion(request: request);
+      for (var element in response!.choices) {
+        _messages.add(ChatMessage(text:element.message!.content.toString(), sender: "ChatGpt"));
+        print("data -> ${element.message?.content}");
+      }
+      setState(() {});
   }
 
-
-  @override
-  void dispose(){
-    _subscription?.cancel();
-    super.dispose();
-  }
-  void _sendMessage(){
+  void _sendMessage() {
     ChatMessage message = ChatMessage(text: controller.text, sender: "user");
-
     setState(() {
-      _messages.insert(0, message);
+       completeWithSSE(controller.text);
+      _messages.add(message);
       controller.clear();
 
     });
