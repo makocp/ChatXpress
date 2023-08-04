@@ -1,3 +1,4 @@
+import 'package:chatXpress/chatgpt/chat_screen.dart';
 import 'package:chatXpress/firebase_options.dart';
 import 'package:chatXpress/pages/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StartPage(),
+      home: ChatScreen(),
     );
   }
 }
