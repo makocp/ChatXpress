@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 
@@ -15,35 +13,48 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<ChatMessage> _messages = [];
   List<Messages> messages = [];
 
-  final openAI = OpenAI.instance.build(token: "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",baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),enableLog: true);
-  StreamSubscription? _subscription;
+  // create an instance of the OpenAI api
+  final openAI = OpenAI.instance.build(
+      token: "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",
+      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 10)),
+      enableLog: true);
 
-  void completeWithSSE(String prompt) async {
-      messages.add(Messages(
-        role: Role.user, // Replace with the appropriate role value from the enum
-        content: prompt,
-      ));
+  void sendPrompt(String prompt) async {
 
-      final request = ChatCompleteText(messages: messages, maxToken: 200, model: GptTurboChatModel());
-      final response = await openAI.onChatCompletion(request: request);
-      for (var element in response!.choices) {
-        _messages.add(ChatMessage(text:element.message!.content.toString(), sender: "ChatGpt"));
-        print("data -> ${element.message?.content}");
-      }
-      setState(() {});
+    // add the user message to the list
+    // @role can be used to display the UI depending the sender role
+    messages.add(Messages(
+      role: Role.user,
+      content: prompt,
+    ));
+
+    // create a request -> in the future can be replaced with a stream
+    // advanatage is that the stream is stays opened until a specific case
+    // ex: the user leaves the chat
+    final request = ChatCompleteText(messages: messages, maxToken: 200,
+        model: GptTurboChatModel());
+
+    // response
+    final response = await openAI.onChatCompletion(request: request);
+
+    // get the message object from the response
+    var message = response!.choices.last.message;
+
+    // create a ui element from the response
+    _messages.add(ChatMessage(
+             text: message!.content, sender: "ChatGpt"));
+    setState(() {});
   }
 
   void _sendMessage() {
     ChatMessage message = ChatMessage(text: controller.text, sender: "user");
     setState(() {
-       completeWithSSE(controller.text);
+      sendPrompt(controller.text);
       _messages.add(message);
       controller.clear();
-
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,13 +70,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
-                        child: ChatMessage(text: _messages[index].text, sender: _messages[index].sender),
+                        child: ChatMessage(
+                            text: _messages[index].text,
+                            sender: _messages[index].sender),
                       ),
                     );
                   })),
           Container(
             decoration: BoxDecoration(color: Colors.white),
-            child: _buildTextComposer(_sendMessage,controller),
+            child: _buildTextComposer(_sendMessage, controller),
           )
         ],
       ),
@@ -73,9 +86,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-
-Widget _buildTextComposer(Function sendMessage,TextEditingController textEditingController) {
-
+Widget _buildTextComposer(
+    Function sendMessage, TextEditingController textEditingController) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
     child: Row(
@@ -87,15 +99,15 @@ Widget _buildTextComposer(Function sendMessage,TextEditingController textEditing
                 InputDecoration(isCollapsed: true, hintText: "Send a message"),
           ),
         ),
-        IconButton(onPressed: () {
-          sendMessage();
-        }, icon: Icon(Icons.send))
+        IconButton(
+            onPressed: () {
+              sendMessage();
+            },
+            icon: Icon(Icons.send))
       ],
     ),
   );
 }
-
-
 
 class ChatMessage extends StatelessWidget {
   const ChatMessage({super.key, required this.text, required this.sender});
@@ -113,12 +125,12 @@ class ChatMessage extends StatelessWidget {
         ),
         Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(text, style: Theme.of(context).textTheme.subtitle1),
-                Container(margin: const EdgeInsets.only(top: 5.0))
-              ],
-            ))
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(text, style: Theme.of(context).textTheme.subtitle1),
+            Container(margin: const EdgeInsets.only(top: 5.0))
+          ],
+        ))
       ],
     );
   }
