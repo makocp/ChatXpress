@@ -43,6 +43,16 @@ class _ChatScreenState extends State<ChatScreen> {
     // create a ui element from the response
     _messages.add(ChatMessage(
              text: message!.content, sender: "ChatGpt"));
+
+
+
+    // without this, the context would be much harder for the LLM to
+    // understand, since the messages list would only contain the questions.
+    // ***TIP***: remove this statement and compare the answers you would get
+    // from the LLM, so you have a better understanding of the functionality.
+    messages.add(Messages(role: Role.assistant,
+    content: message!.content));
+
     setState(() {});
   }
 
