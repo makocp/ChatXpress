@@ -22,7 +22,7 @@ class MyContainerSignInAndUp extends StatelessWidget {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-            child: Column(
+            child: ListView(
               children: columnPageContent,
             ),
           ),
