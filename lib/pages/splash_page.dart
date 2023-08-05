@@ -27,8 +27,8 @@ class _SplashState extends State<Splash> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset('lib/assets/images/chatXpress.png'),
-              SizedBox(height: 20),
-              DefaultTextStyle(
+              const SizedBox(height: 20),
+              const DefaultTextStyle(
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
