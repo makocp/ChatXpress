@@ -1,6 +1,10 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/components/my_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+
+import '../components/my_button.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -44,12 +48,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (message != null) {
       setState(() {
-        _messages.add(
-            ChatMessage(
-              text: message.content ??
-                  "Something went wrong, please try again later",
-              sender: "ChatGpt",
-            ));
+        _messages.add(ChatMessage(
+          text:
+              message.content ?? "Something went wrong, please try again later",
+          sender: "ChatGpt",
+        ));
       });
     }
   }
@@ -68,37 +71,43 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: const Text("Chat Screen"),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ChatMessage(
-                    text: _messages[index].text,
-                    sender: _messages[index].sender,
-                  ),
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.grey,
-                  offset: Offset(0, -2),
-                  blurRadius: 4,
+      drawer: const MyDrawer(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ChatMessage(
+                        text: _messages[index].text,
+                        sender: _messages[index].sender,
+                      ),
+                    );
+                  },
                 ),
-              ],
-            ),
-            child: _buildTextComposer(),
-          )
-        ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0, -2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: _buildTextComposer(),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -137,7 +146,8 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
+      mainAxisAlignment:
+          sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
         CircleAvatar(child: Text(sender[0])),
         const SizedBox(width: 8),
@@ -145,7 +155,9 @@ class ChatMessage extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: sender == "ChatGpt" ? MyColors.greenDefaultColor : Colors.grey[200],
+              color: sender == "ChatGpt"
+                  ? MyColors.greenDefaultColor
+                  : Colors.grey[200],
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(text),

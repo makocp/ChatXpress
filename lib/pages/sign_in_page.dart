@@ -5,7 +5,6 @@ import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/home_page.dart';
 import 'package:chatXpress/pages/sign_up_page.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,13 +15,6 @@ class SignInPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   SignInPage({super.key});
-
-  // void signInUser() async {
-  //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //     email: emailController.text,
-  //     password: passwordController.text,
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
