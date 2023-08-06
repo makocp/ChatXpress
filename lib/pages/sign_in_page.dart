@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
@@ -116,7 +115,6 @@ class SignInPage extends StatelessWidget {
             ),
           ],
         ),
-
         // Register text
         const SizedBox(
           height: 25,
