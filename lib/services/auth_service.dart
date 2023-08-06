@@ -29,4 +29,8 @@ class AuthService {
     final appleProvider = AppleAuthProvider();
     return await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
+
+  resetPassword() async {
+
+  }
 }

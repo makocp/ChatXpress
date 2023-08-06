@@ -34,7 +34,7 @@ class _SplashState extends State<Splash> {
                     fontSize: 24,
                     color: Colors.white,
                   ),
-                  child: Text("ChatExpress"))
+                  child: Text("ChatXpress"))
             ],
           )),
     );
@@ -42,6 +42,7 @@ class _SplashState extends State<Splash> {
 
   void navigateToHome() async {
     await Future.delayed(const Duration(seconds: 2), () {});
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(

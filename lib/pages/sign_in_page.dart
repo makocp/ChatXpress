@@ -70,7 +70,7 @@ class SignInPage extends StatelessWidget {
         // Alternative Logins
         const SizedBox(height: 25),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: Platform.isIOS ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
           children: [
             showGoogleSignIn(),
             showAppleSignIn(),
@@ -132,7 +132,7 @@ class SignInPage extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => {ForgotPassword()}));
+              MaterialPageRoute(builder: (context) => ForgotPassword()));
         },
         child: const Text(
           'Forgot Password?.',
@@ -148,17 +148,12 @@ class SignInPage extends StatelessWidget {
   // If not iOS, then show SizedBox.shrink() -> like nothing, instead of null.
   showAppleSignIn() {
     if (Platform.isIOS) {
-      return [
-        const SizedBox(
-          width: 20,
-        ),
-        MySquareTile(
-          imagePath: 'lib/assets/images/apple.png',
-          onTap: () {
-            AuthService().signInWithApple();
-          },
-        )
-      ];
+      return MySquareTile(
+        imagePath: 'lib/assets/images/apple.png',
+        onTap: () {
+          AuthService().signInWithApple();
+        },
+      );
     } else {
       return const SizedBox.shrink();
     }

@@ -1,6 +1,7 @@
 import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_textfield.dart';
+import 'package:chatXpress/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -31,27 +32,6 @@ class ForgotPassword extends StatelessWidget {
             obscureText: false,
             icon: Icons.email_outlined),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Text(
-              'or ',
-              style: TextStyle(color: MyColors.greenDefaultColorDark),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'log in?',
-                style: TextStyle(
-                    color: MyColors.greenDefaultColorDark,
-                    fontWeight: FontWeight.w600),
-              ),
-            )
-          ],
-        ),
-        const SizedBox(height: 20),
         MyButton(
           onTap: () => {
             showDialog(
@@ -61,11 +41,15 @@ class ForgotPassword extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }),
-
+            resetPassword()
           },
-          buttonText: 'Next',
+          buttonText: 'Reset Password',
         ),
       ]),
     );
+  }
+
+  resetPassword() {
+    AuthService().resetPassword();
   }
 }
