@@ -4,6 +4,7 @@ import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
+import 'package:chatXpress/pages/forgot_password.dart';
 import 'package:chatXpress/pages/sign_up_page.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,13 +54,19 @@ class SignInPage extends StatelessWidget {
 
         // Forgot password text
         const SizedBox(height: 10),
-        const Align(
+         Align(
           alignment: Alignment.centerRight,
-          child: Text(
-            'Forgot password?',
-            style: TextStyle(
-                color: MyColors.greenDefaultColorDark,
-                fontWeight: FontWeight.w700),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ForgotPassword()));
+            },
+            child: const Text(
+              'Forgot Password?.',
+              style: TextStyle(
+                  color: MyColors.greenDefaultColorDark,
+                  fontWeight: FontWeight.w600),
+            ),
           ),
         ),
 
