@@ -15,7 +15,7 @@ class StartPage extends StatelessWidget {
         if (snapshot.hasData) {
           return const HomePage();
         } else {
-          return ForgotPassword();
+          return SignInPage();
         }
       },
     );
