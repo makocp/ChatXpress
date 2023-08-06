@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:developer';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/my_button.dart';
@@ -25,45 +26,13 @@ class SignInPage extends StatelessWidget {
         elevation: 0,
       ),
       body: MyContainerSignInAndUp(columnPageContent: [
-        // Icon
-        const Image(
-            image: AssetImage('lib/assets/images/chatXpress.png'), height: 100),
-
-        // Email input
+        showIcon(),
         const SizedBox(height: 50),
-        MyTextfield(
-            controller: emailController,
-            hintText: 'Email',
-            obscureText: false,
-            icon: Icons.email_outlined),
-
-        // Password input
+        showEmailInput(emailController),
         const SizedBox(height: 25),
-        MyTextfield(
-            controller: passwordController,
-            hintText: 'Password',
-            obscureText: true,
-            icon: Icons.lock_outline),
-
-        // Forgot password text
+        showPasswordInput(passwordController),
         const SizedBox(height: 10),
-         Align(
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ForgotPassword()));
-            },
-            child: const Text(
-              'Forgot Password?.',
-              style: TextStyle(
-                  color: MyColors.greenDefaultColorDark,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-        ),
-
-        // SignIn button
+        showForgotPassword(context),
         const SizedBox(height: 25),
         MyButton(
           onTap: () => {
@@ -78,11 +47,7 @@ class SignInPage extends StatelessWidget {
                 .signInWithEmailAndPassword(
                     email: emailController.text,
                     password: passwordController.text)
-                .then((value) {})
-                .onError((error, stackTrace) {
-              log('Error ${error.toString()}');
-              // Like finally block -> to pop the Indicator.
-            }).whenComplete(() {
+                .whenComplete(() {
               Navigator.pop(context);
             })
           },
@@ -107,19 +72,8 @@ class SignInPage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            MySquareTile(
-              imagePath: 'lib/assets/images/google.png',
-              onTap: () {
-                AuthService().signInWithGoogle();
-              },
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            MySquareTile(
-              imagePath: 'lib/assets/images/apple.png',
-              onTap: () {},
-            ),
+            showGoogleSignIn(),
+            showAppleSignIn(),
           ],
         ),
         // Register text
@@ -148,6 +102,74 @@ class SignInPage extends StatelessWidget {
           ],
         )
       ]),
+    );
+  }
+
+  showIcon() {
+    return const Image(
+        image: AssetImage('lib/assets/images/chatXpress.png'), height: 100);
+  }
+
+  showEmailInput(TextEditingController emailController) {
+    return MyTextfield(
+        controller: emailController,
+        hintText: 'Email',
+        obscureText: false,
+        icon: Icons.email_outlined);
+  }
+
+  showPasswordInput(TextEditingController passwordController) {
+    return MyTextfield(
+        controller: passwordController,
+        hintText: 'Password',
+        obscureText: true,
+        icon: Icons.lock_outline);
+  }
+
+  showForgotPassword(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => {ForgotPassword()}));
+        },
+        child: const Text(
+          'Forgot Password?.',
+          style: TextStyle(
+              color: MyColors.greenDefaultColorDark,
+              fontWeight: FontWeight.w600),
+        ),
+      ),
+    );
+  }
+
+  // To display the Apple Sign In, only for iOS.
+  // If not iOS, then show SizedBox.shrink() -> like nothing, instead of null.
+  showAppleSignIn() {
+    if (Platform.isIOS) {
+      return [
+        const SizedBox(
+          width: 20,
+        ),
+        MySquareTile(
+          imagePath: 'lib/assets/images/apple.png',
+          onTap: () {
+            AuthService().signInWithApple();
+          },
+        )
+      ];
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  showGoogleSignIn() {
+    return MySquareTile(
+      imagePath: 'lib/assets/images/google.png',
+      onTap: () {
+        AuthService().signInWithGoogle();
+      },
     );
   }
 }

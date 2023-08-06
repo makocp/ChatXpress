@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>756455428985-dlj9vogdfbvlmj2vsi2osc12evhfraj9.apps.googleusercontent.com</string>
+	<string>756455428985-plug5ekiqgv2s6snojlqet3nffnki9at.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.756455428985-dlj9vogdfbvlmj2vsi2osc12evhfraj9</string>
+	<string>com.googleusercontent.apps.756455428985-plug5ekiqgv2s6snojlqet3nffnki9at</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>756455428985-888dfmqt86f9efcd5teh3fvomlett26a.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.chatxpress.chatxpress</string>
+	<string>com.codeproducer.chatxpress</string>
 	<key>PROJECT_ID</key>
 	<string>chatxpress-db</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:756455428985:ios:a652b1629661ee9f0495a8</string>
+	<string>1:756455428985:ios:b431b04a81fc42b80495a8</string>
 </dict>
 </plist>
