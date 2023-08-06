@@ -112,7 +112,9 @@ class SignInPage extends StatelessWidget {
             ),
             MySquareTile(
               imagePath: 'lib/assets/images/apple.png',
-              onTap: () {},
+              onTap: () {
+                AuthService().signInWithApple();
+              },
             ),
           ],
         ),
