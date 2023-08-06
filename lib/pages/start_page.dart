@@ -1,3 +1,4 @@
+import 'package:chatXpress/pages/forgot_password.dart';
 import 'package:chatXpress/pages/home_page.dart';
 import 'package:chatXpress/pages/sign_in_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
