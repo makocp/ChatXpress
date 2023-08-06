@@ -1,7 +1,5 @@
-import 'package:chatXpress/chatgpt/chat_screen.dart';
 import 'package:chatXpress/firebase_options.dart';
 import 'package:chatXpress/pages/splash_page.dart';
-import 'package:chatXpress/pages/start_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
