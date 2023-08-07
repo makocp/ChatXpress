@@ -2,10 +2,7 @@ import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_textfield.dart';
 import 'package:chatXpress/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../assets/colors/my_colors.dart';
 
 class ForgotPassword extends StatelessWidget {
   final emailController = TextEditingController();
@@ -41,7 +38,9 @@ class ForgotPassword extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }),
-            resetPassword()
+            resetPassword(emailController.text).whenComplete(() {
+              Navigator.pop(context);
+            }),
           },
           buttonText: 'Reset Password',
         ),
@@ -49,7 +48,7 @@ class ForgotPassword extends StatelessWidget {
     );
   }
 
-  resetPassword() {
-    AuthService().resetPassword();
+  resetPassword(String email) async {
+    return await AuthService().resetPassword(email);
   }
 }

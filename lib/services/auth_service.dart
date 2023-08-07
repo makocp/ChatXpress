@@ -30,7 +30,7 @@ class AuthService {
     return await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
 
-  resetPassword() async {
-
+  resetPassword(String email) async {
+    return FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 }
