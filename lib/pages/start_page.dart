@@ -1,5 +1,4 @@
-import 'package:chatXpress/pages/forgot_password.dart';
-import 'package:chatXpress/pages/home_page.dart';
+import 'package:chatXpress/pages/chat_page.dart';
 import 'package:chatXpress/pages/sign_in_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +12,7 @@ class StartPage extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const HomePage();
+          return const ChatScreen();
         } else {
           return SignInPage();
         }
