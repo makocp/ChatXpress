@@ -1,10 +1,8 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/my_drawer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 
-import '../components/my_button.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
