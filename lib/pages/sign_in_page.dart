@@ -20,6 +20,7 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -69,12 +70,19 @@ class SignInPage extends StatelessWidget {
         // Alternative Logins
         const SizedBox(height: 25),
         Row(
-          mainAxisAlignment: Platform.isIOS ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
-          children: [
-            showGoogleSignIn(),
-            showAppleSignIn(),
-          ],
-        ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            // To show Apple Sign In only on iOS device.
+            children: Platform.isIOS
+                ? [
+                    showGoogleSignIn(),
+                    const SizedBox(
+                      width: 25,
+                    ),
+                    showAppleSignIn(),
+                  ]
+                : [
+                    showGoogleSignIn(),
+                  ]),
         // Register text
         const SizedBox(
           height: 25,
@@ -143,19 +151,13 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  // To display the Apple Sign In, only for iOS.
-  // If not iOS, then show SizedBox.shrink() -> like nothing, instead of null.
   showAppleSignIn() {
-    if (Platform.isIOS) {
-      return MySquareTile(
-        imagePath: 'lib/assets/images/apple.png',
-        onTap: () {
-          AuthService().signInWithApple();
-        },
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
+    return MySquareTile(
+      imagePath: 'lib/assets/images/apple.png',
+      onTap: () {
+        AuthService().signInWithApple();
+      },
+    );
   }
 
   showGoogleSignIn() {
