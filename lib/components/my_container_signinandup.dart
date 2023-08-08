@@ -23,6 +23,8 @@ class MyContainerSignInAndUp extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 35),
             child: ListView(
+              // To hide the keyboard, when swipe -> better usability.
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               children: columnPageContent,
             ),
           ),

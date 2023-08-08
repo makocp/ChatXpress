@@ -18,25 +18,24 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-          width: double.infinity,
-          color: MyColors.greenDefaultColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('lib/assets/images/chatXpress.png'),
-              const SizedBox(height: 20),
-              const DefaultTextStyle(
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: Colors.white,
-                  ),
-                  child: Text("ChatXpress"))
-            ],
-          )),
+    return Container(
+      width: double.infinity,
+      color: MyColors.greenDefaultColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('lib/assets/images/chatXpress.png'),
+          const SizedBox(height: 20),
+          const DefaultTextStyle(
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: Colors.white,
+              ),
+              child: Text("ChatXpress"))
+        ],
+      ),
     );
   }
 
