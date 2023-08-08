@@ -8,24 +8,29 @@ class MySquareTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-            color: MyColors.greenDefaultColorDark,
-          )
-        ),
-        // child: Card(
-        //   elevation: 20,
-        //   color: Colors.transparent,
+    // Construct a Material Widget around the container for the Splash effect.
+    return Material(
+      color: Colors.transparent,
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      // To get the splash effect only inside the container.
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: InkWell(
+        // To change the ripple effect (longer duration), like in Elevated Button.
+        splashFactory: InkRipple.splashFactory,
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              color: Colors.transparent,
+              border: Border.all(
+                color: MyColors.greenDefaultColorDark,
+              )),
           child: Image.asset(
             imagePath,
             height: 40,
           ),
-        // ),
+        ),
       ),
     );
   }
