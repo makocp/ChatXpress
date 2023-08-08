@@ -26,7 +26,7 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 
 
 ### Git
-- Undo last commit: `git reset --soft HEAD~``
+- Undo last commit: `git reset --soft HEAD~`
 
 ## References/Info
 
