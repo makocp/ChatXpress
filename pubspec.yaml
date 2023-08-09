@@ -20,6 +20,7 @@ dependencies:
   chat_gpt_sdk: 2.2.4
   envied: ^0.3.0+3
   sign_in_with_apple: ^5.0.0
+  cloud_firestore: ^4.8.4
 
 dev_dependencies:
   flutter_test:
