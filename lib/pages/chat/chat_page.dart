@@ -16,7 +16,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final chatPageModel = ServiceLocator<ChatPageModel>();
   List<ChatMessage> _messages = [];
-  List<Messages> messages = [];
 
   final openAI = OpenAI.instance.build(
     token: "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",
@@ -26,7 +25,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage(String prompt) async {
     _messages = chatPageModel.uiMessages;
-    messages = chatPageModel.messages;
     chatPageModel.sendMessage(prompt, () => setState(() {}));
   }
 
