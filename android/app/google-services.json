@@ -7,50 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:756455428985:android:1344759334a0c57c0495a8",
-        "android_client_info": {
-          "package_name": "com.chatxpress.chatxpress"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "756455428985-888dfmqt86f9efcd5teh3fvomlett26a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.chatxpress.chatxpress",
-            "certificate_hash": "1b2b7591c05ecc27477e9b6ba7cf634acfbf7b25"
-          }
-        },
-        {
-          "client_id": "756455428985-dm9gehdc7gd3a4j4icatsrl2q5roadn1.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAeY3qhOltwr4a_thkgdcHRygFJ882e84s"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "756455428985-13v183v4rrikpdlt2gbv6vnst77hah6k.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "756455428985-9j0qvhidkobmq91eidolvklgeic0hde4.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.chatxpress.chatxpress.RunnerTests"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:756455428985:android:c1d3d3abddf951930495a8",
         "android_client_info": {
           "package_name": "com.codeproducer.chatxpress"
