@@ -21,6 +21,7 @@ dependencies:
   envied: ^0.3.0+3
   sign_in_with_apple: ^5.0.0
   cloud_firestore: ^4.8.4
+  get_it: ^7.6.0
 
 dev_dependencies:
   flutter_test:
