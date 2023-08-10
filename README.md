@@ -24,9 +24,15 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 - Additional: If you implement Google Sign In, you also have to implement Apple Sign In (according to Apple App Store policiy)
 - Just follow the tutorial below for more detailed Information.
 
-
 ### Git
 - Undo last commit: `git reset --soft HEAD~`
+
+### Firebase Firestore
+- Solve error with CocoaPods and compatible version for Firestore pre-compiled framework (otherwise build wouldn't start):
+    - Added `pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '10.12.0'` to Podfile according to [Documentation](https://firebase.google.com/docs/firestore/quickstart?authuser=0&_gl=1*1wowrp2*_ga*MTI2NzE5MzExMy4xNjg1OTE0ODMy*_ga_CW55HF8NVT*MTY5MTU1ODAwOC40MC4xLjE2OTE1NTgxNjEuMC4wLjA.#dart)
+    - Downgraded version from 10.13.0 to 10.12.0
+    - cd ios -> pod deintegrate -> pod repo update -> pod install
+
 
 ## References/Info
 
@@ -38,3 +44,4 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
     - [Change minSdk version](https://stackoverflow.com/questions/71014470/android-minsdkversion-with-flutterv2-8-1)
 - [Add Google Sign In](https://pub.dev/packages/google_sign_in)
 - [Add Apple Sign In](https://www.youtube.com/watch?v=ettlLq2gW0U&t=315s&ab_channel=dbestech)
+- [Firebase Firestore](https://firebase.google.com/docs/firestore/quickstart?authuser=0&_gl=1*1wowrp2*_ga*MTI2NzE5MzExMy4xNjg1OTE0ODMy*_ga_CW55HF8NVT*MTY5MTU1ODAwOC40MC4xLjE2OTE1NTgxNjEuMC4wLjA.#dart)

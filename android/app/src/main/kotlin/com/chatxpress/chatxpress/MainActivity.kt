@@ -1,4 +1,4 @@
-package com.chatxpress.chatxpress
+package com.codeproducer.chatxpress
 
 import io.flutter.embedding.android.FlutterActivity
 
