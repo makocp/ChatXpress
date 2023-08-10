@@ -4,6 +4,7 @@ import 'package:chatXpress/pages/chat/chat_page_model.dart';
 import 'package:chatXpress/services_provider/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'chat_components/chat_message.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -16,12 +17,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final chatPageModel = ServiceLocator<ChatPageModel>();
   List<ChatMessage> _messages = [];
-
-  final openAI = OpenAI.instance.build(
-    token: "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",
-    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 10)),
-    enableLog: true,
-  );
 
   void _sendMessage(String prompt) async {
     _messages = chatPageModel.uiMessages;
@@ -101,39 +96,6 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: const Icon(Icons.send),
           color: MyColors.greenDefaultColor,
         )
-      ],
-    );
-  }
-}
-
-class ChatMessage extends StatelessWidget {
-  const ChatMessage({Key? key, required this.text, required this.sender})
-      : super(key: key);
-
-  final String text;
-  final String sender;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment:
-          sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
-      children: [
-        CircleAvatar(child: Text(sender[0])),
-        const SizedBox(width: 8),
-        Flexible(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: sender == "ChatGpt"
-                  ? MyColors.greenDefaultColor
-                  : Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(text),
-          ),
-        ),
       ],
     );
   }
