@@ -1,8 +1,9 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/my_drawer.dart';
+import 'package:chatXpress/pages/chat/chat_page_model.dart';
+import 'package:chatXpress/services_provider/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
-
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -13,8 +14,9 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<ChatMessage> _messages = [];
-  final List<Messages> messages = [];
+  final chatPageModel = ServiceLocator<ChatPageModel>();
+  List<ChatMessage> _messages = [];
+  List<Messages> messages = [];
 
   final openAI = OpenAI.instance.build(
     token: "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",
@@ -23,36 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
   );
 
   void _sendMessage(String prompt) async {
-    messages.add(Messages(
-      role: Role.user,
-      content: prompt,
-    ));
-
-    ChatMessage messageWidget = ChatMessage(text: prompt, sender: "user");
-    _messages.add(messageWidget);
-    setState(() {});
-
-    final request = ChatCompleteText(
-      messages: messages,
-      maxToken: 200,
-      model: GptTurboChatModel(),
-    );
-
-    final response = await openAI.onChatCompletion(request: request);
-
-    var message = response?.choices.isNotEmpty == true
-        ? response!.choices.last.message
-        : null;
-
-    if (message != null) {
-      setState(() {
-        _messages.add(ChatMessage(
-          text:
-              message.content ?? "Something went wrong, please try again later",
-          sender: "ChatGpt",
-        ));
-      });
-    }
+    _messages = chatPageModel.uiMessages;
+    messages = chatPageModel.messages;
+    chatPageModel.sendMessage(prompt, () => setState(() {}));
   }
 
   void _handleSendMessage() {

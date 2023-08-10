@@ -1,4 +1,4 @@
-import 'package:chatXpress/pages/chat_page.dart';
+import 'package:chatXpress/pages/chat/chat_page.dart';
 import 'package:chatXpress/pages/sign_in_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
