@@ -16,3 +16,9 @@ void initSignInService(){
   ServiceLocator.registerSingleton<AuthService>(AuthService());
   ServiceLocator.registerSingleton<SignInPageModel>(SignInPageModel());
 }
+
+void disposeSignInService(){
+  ServiceLocator.unregister<AuthService>();
+  ServiceLocator.unregister<SignInPageModel>();
+
+}

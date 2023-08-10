@@ -30,6 +30,12 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   @override
+  void dispose() {
+    disposeSignInService();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
