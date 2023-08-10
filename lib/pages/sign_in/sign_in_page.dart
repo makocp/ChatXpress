@@ -5,16 +5,29 @@ import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
 import 'package:chatXpress/pages/forgot_password_page.dart';
+import 'package:chatXpress/pages/sign_in/sing_in_page_model.dart';
 import 'package:chatXpress/pages/sign_up_page.dart';
-import 'package:chatXpress/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chatXpress/services_provider/injection_container.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  late SignInPageModel signInPageModel;
 
-  SignInPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    initSignInService();
+    signInPageModel = ServiceLocator<SignInPageModel>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +56,8 @@ class SignInPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }),
-            FirebaseAuth.instance
-                .signInWithEmailAndPassword(
-                    email: emailController.text,
-                    password: passwordController.text)
-                .whenComplete(() {
-              Navigator.pop(context);
-            })
+            signInPageModel.signInWithCredentials(
+                context, emailController.text, passwordController.text)
           },
           buttonText: 'Login',
         ),
@@ -155,7 +163,7 @@ class SignInPage extends StatelessWidget {
     return MySquareTile(
       imagePath: 'lib/assets/images/apple.png',
       onTap: () {
-        AuthService().signInWithApple();
+        signInPageModel.signInWithApple();
       },
     );
   }
@@ -164,7 +172,7 @@ class SignInPage extends StatelessWidget {
     return MySquareTile(
       imagePath: 'lib/assets/images/google.png',
       onTap: () {
-        AuthService().signInWithGoogle();
+        signInPageModel.signInWithGoogle();
       },
     );
   }
