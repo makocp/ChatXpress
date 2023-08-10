@@ -3,7 +3,6 @@ import 'package:chatXpress/components/my_drawer.dart';
 import 'package:chatXpress/pages/chat/chat_page_model.dart';
 import 'package:chatXpress/services_provider/injection_container.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'chat_components/chat_message.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -17,19 +16,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final chatPageModel = ServiceLocator<ChatPageModel>();
   List<ChatMessage> _messages = [];
-
-  void _sendMessage(String prompt) async {
-    _messages = chatPageModel.uiMessages;
-    chatPageModel.sendMessage(prompt, () => setState(() {}));
-  }
-
-  void _handleSendMessage() {
-    String prompt = _controller.text.trim();
-    if (prompt.isNotEmpty) {
-      _sendMessage(prompt);
-      _controller.clear();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,5 +84,18 @@ class _ChatScreenState extends State<ChatScreen> {
         )
       ],
     );
+  }
+
+  void _sendMessage(String prompt) async {
+    _messages = chatPageModel.uiMessages;
+    chatPageModel.sendMessage(prompt, () => setState(() {}));
+  }
+
+  void _handleSendMessage() {
+    String prompt = _controller.text.trim();
+    if (prompt.isNotEmpty) {
+      _sendMessage(prompt);
+      _controller.clear();
+    }
   }
 }
