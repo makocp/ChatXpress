@@ -45,14 +45,14 @@ flutter:
 
 
   assets:
-    - lib/assets/images/
+    - assets/images/
 
 flutter_launcher_icons:
   android: true
   ios: true
   macos:
     generate: true
-    image_path: "lib/assets/icons/ios/chatXpress_ios_icon.png"
-  image_path: "lib/assets/icons/ios/chatXpress_ios_icon.png"
+    image_path: "assets/icons/ios/chatXpress_ios_icon.png"
+  image_path: "assets/icons/ios/chatXpress_ios_icon.png"
   adaptive_icon_background: "#00A67E"
-  adaptive_icon_foreground: "lib/assets/icons/android/chatXpress_android_foreground.png"
+  adaptive_icon_foreground: "assets/icons/android/chatXpress_android_foreground.png"
