@@ -4,9 +4,9 @@ import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/forgot_password_page.dart';
-import 'package:chatXpress/pages/sign_in/sing_in_page_model.dart';
-import 'package:chatXpress/pages/sign_up_page.dart';
+import 'package:chatXpress/pages/forgot_password/forgot_password_page.dart';
+import 'package:chatXpress/pages/sign_in/sign_in_page_model.dart';
+import 'package:chatXpress/pages/sign_up/sign_up_page.dart';
 import 'package:chatXpress/services_provider/injection_container.dart';
 import 'package:flutter/material.dart';
 
@@ -25,14 +25,8 @@ class _SignInPageState extends State<SignInPage> {
   @override
   void initState() {
     super.initState();
-    initSignInService();
+    registerSignInService();
     signInPageModel = ServiceLocator<SignInPageModel>();
-  }
-
-  @override
-  void dispose() {
-    disposeSignInService();
-    super.dispose();
   }
 
   @override
@@ -64,7 +58,7 @@ class _SignInPageState extends State<SignInPage> {
                 }),
             signInPageModel.signInWithCredentials(
                 context, emailController.text, passwordController.text)
-          },
+        },
           buttonText: 'Login',
         ),
 
@@ -112,6 +106,7 @@ class _SignInPageState extends State<SignInPage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SignUpPage()));
+                    unregisterSignInService();
               },
               child: const Text(
                 'Create account.',
@@ -154,6 +149,7 @@ class _SignInPageState extends State<SignInPage> {
         onTap: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => ForgotPassword()));
+          unregisterSignInService();
         },
         child: const Text(
           'Forgot Password?',

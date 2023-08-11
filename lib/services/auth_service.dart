@@ -44,4 +44,26 @@ class AuthService {
       Navigator.pop(context);
     });
   }
+
+  signUp(BuildContext context,String email, String password){
+    FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+        email: email,
+        password: password)
+        .then((value) {
+      // If account creation was successfull, then the User gets Signed in.
+      // -> This invokes the listener on the StartPage, which switches from LogInPage to HomePage.
+      FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // This pop method is necessary to pop the SignUpPage and get to the HomePage.
+      // Otherwise the SignUpPage would "overwrite" the HomePage.
+      // -> See Widget Tree in Widget inspector for details and better understanding.
+      Navigator.pop(context);
+    }).onError((error, stackTrace) {
+      log('Error ${error.toString()}');
+    });
+  }
+
 }

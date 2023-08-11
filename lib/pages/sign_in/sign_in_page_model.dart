@@ -7,13 +7,17 @@ class SignInPageModel {
 
   signInWithCredentials(BuildContext context, String email, String password) {
     authService.singInWithCredentials(context, email, password);
+    unregisterSignInService();
   }
 
   signInWithGoogle() {
     authService.signInWithGoogle();
+    unregisterSignInService();
+
   }
 
   signInWithApple() {
     authService.signInWithApple();
+    unregisterSignInService();
   }
 }
