@@ -4,7 +4,7 @@ import 'package:chatXpress/components/my_button.dart';
 import 'package:chatXpress/components/my_container_signinandup.dart';
 import 'package:chatXpress/components/my_squaretile.dart';
 import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/forgot_password_page.dart';
+import 'package:chatXpress/pages/forgot_password/forgot_password_page.dart';
 import 'package:chatXpress/pages/sign_in/sign_in_page_model.dart';
 import 'package:chatXpress/pages/sign_up/sign_up_page.dart';
 import 'package:chatXpress/services_provider/injection_container.dart';

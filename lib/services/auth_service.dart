@@ -65,4 +65,5 @@ class AuthService {
       log('Error ${error.toString()}');
     });
   }
+
 }
