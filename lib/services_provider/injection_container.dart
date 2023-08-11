@@ -1,5 +1,6 @@
 import 'package:chatXpress/pages/chat/chat_page_model.dart';
-import 'package:chatXpress/pages/sign_in/sing_in_page_model.dart';
+import 'package:chatXpress/pages/sign_in/sign_in_page_model.dart';
+import 'package:chatXpress/pages/sign_up/sign_up_page_model.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/gpt.dart';
 import 'package:get_it/get_it.dart';
@@ -12,13 +13,23 @@ void init(){
   ServiceLocator.registerSingleton<Gpt>(Gpt());
 }
 
-void initSignInService(){
+void registerSignInService(){
   ServiceLocator.registerSingleton<AuthService>(AuthService());
   ServiceLocator.registerSingleton<SignInPageModel>(SignInPageModel());
 }
 
-void disposeSignInService(){
+void unregisterSignInService(){
   ServiceLocator.unregister<AuthService>();
   ServiceLocator.unregister<SignInPageModel>();
+}
 
+
+void registerSignUpService(){
+  ServiceLocator.registerSingleton<AuthService>(AuthService());
+  ServiceLocator.registerSingleton<SignUpPageModel>(SignUpPageModel());
+}
+
+void unregisterSignUpService(){
+  ServiceLocator.unregister<AuthService>();
+  ServiceLocator.unregister<SignUpPageModel>();
 }

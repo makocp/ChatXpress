@@ -25,7 +25,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.1
   flutter_lints: ^2.0.0
   envied_generator: ^0.3.0+3
   build_runner: ^2.4.6
