@@ -20,11 +20,6 @@ class MyDrawer extends StatelessWidget {
                     title: const Text('New chat'),
                     onTap: () {},
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.delete_outline),
-                    title: const Text('Delete history'),
-                    onTap: () {},
-                  ),
                   const Divider(),
                 ],
               ),
@@ -117,6 +112,11 @@ class MyDrawer extends StatelessWidget {
               Column(
                 children: [
                   const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.delete_outline),
+                    title: const Text('Delete history'),
+                    onTap: () {},
+                  ),
                   ListTile(
                     leading: const Icon(Icons.lock_reset_outlined),
                     title: const Text('Reset password'),

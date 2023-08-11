@@ -47,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
         body: MyContainerSignInAndUp(columnPageContent: [
           // Icon
           const Image(
-              image: AssetImage('lib/assets/images/chatXpress.png'), height: 100),
+              image: AssetImage('assets/images/chatXpress.png'), height: 100),
 
           const SizedBox(height: 50),
           MyTextfield(

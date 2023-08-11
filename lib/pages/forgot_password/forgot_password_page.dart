@@ -40,7 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         body: MyContainerSignInAndUp(columnPageContent: [
           // Icon
           const Image(
-              image: AssetImage('lib/assets/images/chatXpress.png'),
+              image: AssetImage('assets/images/chatXpress.png'),
               height: 100),
 
           // Email input

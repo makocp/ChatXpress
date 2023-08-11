@@ -123,7 +123,7 @@ class _SignInPageState extends State<SignInPage> {
 
   showIcon() {
     return const Image(
-        image: AssetImage('lib/assets/images/chatXpress.png'), height: 100);
+        image: AssetImage('assets/images/chatXpress.png'), height: 100);
   }
 
   showEmailInput(TextEditingController emailController) {
@@ -163,7 +163,7 @@ class _SignInPageState extends State<SignInPage> {
 
   showAppleSignIn() {
     return MySquareTile(
-      imagePath: 'lib/assets/images/apple.png',
+      imagePath: 'assets/images/apple.png',
       onTap: () {
         signInPageModel.signInWithApple();
       },
@@ -172,7 +172,7 @@ class _SignInPageState extends State<SignInPage> {
 
   showGoogleSignIn() {
     return MySquareTile(
-      imagePath: 'lib/assets/images/google.png',
+      imagePath: 'assets/images/google.png',
       onTap: () {
         signInPageModel.signInWithGoogle();
       },
