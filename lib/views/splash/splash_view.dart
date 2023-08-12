@@ -1,4 +1,5 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/assets/colors/my_image_paths.dart';
 import 'package:chatXpress/views/start/start_view.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class _SplashViewState extends State<SplashView> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/chatXpress.png'),
+          Image.asset(MyImagePaths.iconPath),
           const SizedBox(height: 20),
           const DefaultTextStyle(
               style: TextStyle(

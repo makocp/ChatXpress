@@ -2,16 +2,16 @@ import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
-  final VoidCallback? onTap; // Changed Function()? to VoidCallback?
+  final VoidCallback? onPressed;
   final String buttonText;
 
-  const MyButton({Key? key, required this.onTap, required this.buttonText})
+  const MyButton({Key? key, required this.onPressed, required this.buttonText})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onTap, // Changed onTap to onPressed
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: MyColors.greenDefaultColor,
         padding: const EdgeInsets.all(15),
@@ -23,7 +23,6 @@ class MyButton extends StatelessWidget {
         buttonText,
         style: const TextStyle(
           color: Colors.white,
-          // fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
       ),

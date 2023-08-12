@@ -17,6 +17,7 @@ class _ChatViewState extends State<ChatView> {
   final _scrollController = ScrollController();
   final _chatViewmodel = ChatViewmodel();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,11 +85,12 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _sendMessage(String prompt) async {
-    _chatViewmodel.sendMessage(
+_chatViewmodel.sendMessage(
         prompt,
         () => setState(() {
               _scrollToBottom();
             }));
+
   }
 
   Future<void> _handleSendMessage() async {
