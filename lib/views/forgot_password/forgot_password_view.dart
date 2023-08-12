@@ -1,15 +1,15 @@
-import 'package:chatXpress/components/my_button.dart';
-import 'package:chatXpress/components/my_container_signinandup.dart';
-import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/forgot_password/forgot_password_page_model.dart';
+import 'package:chatXpress/components/button_components/my_button.dart';
+import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
+import 'package:chatXpress/components/textfield_components/my_textfield.dart';
+import 'package:chatXpress/views/forgot_password/forgot_password_viewmodel.dart';
 import 'package:flutter/material.dart';
 
-class ForgotPassword extends StatelessWidget {
-    ForgotPassword({super.key});
+class ForgotPasswordView extends StatelessWidget {
+    ForgotPasswordView({super.key});
 
   final emailController = TextEditingController();
 
-  final forgotPasswordPageModel = ForgotPasswordPageModel();
+  final forgotPasswordPageModel = ForgotPasswordViewmodel();
 
   @override
   Widget build(BuildContext context) {

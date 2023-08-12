@@ -1,22 +1,22 @@
 import 'dart:io';
 import 'package:chatXpress/assets/colors/my_colors.dart';
-import 'package:chatXpress/components/my_button.dart';
-import 'package:chatXpress/components/my_container_signinandup.dart';
-import 'package:chatXpress/components/my_squaretile.dart';
-import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/forgot_password/forgot_password_page.dart';
-import 'package:chatXpress/pages/sign_in/sign_in_page_model.dart';
-import 'package:chatXpress/pages/sign_up/sign_up_page.dart';
+import 'package:chatXpress/components/button_components/my_button.dart';
+import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
+import 'package:chatXpress/components/button_components/my_squaretile.dart';
+import 'package:chatXpress/components/textfield_components/my_textfield.dart';
+import 'package:chatXpress/views/forgot_password/forgot_password_view.dart';
+import 'package:chatXpress/views/sign_in/sign_in_viewmodel.dart';
+import 'package:chatXpress/views/sign_up/sign_up_view.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatelessWidget {
-  SignInPage({super.key});
+class SignInView extends StatelessWidget {
+  SignInView({super.key});
 
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
-  final signInPageModel = SignInPageModel();
+  final signInPageModel = SignInViewmodel();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class SignInPage extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()));
+                    MaterialPageRoute(builder: (context) => const SignUpView()));
               },
               child: const Text(
                 'Create account.',
@@ -136,7 +136,7 @@ class SignInPage extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ForgotPassword()));
+              MaterialPageRoute(builder: (context) => ForgotPasswordView()));
         },
         child: const Text(
           'Forgot Password?',

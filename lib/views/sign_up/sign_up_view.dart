@@ -1,26 +1,25 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
-import 'package:chatXpress/components/my_button.dart';
-import 'package:chatXpress/components/my_container_signinandup.dart';
-import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/sign_up/sign_up_page_model.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
+import 'package:chatXpress/components/button_components/my_button.dart';
+import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
+import 'package:chatXpress/components/textfield_components/my_textfield.dart';
+import 'package:chatXpress/views/sign_up/sign_up_viewmodel.dart';
 import 'package:flutter/material.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpViewState extends State<SignUpView> {
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
   final passwordConfirmationController = TextEditingController();
 
-  final signUpPageModel = SignUpPageModel();
+  final signUpPageModel = SignUpViewmodel();
 
   @override
   Widget build(BuildContext context) {

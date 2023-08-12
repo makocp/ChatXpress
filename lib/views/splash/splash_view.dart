@@ -1,15 +1,15 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
-import 'package:chatXpress/pages/start_page.dart';
+import 'package:chatXpress/views/start/start_view.dart';
 import 'package:flutter/material.dart';
 
-class Splash extends StatefulWidget {
-  const Splash({super.key});
+class SplashView extends StatefulWidget {
+  const SplashView({super.key});
 
   @override
-  State<Splash> createState() => _SplashState();
+  State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
@@ -45,6 +45,6 @@ class _SplashState extends State<Splash> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => const StartPage()));
+            builder: (BuildContext context) => const StartView()));
   }
 }
