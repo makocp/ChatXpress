@@ -1,4 +1,5 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/components/chat_components/text_field.dart';
 import 'package:chatXpress/components/drawer_components/my_drawer.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,14 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff40414f),
       appBar: AppBar(
+        backgroundColor: MyColors.greenDefaultColor,
         title: const Text("Chat Screen"),
       ),
       drawer: const MyDrawer(),
-      body: SafeArea(
+      body:
+      SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
@@ -47,17 +51,17 @@ class _ChatViewState extends State<ChatView> {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, -2),
-                      blurRadius: 4,
-                    ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomTextInput(hintText: "send a message",controller: _controller),
+                    IconButton(
+                      onPressed: () => _handleSendMessage(),
+                      icon: const Icon(Icons.send),
+                      color: MyColors.greenDefaultColor,
+                    )
                   ],
-                ),
-                child: _buildTextComposer(),
+                )
               )
             ],
           ),
@@ -79,11 +83,7 @@ class _ChatViewState extends State<ChatView> {
             onSubmitted: (value) => _handleSendMessage(),
           ),
         ),
-        IconButton(
-          onPressed: () => _handleSendMessage(),
-          icon: const Icon(Icons.send),
-          color: MyColors.greenDefaultColor,
-        )
+
       ],
     );
   }

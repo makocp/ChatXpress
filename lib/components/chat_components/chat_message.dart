@@ -12,9 +12,8 @@ class ChatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: sender == "ChatGpt"
-          ? MainAxisAlignment.start
-          : MainAxisAlignment.end,
+      mainAxisAlignment:
+          sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
         ..._buildMessageWidgets(sender, text),
       ],
@@ -26,23 +25,39 @@ class ChatMessage extends StatelessWidget {
 
     return [
       if (isChatGpt) _buildAvatar(sender),
+      const SizedBox(
+        width: 5,
+      ),
       Flexible(
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isChatGpt
-                ? MyColors.greenDefaultColor
-                : Colors.grey[200],
+            color: isChatGpt ? MyColors.greenDefaultColor : Colors.white,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Text(text),
+          child: Text(
+            text,
+            style: TextStyle(
+                color: sender == "ChatGpt" ? Colors.white : Colors.black),
+          ),
         ),
+      ),
+      const SizedBox(
+        width: 5,
       ),
       if (!isChatGpt) _buildAvatar(sender),
     ];
   }
 
   Widget _buildAvatar(String sender) {
-    return CircleAvatar(child: Text(sender[0]));
+    if (sender == "ChatGpt") {
+      return const CircleAvatar(
+        backgroundImage: ExactAssetImage('assets/images/chatXpress.png'),
+        radius: 15,
+        backgroundColor: MyColors.greenDefaultColorDark,
+      );
+    } else {
+      return CircleAvatar(child: Text(sender[0],style: TextStyle(color: Colors.black),),backgroundColor: Colors.white54,);
+    }
   }
 }
