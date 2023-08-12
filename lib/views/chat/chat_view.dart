@@ -1,20 +1,19 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
-import 'package:chatXpress/components/my_drawer.dart';
-import 'package:chatXpress/pages/chat/chat_page_model.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
+import 'package:chatXpress/components/drawer_components/my_drawer.dart';
+import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'chat_components/chat_message.dart';
+import '../../components/chat_components/chat_message.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+class ChatView extends StatefulWidget {
+  const ChatView({Key? key}) : super(key: key);
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatViewState extends State<ChatView> {
   final TextEditingController _controller = TextEditingController();
-  final chatPageModel = ServiceLocator<ChatPageModel>();
+  final chatPageModel = ChatViewmodel();
   List<ChatMessage> _messages = [];
 
   @override
@@ -89,6 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage(String prompt) async {
     _messages = chatPageModel.uiMessages;
     chatPageModel.sendMessage(prompt, () => setState(() {}));
+
   }
 
   void _handleSendMessage() {

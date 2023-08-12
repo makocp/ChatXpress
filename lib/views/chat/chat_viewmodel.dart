@@ -1,10 +1,10 @@
-import 'package:chatXpress/pages/chat/chat_page.dart';
-import 'package:chatXpress/services/gpt.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
-import 'chat_components/chat_message.dart';
+import 'package:chatXpress/services/gpt_service.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
+import '../../components/chat_components/chat_message.dart';
 
-class ChatPageModel {
+class ChatViewmodel {
   final List<ChatMessage> uiMessages = [];
+  final gptService = serviceContainer<GptService>();
 
   void sendMessage(String prompt, Function function) async {
       // add the message to the UI
@@ -14,7 +14,7 @@ class ChatPageModel {
     function();
 
     // get the prompt response
-    var response = await ServiceLocator<Gpt>().sendRequest(prompt);
+    var response = await gptService.sendRequest(prompt);
 
     // add the response to the UI
     _addResponseToUi(response);

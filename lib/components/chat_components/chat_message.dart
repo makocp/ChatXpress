@@ -1,5 +1,4 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessage extends StatelessWidget {

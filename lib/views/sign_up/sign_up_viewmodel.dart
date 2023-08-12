@@ -1,11 +1,10 @@
 import 'package:chatXpress/services/auth_service.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/cupertino.dart';
 
-class SignUpPageModel {
-  final authService = ServiceLocator<AuthService>();
+class SignUpViewmodel {
+  final authService = serviceContainer<AuthService>();
   signUp(BuildContext context,String email,String password){
     authService.signUp(context, email, password);
-    unregisterSignUpService();
   }
 }

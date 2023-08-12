@@ -1,33 +1,22 @@
 import 'dart:io';
 import 'package:chatXpress/assets/colors/my_colors.dart';
-import 'package:chatXpress/components/my_button.dart';
-import 'package:chatXpress/components/my_container_signinandup.dart';
-import 'package:chatXpress/components/my_squaretile.dart';
-import 'package:chatXpress/components/my_textfield.dart';
-import 'package:chatXpress/pages/forgot_password/forgot_password_page.dart';
-import 'package:chatXpress/pages/sign_in/sign_in_page_model.dart';
-import 'package:chatXpress/pages/sign_up/sign_up_page.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
+import 'package:chatXpress/components/button_components/my_button.dart';
+import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
+import 'package:chatXpress/components/button_components/my_squaretile.dart';
+import 'package:chatXpress/components/textfield_components/my_textfield.dart';
+import 'package:chatXpress/views/forgot_password/forgot_password_view.dart';
+import 'package:chatXpress/views/sign_in/sign_in_viewmodel.dart';
+import 'package:chatXpress/views/sign_up/sign_up_view.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class SignInView extends StatelessWidget {
+  SignInView({super.key});
 
-  @override
-  State<SignInPage> createState() => _SignInPageState();
-}
-
-class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  late SignInPageModel signInPageModel;
 
-  @override
-  void initState() {
-    super.initState();
-    registerSignInService();
-    signInPageModel = ServiceLocator<SignInPageModel>();
-  }
+  final passwordController = TextEditingController();
+
+  final signInPageModel = SignInViewmodel();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
                 }),
             signInPageModel.signInWithCredentials(
                 context, emailController.text, passwordController.text)
-        },
+          },
           buttonText: 'Login',
         ),
 
@@ -105,8 +94,7 @@ class _SignInPageState extends State<SignInPage> {
             GestureDetector(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignUpPage()));
-                    unregisterSignInService();
+                    MaterialPageRoute(builder: (context) => const SignUpView()));
               },
               child: const Text(
                 'Create account.',
@@ -148,8 +136,7 @@ class _SignInPageState extends State<SignInPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ForgotPassword()));
-          unregisterSignInService();
+              MaterialPageRoute(builder: (context) => ForgotPasswordView()));
         },
         child: const Text(
           'Forgot Password?',

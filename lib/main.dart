@@ -1,11 +1,11 @@
 import 'package:chatXpress/firebase_options.dart';
-import 'package:chatXpress/pages/splash_page.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
+import 'package:chatXpress/views/splash/splash_view.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 Future main() async {
-  init();
+  initServiceLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      home: SplashView(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 
-class Gpt{
+class GptService{
   final List<Messages> messages = [];
 
   final openAI = OpenAI.instance.build(
@@ -26,7 +26,7 @@ class Gpt{
         : null;
 
     _addResponseToChat(message!.content);
-    return message!.content;
+    return message.content;
   }
 
   void _addResponseToChat(String response) {
