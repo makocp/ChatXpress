@@ -26,8 +26,6 @@ class SignInView extends StatelessWidget {
         elevation: 0,
       ),
       body: MyContainerSignInAndUp(listViewContent: [
-        showIcon(),
-        const SizedBox(height: 50),
         showEmailInput(_emailController),
         const SizedBox(height: 25),
         showPasswordInput(_passwordController),
@@ -117,11 +115,6 @@ class SignInView extends StatelessWidget {
       },
       buttonText: 'Login',
     );
-  }
-
-  Image showIcon() {
-    return const Image(
-        image: AssetImage('assets/images/chatXpress.png'), height: 100);
   }
 
   MyTextfield showEmailInput(TextEditingController emailController) {
