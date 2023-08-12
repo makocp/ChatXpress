@@ -7,9 +7,8 @@ import 'package:flutter/material.dart';
 class ForgotPasswordView extends StatelessWidget {
     ForgotPasswordView({super.key});
 
-  final emailController = TextEditingController();
-
-  final forgotPasswordPageModel = ForgotPasswordViewmodel();
+  final _emailController = TextEditingController();
+  final _forgotPasswordViewmodel = ForgotPasswordViewmodel();
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +19,17 @@ class ForgotPasswordView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: MyContainerSignInAndUp(columnPageContent: [
-        // Icon
-        const Image(
-            image: AssetImage('assets/images/chatXpress.png'), height: 100),
-
+      body: MyContainerSignInAndUp(listViewContent: [
         // Email input
         const SizedBox(height: 50),
         MyTextfield(
-            controller: emailController,
+            controller: _emailController,
             hintText: 'Email',
             obscureText: false,
             icon: Icons.email_outlined),
         const SizedBox(height: 20),
         MyButton(
-          onTap: () => {
+          onPressed: () => {
             showDialog(
                 context: context,
                 builder: (context) {
@@ -42,7 +37,7 @@ class ForgotPasswordView extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }),
-            forgotPasswordPageModel.resetPassword(emailController.text).whenComplete(() {
+            _forgotPasswordViewmodel.resetPassword(_emailController.text).whenComplete(() {
               Navigator.pop(context);
               Navigator.pop(context);
             }),

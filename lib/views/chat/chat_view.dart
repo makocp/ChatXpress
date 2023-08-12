@@ -13,7 +13,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final TextEditingController _controller = TextEditingController();
-  final chatPageModel = ChatViewmodel();
+  final _chatViewmodel = ChatViewmodel();
   List<ChatMessage> _messages = [];
 
   @override
@@ -86,8 +86,8 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _sendMessage(String prompt) async {
-    _messages = chatPageModel.uiMessages;
-    chatPageModel.sendMessage(prompt, () => setState(() {}));
+    _messages = _chatViewmodel.uiMessages;
+    _chatViewmodel.sendMessage(prompt, () => setState(() {}));
 
   }
 
