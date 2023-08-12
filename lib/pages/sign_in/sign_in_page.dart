@@ -7,27 +7,16 @@ import 'package:chatXpress/components/my_textfield.dart';
 import 'package:chatXpress/pages/forgot_password/forgot_password_page.dart';
 import 'package:chatXpress/pages/sign_in/sign_in_page_model.dart';
 import 'package:chatXpress/pages/sign_up/sign_up_page.dart';
-import 'package:chatXpress/services_provider/injection_container.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class SignInPage extends StatelessWidget {
+  SignInPage({super.key});
 
-  @override
-  State<SignInPage> createState() => _SignInPageState();
-}
-
-class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  late SignInPageModel signInPageModel;
 
-  @override
-  void initState() {
-    super.initState();
-    registerSignInService();
-    signInPageModel = ServiceLocator<SignInPageModel>();
-  }
+  final passwordController = TextEditingController();
+
+  final signInPageModel = SignInPageModel();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
                 }),
             signInPageModel.signInWithCredentials(
                 context, emailController.text, passwordController.text)
-        },
+          },
           buttonText: 'Login',
         ),
 
@@ -106,7 +95,6 @@ class _SignInPageState extends State<SignInPage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SignUpPage()));
-                    unregisterSignInService();
               },
               child: const Text(
                 'Create account.',
@@ -149,7 +137,6 @@ class _SignInPageState extends State<SignInPage> {
         onTap: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => ForgotPassword()));
-          unregisterSignInService();
         },
         child: const Text(
           'Forgot Password?',

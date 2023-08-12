@@ -14,7 +14,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final chatPageModel = ServiceLocator<ChatPageModel>();
+  final chatPageModel = ChatPageModel();
   List<ChatMessage> _messages = [];
 
   @override

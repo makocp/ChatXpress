@@ -6,6 +6,5 @@ class SignUpPageModel {
   final authService = ServiceLocator<AuthService>();
   signUp(BuildContext context,String email,String password){
     authService.signUp(context, email, password);
-    unregisterSignUpService();
   }
 }

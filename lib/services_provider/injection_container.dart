@@ -9,38 +9,6 @@ import 'package:get_it/get_it.dart';
 final ServiceLocator = GetIt.instance;
 
 void init() {
-  // init external services: GPT/Firebase
-  ServiceLocator.registerSingleton<ChatPageModel>(ChatPageModel());
+  ServiceLocator.registerSingleton<AuthService>(AuthService());
   ServiceLocator.registerSingleton<Gpt>(Gpt());
-}
-
-void registerSignInService() {
-  ServiceLocator.registerSingleton<AuthService>(AuthService());
-  ServiceLocator.registerSingleton<SignInPageModel>(SignInPageModel());
-}
-
-void unregisterSignInService() {
-  ServiceLocator.unregister<AuthService>();
-  ServiceLocator.unregister<SignInPageModel>();
-}
-
-void registerSignUpService() {
-  ServiceLocator.registerSingleton<AuthService>(AuthService());
-  ServiceLocator.registerSingleton<SignUpPageModel>(SignUpPageModel());
-}
-
-void unregisterSignUpService() {
-  ServiceLocator.unregister<AuthService>();
-  ServiceLocator.unregister<SignUpPageModel>();
-}
-
-void registerForgotPasswordService() {
-  ServiceLocator.registerSingleton<AuthService>(AuthService());
-  ServiceLocator.registerSingleton<ForgotPasswordPageModel>(
-      ForgotPasswordPageModel());
-}
-
-void unregisterForgotPasswordService() {
-  ServiceLocator.unregister<AuthService>();
-  ServiceLocator.unregister<ForgotPasswordPageModel>();
 }
