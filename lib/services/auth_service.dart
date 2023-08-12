@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
-  signInWithGoogle() async {
+  Future signInWithGoogle() async {
     // Starts the interactive sign-in process.
     // null if sign in failed.
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -20,13 +17,10 @@ class AuthService {
     );
 
     // sign in
-    return await FirebaseAuth.instance
-        .signInWithCredential(credential)
-        .then((value) => {log('User: ${value.user!.email.toString()}')})
-        .then((value) => {log(FirebaseAuth.instance.currentUser.toString())});
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  signInWithApple() async {
+  Future signInWithApple() async {
     final appleProvider = AppleAuthProvider();
     return await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
@@ -35,35 +29,21 @@ class AuthService {
     return FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
-  singInWithCredentials(BuildContext context, String email, String password) async {
-    FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-        email: email,
-        password:password)
-        .whenComplete(() {
-      Navigator.pop(context);
-    });
+  Future singInWithCredentials(String email, String password) async {
+    return await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
   }
 
-  signUp(BuildContext context,String email, String password){
-    FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-        email: email,
-        password: password)
+  Future signUp(String email, String password) async {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
       // If account creation was successfull, then the User gets Signed in.
       // -> This invokes the listener on the StartPage, which switches from LogInPage to HomePage.
-      FirebaseAuth.instance.signInWithEmailAndPassword(
+      return FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      // This pop method is necessary to pop the SignUpPage and get to the HomePage.
-      // Otherwise the SignUpPage would "overwrite" the HomePage.
-      // -> See Widget Tree in Widget inspector for details and better understanding.
-      Navigator.pop(context);
-    }).onError((error, stackTrace) {
-      log('Error ${error.toString()}');
     });
   }
-
 }

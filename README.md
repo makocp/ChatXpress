@@ -33,6 +33,12 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
     - Downgraded version from 10.13.0 to 10.12.0
     - cd ios -> pod deintegrate -> pod repo update -> pod install
 
+### Async Programming
+- Future: Represents the result of an asynchronous operation with two states (complete / uncomplete)
+- Async: To turn function async + automatically wrap return with Future.
+    - IMPORTANT: if method is declared as async, BUT returns void, the function stays synchronous! (no error warning)
+- Await: In combination with Async -> makes async functions appear synchronous -> waits for a future to complete before executing the subsequent lines of code.
+- For more information, see reference below.
 
 ## References/Info
 
@@ -46,3 +52,4 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 - [Add Apple Sign In](https://www.youtube.com/watch?v=ettlLq2gW0U&t=315s&ab_channel=dbestech)
 - [Firebase Firestore](https://firebase.google.com/docs/firestore/quickstart?authuser=0&_gl=1*1wowrp2*_ga*MTI2NzE5MzExMy4xNjg1OTE0ODMy*_ga_CW55HF8NVT*MTY5MTU1ODAwOC40MC4xLjE2OTE1NTgxNjEuMC4wLjA.#dart)
 - [GetIt Explanation](https://www.youtube.com/watch?v=DbV5RV2HRUk&ab_channel=FlutterExplained)
+- [Future, Async, Await](https://sarunw.com/posts/how-to-use-async-await-in-flutter/)
