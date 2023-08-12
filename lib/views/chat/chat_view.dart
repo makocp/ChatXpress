@@ -13,8 +13,9 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final TextEditingController _controller = TextEditingController();
-  final chatPageModel = ChatViewmodel();
-  List<ChatMessage> _messages = [];
+  final _scrollController = ScrollController();
+  final chatViewmodel = ChatViewmodel();
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +31,15 @@ class _ChatViewState extends State<ChatView> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: _messages.length,
+                  reverse: true,
+                  controller: _scrollController,
+                  itemCount: chatViewmodel.messages.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ChatMessage(
-                        text: _messages[index].text,
-                        sender: _messages[index].sender,
+                        text: chatViewmodel.messages[index].text,
+                        sender: chatViewmodel.messages[index].sender,
                       ),
                     );
                   },
@@ -86,9 +89,9 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _sendMessage(String prompt) async {
-    _messages = chatPageModel.uiMessages;
-    chatPageModel.sendMessage(prompt, () => setState(() {}));
-
+    chatViewmodel.sendMessage(prompt, () => setState(() {
+      _scrollToBottom();
+    }));
   }
 
   void _handleSendMessage() {
@@ -96,6 +99,16 @@ class _ChatViewState extends State<ChatView> {
     if (prompt.isNotEmpty) {
       _sendMessage(prompt);
       _controller.clear();
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.initialScrollOffset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 }
