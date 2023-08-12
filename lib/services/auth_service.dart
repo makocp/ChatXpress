@@ -25,8 +25,8 @@ class AuthService {
     return await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
 
-  resetPassword(String email) async {
-    return FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  Future resetPassword(String email) async {
+    return await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
   Future singInWithCredentials(String email, String password) async {
