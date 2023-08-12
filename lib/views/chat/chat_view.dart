@@ -15,20 +15,18 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   final TextEditingController _controller = TextEditingController();
   final _scrollController = ScrollController();
-  final chatViewmodel = ChatViewmodel();
-
+  final _chatViewmodel = ChatViewmodel();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff40414f),
+      backgroundColor: const Color(0xff40414f),
       appBar: AppBar(
         backgroundColor: MyColors.greenDefaultColor,
         title: const Text("Chat Screen"),
       ),
       drawer: const MyDrawer(),
-      body:
-      SafeArea(
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
@@ -37,32 +35,47 @@ class _ChatViewState extends State<ChatView> {
                 child: ListView.builder(
                   reverse: true,
                   controller: _scrollController,
-                  itemCount: chatViewmodel.messages.length,
+                  itemCount: _chatViewmodel.messages.length + 1,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: ChatMessage(
-                        text: chatViewmodel.messages[index].text,
-                        sender: chatViewmodel.messages[index].sender,
-                      ),
+                      child: index > 0
+                          ? ChatMessage(
+                              text: _chatViewmodel.messages[index - 1].text,
+                              sender: _chatViewmodel.messages[index - 1].sender,
+                            )
+                          : _chatViewmodel.requestWaiting
+                              ? const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                      height: 20.0,
+                                      width: 20.0,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                ],
+                              )
+                              : const SizedBox(
+                                  height: 0,
+                                ),
                     );
                   },
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomTextInput(hintText: "send a message",controller: _controller),
-                    IconButton(
-                      onPressed: () => _handleSendMessage(),
-                      icon: const Icon(Icons.send),
-                      color: MyColors.greenDefaultColor,
-                    )
-                  ],
-                )
-              )
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomTextInput(
+                          hintText: "Send a message", controller: _controller),
+                      IconButton(
+                        onPressed: () => _handleSendMessage(),
+                        icon: const Icon(Icons.send),
+                        color: MyColors.greenDefaultColor,
+                      )
+                    ],
+                  ))
             ],
           ),
         ),
@@ -70,31 +83,15 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Widget _buildTextComposer() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              hintText: "Send a message",
-              border: InputBorder.none,
-            ),
-            onSubmitted: (value) => _handleSendMessage(),
-          ),
-        ),
-
-      ],
-    );
-  }
-
   void _sendMessage(String prompt) async {
-    chatViewmodel.sendMessage(prompt, () => setState(() {
-      _scrollToBottom();
-    }));
+    _chatViewmodel.sendMessage(
+        prompt,
+        () => setState(() {
+              _scrollToBottom();
+            }));
   }
 
-  void _handleSendMessage() {
+  Future<void> _handleSendMessage() async {
     String prompt = _controller.text.trim();
     if (prompt.isNotEmpty) {
       _sendMessage(prompt);

@@ -33,7 +33,15 @@ class ChatMessage extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isChatGpt ? MyColors.greenDefaultColor : Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: sender == "ChatGpt"
+                ? const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                    bottomRight: Radius.circular(12))
+                : const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12),
+                    topRight: Radius.circular(12)),
           ),
           child: Text(
             text,
@@ -57,7 +65,14 @@ class ChatMessage extends StatelessWidget {
         backgroundColor: MyColors.greenDefaultColorDark,
       );
     } else {
-      return CircleAvatar(child: Text(sender[0],style: TextStyle(color: Colors.black),),backgroundColor: Colors.white54,);
+      return CircleAvatar(
+        child: Text(
+          sender[0],
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        radius: 15,
+      );
     }
   }
 }

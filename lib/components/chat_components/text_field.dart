@@ -17,7 +17,6 @@ class CustomTextInput extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: Container(
-        margin: EdgeInsets.only(top: 5),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),

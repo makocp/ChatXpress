@@ -6,9 +6,12 @@ import '../../components/chat_components/chat_message.dart';
 class ChatViewmodel {
   final List<Message> messages = [];
   List<ChatMessage> uiMessages = [];
+  bool requestWaiting = false;
   final gptService = serviceContainer<GptService>();
 
   void sendMessage(String prompt, Function function) async {
+    requestWaiting = true;
+
       // add the message to the UI
     _addQuestionChat(prompt);
 
@@ -18,8 +21,12 @@ class ChatViewmodel {
     // get the prompt response
     var response = await gptService.sendRequest(prompt);
 
+    requestWaiting = false;
+
     // add the response to the UI
     _addResponseToChat(response);
+
+
 
     // set the state
     function();
