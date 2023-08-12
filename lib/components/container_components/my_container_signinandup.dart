@@ -1,10 +1,10 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/assets/colors/my_image_paths.dart';
 import 'package:flutter/material.dart';
 
 // The purpose of this class is to use it as framework in a SCAFFOLD for background, padding, etc. for the SignIn and SignUp Page to avoid redundancy.
 class MyContainerSignInAndUp extends StatelessWidget {
   final List<Widget> listViewContent;
-  final String iconPath = 'assets/images/chatXpress.png';
 
   const MyContainerSignInAndUp({
     super.key,
@@ -24,8 +24,8 @@ class MyContainerSignInAndUp extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 35),
           child: Column(
             children: [
-              Image(
-                image: AssetImage(iconPath),
+              const Image(
+                image: AssetImage(MyImagePaths.iconPath),
                 height: 100,
               ),
               const SizedBox(height: 50),
