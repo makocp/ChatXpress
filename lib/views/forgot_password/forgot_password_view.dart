@@ -5,11 +5,10 @@ import 'package:chatXpress/views/forgot_password/forgot_password_viewmodel.dart'
 import 'package:flutter/material.dart';
 
 class ForgotPasswordView extends StatelessWidget {
-    ForgotPasswordView({super.key});
+  ForgotPasswordView({super.key});
 
-  final emailController = TextEditingController();
-
-  final forgotPasswordPageModel = ForgotPasswordViewmodel();
+  final _emailController = TextEditingController();
+  final _forgotPasswordViewmodel = ForgotPasswordViewmodel();
 
   @override
   Widget build(BuildContext context) {
@@ -20,36 +19,40 @@ class ForgotPasswordView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: MyContainerSignInAndUp(columnPageContent: [
-        // Icon
-        const Image(
-            image: AssetImage('assets/images/chatXpress.png'), height: 100),
-
-        // Email input
-        const SizedBox(height: 50),
-        MyTextfield(
-            controller: emailController,
-            hintText: 'Email',
-            obscureText: false,
-            icon: Icons.email_outlined),
+      body: MyContainerSignInAndUp(listViewContent: [
+        showEmailInput(),
         const SizedBox(height: 20),
-        MyButton(
-          onTap: () => {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }),
-            forgotPasswordPageModel.resetPassword(emailController.text).whenComplete(() {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }),
-          },
-          buttonText: 'Reset Password',
-        ),
+        showResetPasswordButton(context),
       ]),
     );
+  }
+
+  MyButton showResetPasswordButton(BuildContext context) {
+    return MyButton(
+      onPressed: () => {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }),
+        _forgotPasswordViewmodel
+            .resetPassword(_emailController.text)
+            // This pop is on success, to get to the SignInView.
+            .then((value) => {Navigator.pop(context)})
+            // This pop needs to be done on success or failure, to pop the progress indicator.
+            .whenComplete(() => Navigator.pop(context)),
+      },
+      buttonText: 'Reset Password',
+    );
+  }
+
+  MyTextfield showEmailInput() {
+    return MyTextfield(
+        controller: _emailController,
+        hintText: 'Email',
+        obscureText: false,
+        icon: Icons.email_outlined);
   }
 }
