@@ -7,7 +7,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Color(0xff202123),
+      backgroundColor: const Color(0xff202123),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -26,7 +26,7 @@ class MyDrawer extends StatelessWidget {
                     ),
                     onTap: () {},
                   ),
-                  const Divider(),
+                  const Divider(color: Colors.white,),
                 ],
               ),
               Expanded(
@@ -46,7 +46,7 @@ class MyDrawer extends StatelessWidget {
               ),
               Column(
                 children: [
-                  const Divider(),
+                  const Divider(color: Colors.white,),
                   ListTile(
                     leading: const Icon(Icons.delete_outline,color: Colors.red),
                     title: const Text('Delete history', style: TextStyle(color: Colors.red)),

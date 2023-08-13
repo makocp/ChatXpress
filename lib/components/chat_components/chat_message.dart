@@ -66,12 +66,12 @@ class ChatMessage extends StatelessWidget {
       );
     } else {
       return CircleAvatar(
-        child: Text(
-          sender[0],
-          style: TextStyle(color: Colors.black),
-        ),
         backgroundColor: Colors.white,
         radius: 15,
+        child: Text(
+          sender[0],
+          style: const TextStyle(color: Colors.black),
+        ),
       );
     }
   }
