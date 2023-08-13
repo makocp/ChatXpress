@@ -5,6 +5,6 @@ class ForgotPasswordViewmodel {
   final authService = serviceContainer<AuthService>();
 
   Future resetPassword(String email) async {
-    return authService.resetPassword(email);
+    return authService.sendPasswordResetEmail(email);
   }
 }

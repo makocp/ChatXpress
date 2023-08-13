@@ -45,26 +45,26 @@ class SignInView extends StatelessWidget {
 
   Row showRegisterText(BuildContext context) {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Not a member? ',
-            style: TextStyle(color: MyColors.greenDefaultColorDark),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Not a member? ',
+          style: TextStyle(color: MyColors.greenDefaultColorDark),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SignUpView()));
+          },
+          child: const Text(
+            'Create account.',
+            style: TextStyle(
+                color: MyColors.greenDefaultColorDark,
+                fontWeight: FontWeight.w600),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignUpView()));
-            },
-            child: const Text(
-              'Create account.',
-              style: TextStyle(
-                  color: MyColors.greenDefaultColorDark,
-                  fontWeight: FontWeight.w600),
-            ),
-          )
-        ],
-      );
+        )
+      ],
+    );
   }
 
   Row showAlternativeSignIn() {
@@ -108,8 +108,10 @@ class SignInView extends StatelessWidget {
               );
             }),
         _signInViewmodel
-            .signInWithCredentials(
+            .singInWithEmailAndPassword(
                 _emailController.text, _passwordController.text)
+            .then((value) => {_signInViewmodel.showSuccessToast("SUCCESS! :)")})
+            .onError((error, stackTrace) => {_signInViewmodel.showErrorToast("ERROR! :(")})
             // to pop the progress indicator.
             .whenComplete(() => Navigator.pop(context)),
       },

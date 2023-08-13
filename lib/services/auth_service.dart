@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
-  Future signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     // Starts the interactive sign-in process.
     // null if sign in failed.
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -20,30 +20,23 @@ class AuthService {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future signInWithApple() async {
+  Future<UserCredential> signInWithApple() async {
     final appleProvider = AppleAuthProvider();
     return await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
 
-  Future resetPassword(String email) async {
+  Future<void> sendPasswordResetEmail(String email) async {
     return await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
-  Future singInWithCredentials(String email, String password) async {
+  Future<UserCredential> singInWithEmailAndPassword(
+      String email, String password) async {
     return await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future signUp(String email, String password) async {
-    await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) {
-      // If account creation was successfull, then the User gets Signed in.
-      // -> This invokes the listener on the StartPage, which switches from LogInPage to HomePage.
-      return FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    });
+  Future<UserCredential> createUserWithEmailAndPassword(String email, String password) async {
+    return await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
   }
 }
