@@ -40,6 +40,9 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 - Await: In combination with Async -> makes async functions appear synchronous -> waits for a future to complete before executing the subsequent lines of code.
 - For more information, see reference below.
 
+### Unfocus context for keyboard dismiss (ChatView -> Drawer)
+- The keyboard gets reopened again, after the drawer gets opened. Here the reference for fixing this issue: [](https://github.com/flutter/flutter/issues/54277#issuecomment-640998757)
+
 ## References/Info
 
 - [Mitch Koko](https://www.youtube.com/@createdbykoko)
