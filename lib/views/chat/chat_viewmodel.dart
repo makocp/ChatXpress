@@ -39,4 +39,5 @@ class ChatViewmodel {
   void _addResponseToChat(String response) {
     messages.insert(0,Message(text: response, date: DateTime.now(), sender: "ChatGpt"));
   }
+
 }

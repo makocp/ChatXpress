@@ -1,8 +1,11 @@
+import 'package:chatXpress/views/menu/menu_viewmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+class MenuView extends StatelessWidget {
+  MenuView({super.key});
+
+  final MenuViewmodel _menuViewmodel = MenuViewmodel();
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +27,13 @@ class MyDrawer extends StatelessWidget {
                       'New chat',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      _menuViewmodel.createNewChat();
+                    },
                   ),
-                  const Divider(color: Colors.white,),
+                  const Divider(
+                    color: Colors.white,
+                  ),
                 ],
               ),
               Expanded(
@@ -39,29 +46,47 @@ class MyDrawer extends StatelessWidget {
                       ),
                       title: const Text('Flutter Development',
                           style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                      onTap: () {
+                        _menuViewmodel.openChat();
+                      },
                     ),
                   ],
                 ),
               ),
               Column(
                 children: [
-                  const Divider(color: Colors.white,),
-                  ListTile(
-                    leading: const Icon(Icons.delete_outline,color: Colors.red),
-                    title: const Text('Delete history', style: TextStyle(color: Colors.red)),
-                    onTap: () {},
+                  const Divider(
+                    color: Colors.white,
                   ),
                   ListTile(
-                    leading: const Icon(Icons.lock_reset_outlined,color: Colors.white,),
-                    title: const Text('Reset password',style: TextStyle(color: Colors.white)),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.logout_outlined,color: Colors.white,),
-                    title: const Text('Logout',style: TextStyle(color: Colors.white)),
+                    leading:
+                        const Icon(Icons.delete_outline, color: Colors.red),
+                    title: const Text('Clean history',
+                        style: TextStyle(color: Colors.red)),
                     onTap: () {
-                      FirebaseAuth.instance.signOut().then((value) {
+                      _menuViewmodel.cleanHistory();
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.lock_reset_outlined,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Reset password',
+                        style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      _menuViewmodel.resetPassword();
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.logout_outlined,
+                      color: Colors.white,
+                    ),
+                    title: const Text('Logout',
+                        style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      _menuViewmodel.logOut().then((value) {
                         Navigator.popUntil(context, (route) => route.isFirst);
                       });
                     },
