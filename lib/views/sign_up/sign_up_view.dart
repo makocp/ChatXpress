@@ -38,25 +38,25 @@ class SignUpView extends StatelessWidget {
 
   Row showSignInText(BuildContext context) {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Already a member? ',
-            style: TextStyle(color: MyColors.greenDefaultColor),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Already a member? ',
+          style: TextStyle(color: MyColors.greenDefaultColor),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            'Sign In.',
+            style: TextStyle(
+                color: MyColors.greenDefaultColorDark,
+                fontWeight: FontWeight.bold),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Text(
-              'Sign In.',
-              style: TextStyle(
-                  color: MyColors.greenDefaultColorDark,
-                  fontWeight: FontWeight.bold),
-            ),
-          )
-        ],
-      );
+        )
+      ],
+    );
   }
 
   MyButton showSignUpButton(BuildContext context) {
@@ -65,12 +65,17 @@ class SignUpView extends StatelessWidget {
         if (_passwordController.text == _passwordConfirmationController.text)
           {
             _signUpViewmodel
-                .signUp(_emailController.text, _passwordController.text)
-                .then((value) =>
-                    // This pop method is necessary to pop the SignUpPage and get to the HomePage.
-                    // Otherwise the SignUpPage would "overwrite" the HomePage.
-                    // -> See Widget Tree in Widget inspector for details and better understanding.
-                    Navigator.pop(context))
+                .createUserWithEmailAndPassword(
+                    _emailController.text, _passwordController.text)
+                .then((value) {
+              // Signs in the user after successfull account creation.
+              _signUpViewmodel.authService.singInWithEmailAndPassword(
+                  _emailController.text, _passwordController.text);
+              // This pop method is necessary to pop the SignUpPage and get to the HomePage.
+              // Otherwise the SignUpPage would "overwrite" the HomePage.
+              // -> See Widget Tree in Widget inspector for details and better understanding.
+              Navigator.pop(context);
+            })
           },
       },
       buttonText: 'Create Account',
