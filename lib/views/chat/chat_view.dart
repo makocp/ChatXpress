@@ -1,6 +1,6 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/chat_components/text_field.dart';
-import 'package:chatXpress/components/drawer_components/my_drawer.dart';
+import 'package:chatXpress/views/menu/menu_view.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
 import '../../components/chat_components/chat_message.dart';
@@ -25,7 +25,7 @@ class _ChatViewState extends State<ChatView> {
         backgroundColor: MyColors.greenDefaultColor,
         title: const Text("ChatXpress"),
       ),
-      drawer: const MyDrawer(),
+      drawer: MenuView(),
       // to unfocus the ChatView, to dismiss the keyboard, after opening the drawer.
       onDrawerChanged: (isOpened) =>
           FocusManager.instance.primaryFocus?.unfocus(),
