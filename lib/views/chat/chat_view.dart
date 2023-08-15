@@ -46,8 +46,7 @@ class _ChatViewState extends State<ChatView> {
                       padding: const EdgeInsets.all(16.0),
                       child: index > 0
                           ? ChatMessage(
-                              text: _chatViewmodel.messages[index - 1].text,
-                              sender: _chatViewmodel.messages[index - 1].sender,
+                            message: _chatViewmodel.messages[index - 1],
                             )
                           : _chatViewmodel.requestWaiting
                               ? const Row(

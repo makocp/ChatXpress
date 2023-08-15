@@ -1,21 +1,19 @@
+import 'package:chatXpress/models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage({Key? key, required this.text, required this.sender})
-      : super(key: key);
-
-  final String text;
-  final String sender;
+  const ChatMessage({Key? key, required this.message}) : super(key: key);
+  final MessageViewModel message;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment:
-          sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
+          message.sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
-        ..._buildMessageWidgets(sender, text),
+        ..._buildMessageWidgets(message.sender, message.content),
       ],
     );
   }

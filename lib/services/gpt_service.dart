@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chatXpress/models/message.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:chatXpress/secrets.dart';
 
@@ -34,7 +35,7 @@ class GptService {
         message = response.choices.last.message!.content;
       }
     }).onError((error, stackTrace) {
-      message = "An error occurred: $error";
+      message = "* An error occurred: $error *";
     });
 
     return message;

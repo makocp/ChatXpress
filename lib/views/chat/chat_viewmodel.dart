@@ -1,10 +1,11 @@
+import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services/gpt_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import '../../components/chat_components/chat_message.dart';
 
 class ChatViewmodel {
-  final List<Message> messages = [];
+  final List<MessageViewModel> messages = [];
   List<ChatMessage> uiMessages = [];
   bool requestWaiting = false;
   final gptService = serviceContainer<GptService>();
@@ -33,11 +34,11 @@ class ChatViewmodel {
   }
 
   void _addQuestionChat(String prompt) {
-    messages.insert(0,Message(text: prompt, date: DateTime.now(), sender: "user"));
+    messages.insert(0,MessageViewModel(content: prompt, date: DateTime.now(), sender: "user",messageType: MessageType.request));
   }
 
   void _addResponseToChat(String response) {
-    messages.insert(0,Message(text: response, date: DateTime.now(), sender: "ChatGpt"));
+    var messageType = response[0] == "*" ? MessageType.error : MessageType.response;
+    messages.insert(0,MessageViewModel(content: response, date: DateTime.now(), sender: "ChatGpt", messageType:messageType));
   }
-
 }
