@@ -3,7 +3,7 @@ import 'package:chatXpress/components/chat_components/text_field.dart';
 import 'package:chatXpress/views/menu/menu_view.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
-import '../../components/chat_components/chat_message.dart';
+import '../../components/chat_components/chat_message_view.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class _ChatViewState extends State<ChatView> {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: index > 0
-                          ? ChatMessage(
+                          ? ChatMessageView(
                             message: _chatViewmodel.messages[index - 1],
                             )
                           : _chatViewmodel.requestWaiting

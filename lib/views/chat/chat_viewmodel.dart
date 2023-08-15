@@ -2,11 +2,11 @@ import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services/gpt_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
-import '../../components/chat_components/chat_message.dart';
+import '../../components/chat_components/chat_message_view.dart';
 
 class ChatViewmodel {
   final List<MessageViewModel> messages = [];
-  List<ChatMessage> uiMessages = [];
+  List<ChatMessageView> uiMessages = [];
   bool requestWaiting = false;
   final gptService = serviceContainer<GptService>();
 

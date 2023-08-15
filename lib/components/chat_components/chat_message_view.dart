@@ -1,28 +1,30 @@
+import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 
-class ChatMessage extends StatelessWidget {
-  const ChatMessage({Key? key, required this.message}) : super(key: key);
+class ChatMessageView extends StatelessWidget {
+  const ChatMessageView({Key? key, required this.message}) : super(key: key);
   final MessageViewModel message;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment:
-          message.sender == "ChatGpt" ? MainAxisAlignment.start : MainAxisAlignment.end,
+      mainAxisAlignment: message.sender == "ChatGpt"
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.end,
       children: [
-        ..._buildMessageWidgets(message.sender, message.content),
+        ..._buildMessageWidgets(message),
       ],
     );
   }
 
-  List<Widget> _buildMessageWidgets(String sender, String text) {
-    final isChatGpt = sender == "ChatGpt";
+  List<Widget> _buildMessageWidgets(MessageViewModel message) {
+    final isChatGpt = message.sender == "ChatGpt";
 
     return [
-      if (isChatGpt) _buildAvatar(sender),
+      if (isChatGpt) _buildAvatar(message.sender),
       const SizedBox(
         width: 5,
       ),
@@ -31,27 +33,27 @@ class ChatMessage extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isChatGpt ? MyColors.greenDefaultColor : Colors.white,
-            borderRadius: sender == "ChatGpt"
+            borderRadius: message.sender == "ChatGpt"
                 ? const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                    bottomRight: Radius.circular(12))
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12))
                 : const BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                    topRight: Radius.circular(12)),
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+                topRight: Radius.circular(12)),
           ),
           child: Text(
-            text,
+            message.content,
             style: TextStyle(
-                color: sender == "ChatGpt" ? Colors.white : Colors.black),
+                color: getColor(message.messageType)),
           ),
         ),
       ),
       const SizedBox(
         width: 5,
       ),
-      if (!isChatGpt) _buildAvatar(sender),
+      if (!isChatGpt) _buildAvatar(message.sender),
     ];
   }
 
@@ -71,6 +73,19 @@ class ChatMessage extends StatelessWidget {
           style: const TextStyle(color: Colors.black),
         ),
       );
+    }
+  }
+
+  Color getColor(MessageType messageType) {
+    switch (messageType) {
+      case MessageType.error:
+        return MyColors.redForDeleteButton;
+      case MessageType.request:
+        return Colors.black;
+      case MessageType.response:
+        return Colors.white;
+      default:
+        return Colors.red;
     }
   }
 }
