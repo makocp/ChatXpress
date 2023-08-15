@@ -46,7 +46,7 @@ class ChatMessageView extends StatelessWidget {
           child: Text(
             message.content,
             style: TextStyle(
-                color: getColor(message.messageType)),
+                color: getTextColor(message.messageType)),
           ),
         ),
       ),
@@ -76,7 +76,7 @@ class ChatMessageView extends StatelessWidget {
     }
   }
 
-  Color getColor(MessageType messageType) {
+  Color getTextColor(MessageType messageType) {
     switch (messageType) {
       case MessageType.error:
         return MyColors.redForDeleteButton;
