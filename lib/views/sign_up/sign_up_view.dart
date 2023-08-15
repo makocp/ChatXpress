@@ -68,8 +68,10 @@ class SignUpView extends StatelessWidget {
                 .createUserWithEmailAndPassword(
                     _emailController.text, _passwordController.text)
                 .then((value) {
+              // Saves user to DB
+              _signUpViewmodel.saveUserToDb(_emailController.text);
               // Signs in the user after successfull account creation.
-              _signUpViewmodel.authService.singInWithEmailAndPassword(
+              _signUpViewmodel.singInWithEmailAndPassword(
                   _emailController.text, _passwordController.text);
               // This pop method is necessary to pop the SignUpPage and get to the HomePage.
               // Otherwise the SignUpPage would "overwrite" the HomePage.

@@ -1,10 +1,11 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:chatXpress/secrets.dart';
 
 class GptService{
   final List<Messages> messages = [];
 
   final openAI = OpenAI.instance.build(
-    token: "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",
+    token: OPENAI_API_KEY,
     baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
     enableLog: true,
   );
