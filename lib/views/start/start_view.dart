@@ -12,7 +12,7 @@ class StartView extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const ChatView();
+          return ChatView();
         } else {
           return SignInView();
         }

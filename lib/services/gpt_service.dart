@@ -6,7 +6,7 @@ class GptService {
 
   final openAI = OpenAI.instance.build(
     token: OPENAI_API_KEY,
-    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
+    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 15)),
     enableLog: true,
   );
 

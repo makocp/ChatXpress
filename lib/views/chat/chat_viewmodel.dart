@@ -2,41 +2,58 @@ import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services/gpt_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
+import 'package:flutter/foundation.dart';
 
-class ChatViewmodel {
-  final List<MessageViewModel> messages = [];
-  bool requestWaiting = false;
+class ChatViewmodel extends ChangeNotifier {
+
+  List<MessageViewModel> _messages = [];
+  List<MessageViewModel> get messages => _messages;
+
+  // werden wir brauchen wenn wir außerhalb des Viewmodels den Chat zuweisen
+  // Wenn wir beispielweise bei Menu den CurrentChat setzen
+  set messages(List<MessageViewModel> value) {
+    _messages = value;
+    notifyListeners();
+  }
+
+  bool get requestWaiting => _requestWaiting;
+  bool _requestWaiting = false;
+
   final gptService = serviceContainer<GptService>();
 
-  void sendMessage(String prompt, Function function) async {
-    requestWaiting = true;
+  void sendMessage(String prompt) async {
+    _requestWaiting = true;
 
-      // add the message to the UI
     _addQuestionChat(prompt);
 
-    // set the state
-    function();
-
-    // get the prompt response
     var response = await gptService.sendRequest(prompt);
 
-    requestWaiting = false;
+    _requestWaiting = false;
 
-    // add the response to the UI
     _addResponseToChat(response);
-
-
-
-    // set the state
-    function();
   }
 
   void _addQuestionChat(String prompt) {
-    messages.insert(0,MessageViewModel(content: prompt, date: DateTime.now(), sender: "user",messageType: MessageType.request));
+    _messages.insert(
+        0,
+        MessageViewModel(
+            content: prompt,
+            date: DateTime.now(),
+            sender: "user",
+            messageType: MessageType.request));
+    notifyListeners();
   }
 
   void _addResponseToChat(String response) {
-    var messageType = response[0] == "*" ? MessageType.error : MessageType.response;
-    messages.insert(0,MessageViewModel(content: response, date: DateTime.now(), sender: "ChatGpt", messageType:messageType));
+    var messageType =
+        response[0] == "*" ? MessageType.error : MessageType.response;
+    _messages.insert(
+        0,
+        MessageViewModel(
+            content: response,
+            date: DateTime.now(),
+            sender: "ChatGpt",
+            messageType: messageType));
+    notifyListeners();
   }
 }
