@@ -4,25 +4,22 @@ import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
 import 'package:chatXpress/components/button_components/my_squaretile.dart';
 import 'package:chatXpress/components/textfield_components/my_textfield.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:chatXpress/views/forgot_password/forgot_password_view.dart';
 import 'package:chatXpress/views/sign_in/sign_in_viewmodel.dart';
 import 'package:chatXpress/views/sign_up/sign_up_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
-class SignInView extends StatefulWidget {
+class SignInView extends StatelessWidget with GetItMixin {
   SignInView({super.key});
-
-  @override
-  State<SignInView> createState() => _SignInViewState();
-}
-
-class _SignInViewState extends State<SignInView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _signInViewmodel = SignInViewmodel();
+  final _signInViewmodel = serviceContainer<SignInViewmodel>();
 
   @override
   Widget build(BuildContext context) {
+    final bool isLoading = watchOnly((SignInViewmodel x) => x.isLoading);
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -30,7 +27,7 @@ class _SignInViewState extends State<SignInView> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: MyContainerSignInAndUp(listViewContent: [
+      body: MyContainerSignInAndUp(listViewContent: [ 
         showEmailInput(_emailController),
         const SizedBox(height: 25),
         showPasswordInput(_passwordController),
@@ -105,27 +102,11 @@ class _SignInViewState extends State<SignInView> {
   MyButton showSignInButton(BuildContext context) {
     return MyButton(
       onPressed: () => {
-        // if (_signInViewmodel.loading) {const CircularProgressIndicator()},
-        _signInViewmodel.signInAndSetToDb(_emailController.text,
-            _passwordController.text)
+        _signInViewmodel.signInAndSetToDb(
+            _emailController.text, _passwordController.text),
       },
       buttonText: 'Login',
     );
-  }
-
-  void _showProgressIndicator() => {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            })
-      };
-
-  // to pop the progress indicator.
-  void _popIndicator() {
-    Navigator.pop(context);
   }
 
   MyTextfield showEmailInput(TextEditingController emailController) {
