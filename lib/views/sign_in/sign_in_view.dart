@@ -9,9 +9,14 @@ import 'package:chatXpress/views/sign_in/sign_in_viewmodel.dart';
 import 'package:chatXpress/views/sign_up/sign_up_view.dart';
 import 'package:flutter/material.dart';
 
-class SignInView extends StatelessWidget {
+class SignInView extends StatefulWidget {
   SignInView({super.key});
 
+  @override
+  State<SignInView> createState() => _SignInViewState();
+}
+
+class _SignInViewState extends State<SignInView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _signInViewmodel = SignInViewmodel();
@@ -100,23 +105,27 @@ class SignInView extends StatelessWidget {
   MyButton showSignInButton(BuildContext context) {
     return MyButton(
       onPressed: () => {
+        // if (_signInViewmodel.loading) {const CircularProgressIndicator()},
+        _signInViewmodel.signInAndSetToDb(_emailController.text,
+            _passwordController.text)
+      },
+      buttonText: 'Login',
+    );
+  }
+
+  void _showProgressIndicator() => {
         showDialog(
             context: context,
             builder: (context) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            }),
-        _signInViewmodel
-            .singInWithEmailAndPassword(
-                _emailController.text, _passwordController.text)
-            .then((value) => {_signInViewmodel.showSuccessToast("SUCCESS! :)")})
-            .onError((error, stackTrace) => {_signInViewmodel.showErrorToast("ERROR! :(")})
-            // to pop the progress indicator.
-            .whenComplete(() => Navigator.pop(context)),
-      },
-      buttonText: 'Login',
-    );
+            })
+      };
+
+  // to pop the progress indicator.
+  void _popIndicator() {
+    Navigator.pop(context);
   }
 
   MyTextfield showEmailInput(TextEditingController emailController) {

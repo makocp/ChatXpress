@@ -5,9 +5,14 @@ import 'package:chatXpress/components/textfield_components/my_textfield.dart';
 import 'package:chatXpress/views/sign_up/sign_up_viewmodel.dart';
 import 'package:flutter/material.dart';
 
-class SignUpView extends StatelessWidget {
-  SignUpView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmationController = TextEditingController();
@@ -64,24 +69,16 @@ class SignUpView extends StatelessWidget {
       onPressed: () => {
         if (_passwordController.text == _passwordConfirmationController.text)
           {
-            _signUpViewmodel
-                .createUserWithEmailAndPassword(
-                    _emailController.text, _passwordController.text)
-                .then((value) {
-              // Saves user to DB
-              _signUpViewmodel.saveUserToDb(_emailController.text);
-              // Signs in the user after successfull account creation.
-              _signUpViewmodel.singInWithEmailAndPassword(
-                  _emailController.text, _passwordController.text);
-              // This pop method is necessary to pop the SignUpPage and get to the HomePage.
-              // Otherwise the SignUpPage would "overwrite" the HomePage.
-              // -> See Widget Tree in Widget inspector for details and better understanding.
-              Navigator.pop(context);
-            })
+            _signUpViewmodel.createAccountAndSignIn(_emailController.text,
+                _passwordController.text, _popView)
           },
       },
       buttonText: 'Create Account',
     );
+  }
+
+  void _popView() {
+    Navigator.pop(context);
   }
 
   MyTextfield showConfirmationPasswordInput() {

@@ -6,17 +6,31 @@ import 'package:firebase_auth/firebase_auth.dart';
 class SignUpViewmodel {
   final authService = serviceContainer<AuthService>();
   final db = serviceContainer<FirestoreService>();
-  
-  Future<UserCredential> createUserWithEmailAndPassword(String email,String password){
-    return authService.createUserWithEmailAndPassword(email, password);
+
+  // Creates an account in FirebaseAuth, if successful -> signIn and save user to database.
+  createAccountAndSignIn(String email, String password, Function popView) {
+    createUserWithEmailAndPassword(email, password).then((value) {
+      signInWithEmailAndPassword(email, password);
+      setUserToDB(email);
+      // This pop method is necessary to pop the SignUpView and get to the ChatView.
+      // -> Previous SignInView changed to ChatView, because of authStateChange in StartView.
+      // Otherwise the SignUpView would "overwrite" the ChatView.
+      // -> See Widget Tree in Widget inspector for details and better understanding.
+      popView();
+    });
   }
 
-  Future<UserCredential> singInWithEmailAndPassword(String email, String password){
-    return authService.singInWithEmailAndPassword(email, password);
+  Future<UserCredential> createUserWithEmailAndPassword(
+      String email, String password) async {
+    return await authService.createUserWithEmailAndPassword(email, password);
   }
 
-  Future<void> saveUserToDb(String email) {
-    return db.saveUserToDb(email);
+  Future<UserCredential> signInWithEmailAndPassword(
+      String email, String password) async {
+    return await authService.signInWithEmailAndPassword(email, password);
   }
 
+  Future<void> setUserToDB(String email) async {
+    return await db.setUser(email);
+  }
 }
