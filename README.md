@@ -56,3 +56,4 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 - [Firebase Firestore](https://firebase.google.com/docs/firestore/quickstart?authuser=0&_gl=1*1wowrp2*_ga*MTI2NzE5MzExMy4xNjg1OTE0ODMy*_ga_CW55HF8NVT*MTY5MTU1ODAwOC40MC4xLjE2OTE1NTgxNjEuMC4wLjA.#dart)
 - [GetIt Explanation](https://www.youtube.com/watch?v=DbV5RV2HRUk&ab_channel=FlutterExplained)
 - [Future, Async, Await](https://sarunw.com/posts/how-to-use-async-await-in-flutter/)
+- [Difference set, update, create](https://stackoverflow.com/questions/46597327/difference-between-firestore-set-with-merge-true-and-update)

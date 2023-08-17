@@ -1,17 +1,14 @@
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
-import 'package:chatXpress/services/toast_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpViewmodel {
   final authService = serviceContainer<AuthService>();
   final db = serviceContainer<FirestoreService>();
-  final toastService = serviceContainer<ToastService>();
 
   // Creates an account in FirebaseAuth, if successful -> signIn and save user to database.
-  createAccountAndSignIn(
-      String email, String password, Function popView) {
+  createAccountAndSignIn(String email, String password, Function popView) {
     createUserWithEmailAndPassword(email, password).then((value) {
       signInWithEmailAndPassword(email, password);
       setUserToDB(email);
@@ -30,7 +27,7 @@ class SignUpViewmodel {
 
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
-    return await authService.singInWithEmailAndPassword(email, password);
+    return await authService.signInWithEmailAndPassword(email, password);
   }
 
   Future<void> setUserToDB(String email) async {

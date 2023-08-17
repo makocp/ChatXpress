@@ -70,7 +70,7 @@ class _SignUpViewState extends State<SignUpView> {
         if (_passwordController.text == _passwordConfirmationController.text)
           {
             _signUpViewmodel.createAccountAndSignIn(_emailController.text,
-                _passwordController.text, () => _popView())
+                _passwordController.text, _popView)
           },
       },
       buttonText: 'Create Account',
