@@ -22,12 +22,9 @@ class SignInView extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     // to show the progress indicator
     final bool isLoading = watchOnly((SignInViewmodel vm) => vm.isLoading);
-    final String emailErrorMessage =
-        watchOnly((SignInViewmodel vm) => vm.emailErrorMessage);
-    final String passwordErrorMessage =
-        watchOnly((SignInViewmodel vm) => vm.passwordErrorMessage);
-    bool isErrorEmail() => emailErrorMessage.isNotEmpty;
-    bool isErrorPassword() => passwordErrorMessage.isNotEmpty;
+    final String errorMessage =
+        watchOnly((SignInViewmodel vm) => vm.errorMessage);
+    bool isError() => errorMessage.isNotEmpty;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -37,17 +34,15 @@ class SignInView extends StatelessWidget with GetItMixin {
         elevation: 0,
       ),
       body: MyContainerSignInAndUp(listViewContent: [
-        showEmailInput(_emailController, isErrorEmail()),
-        isErrorEmail()
-            ? showErrorBox(emailErrorMessage)
+        showEmailInput(_emailController, isError()),
+        isError()
+            ? showErrorBox(errorMessage)
             : const SizedBox(height: 25),
-        showPasswordInput(_passwordController, isErrorPassword()),
-        isErrorPassword()
-            ? showErrorBox(passwordErrorMessage)
-            : const SizedBox(height: 25),
-        showSignInButton(isLoading, context),
+        showPasswordInput(_passwordController, isError()),
         const SizedBox(height: 10),
         showForgotPassword(context, isLoading),
+        const SizedBox(height: 25),
+        showSignInButton(isLoading, context),
         const SizedBox(height: 25),
         showDivider(),
         const SizedBox(height: 25),
@@ -153,12 +148,12 @@ class SignInView extends StatelessWidget with GetItMixin {
   }
 
   showPasswordInput(
-      TextEditingController passwordController, bool isErrorPassword) {
+      TextEditingController passwordController, bool isError) {
     return MyTextfield(
         controller: passwordController,
         labelText: 'Password',
         obscureText: true,
-        isError: isErrorPassword,
+        isError: isError,
         icon: Icons.lock_outline);
   }
 

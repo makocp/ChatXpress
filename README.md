@@ -43,6 +43,9 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 ### Unfocus context for keyboard dismiss (ChatView -> Drawer)
 - The keyboard gets reopened again, after the drawer gets opened. Here the reference for fixing this issue: [](https://github.com/flutter/flutter/issues/54277#issuecomment-640998757)
 
+### Login Validation
+- There is only one error message to hint, that email OR password are incorrect. Otherwise a  malicious user could potentially brute force the password from another user or see if a given email is registered or not.
+
 ## References/Info
 
 - [Mitch Koko](https://www.youtube.com/@createdbykoko)
