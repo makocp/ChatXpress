@@ -9,10 +9,10 @@ import 'package:get_it/get_it.dart';
 final serviceContainer = GetIt.instance;
 
 void initServiceLocator() {
-  serviceContainer.registerLazySingleton<AuthService>(() => AuthService());
-  serviceContainer.registerLazySingleton<GptService>(() => GptService());
-  serviceContainer.registerLazySingleton<FirestoreService>(() => FirestoreService());
+  serviceContainer.registerSingleton<AuthService>(AuthService());
+  serviceContainer.registerSingleton<GptService>(GptService());
+  serviceContainer.registerSingleton<FirestoreService>(FirestoreService());
   serviceContainer.registerSingleton<ChatViewmodel>(ChatViewmodel());
-  serviceContainer.registerLazySingleton<ToastService>(() => ToastService());
-  serviceContainer.registerLazySingleton<SignInViewmodel>(() => SignInViewmodel());
+  serviceContainer.registerSingleton<ToastService>(ToastService());
+  serviceContainer.registerSingleton<SignInViewmodel>(SignInViewmodel());
 }
