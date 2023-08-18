@@ -21,7 +21,14 @@ class SignInView extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     // to show the progress indicator
-    final bool isLoading = watchOnly((SignInViewmodel x) => x.isLoading);
+    final bool isLoading = watchOnly((SignInViewmodel vm) => vm.isLoading);
+    final String emailErrorMessage =
+        watchOnly((SignInViewmodel vm) => vm.emailErrorMessage);
+    final String passwordErrorMessage =
+        watchOnly((SignInViewmodel vm) => vm.passwordErrorMessage);
+    bool isErrorEmail() => emailErrorMessage.isNotEmpty;
+    bool isErrorPassword() => passwordErrorMessage.isNotEmpty;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
@@ -29,25 +36,42 @@ class SignInView extends StatelessWidget with GetItMixin {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: MyContainerSignInAndUp(listViewContent: [ 
-        showEmailInput(_emailController),
-        const SizedBox(height: 25),
-        showPasswordInput(_passwordController),
+      body: MyContainerSignInAndUp(listViewContent: [
+        showEmailInput(_emailController, isErrorEmail()),
+        isErrorEmail()
+            ? showErrorBox(emailErrorMessage)
+            : const SizedBox(height: 25),
+        showPasswordInput(_passwordController, isErrorPassword()),
+        isErrorPassword()
+            ? showErrorBox(passwordErrorMessage)
+            : const SizedBox(height: 25),
+        showSignInButton(isLoading, context),
         const SizedBox(height: 10),
-        showForgotPassword(context),
-        const SizedBox(height: 25),
-        showSignInButton(isLoading),
+        showForgotPassword(context, isLoading),
         const SizedBox(height: 25),
         showDivider(),
         const SizedBox(height: 25),
-        showAlternativeSignIn(),
+        showAlternativeSignIn(isLoading),
         const SizedBox(height: 25),
-        showRegisterText(context)
+        showRegisterText(context, isLoading),
       ]),
     );
   }
 
-  Row showRegisterText(BuildContext context) {
+  showErrorBox(String errorMessage) {
+    return SizedBox(
+      height: 25,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8, top: 2),
+        child: Text(
+          errorMessage,
+          style: const TextStyle(color: Colors.red, fontSize: 12),
+        ),
+      ),
+    );
+  }
+
+  Row showRegisterText(BuildContext context, bool isLoading) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -57,8 +81,10 @@ class SignInView extends StatelessWidget with GetItMixin {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SignUpView()));
+            if (!isLoading) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SignUpView()));
+            }
           },
           child: const Text(
             'Create account.',
@@ -71,20 +97,20 @@ class SignInView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Row showAlternativeSignIn() {
+  Row showAlternativeSignIn(bool isLoading) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         // To show Apple Sign In only on iOS device.
         children: Platform.isIOS
             ? [
-                showGoogleSignIn(),
+                showGoogleSignIn(isLoading),
                 const SizedBox(
                   width: 25,
                 ),
-                showAppleSignIn(),
+                showAppleSignIn(isLoading),
               ]
             : [
-                showGoogleSignIn(),
+                showGoogleSignIn(isLoading),
               ]);
   }
 
@@ -101,39 +127,50 @@ class SignInView extends StatelessWidget with GetItMixin {
     );
   }
 
-  showSignInButton(bool isLoading) {
-    return isLoading ? const MyButtonLoading() : MyButton(
-      onPressed: () => {
-        _signInViewmodel.signInAndSetToDb(
-            _emailController.text, _passwordController.text),
-      },
-      buttonText: 'Login',
-    );
+  showSignInButton(bool isLoading, BuildContext context) {
+    return isLoading
+        ? const MyButtonLoading()
+        : MyButton(
+            onPressed: () => {
+              if (!isLoading)
+                {
+                  _signInViewmodel.signInAndSetToDb(
+                      _emailController.text.trim(),
+                      _passwordController.text.trim()),
+                }
+            },
+            buttonText: 'Login',
+          );
   }
 
-  MyTextfield showEmailInput(TextEditingController emailController) {
+  showEmailInput(TextEditingController emailController, bool isErrorEmail) {
     return MyTextfield(
         controller: emailController,
-        hintText: 'Email',
+        labelText: 'Email',
         obscureText: false,
+        isError: isErrorEmail,
         icon: Icons.email_outlined);
   }
 
-  MyTextfield showPasswordInput(TextEditingController passwordController) {
+  showPasswordInput(
+      TextEditingController passwordController, bool isErrorPassword) {
     return MyTextfield(
         controller: passwordController,
-        hintText: 'Password',
+        labelText: 'Password',
         obscureText: true,
+        isError: isErrorPassword,
         icon: Icons.lock_outline);
   }
 
-  Align showForgotPassword(BuildContext context) {
+  Align showForgotPassword(BuildContext context, bool isLoading) {
     return Align(
       alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ForgotPasswordView()));
+          if (!isLoading) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ForgotPasswordView()));
+          }
         },
         child: const Text(
           'Forgot Password?',
@@ -145,20 +182,24 @@ class SignInView extends StatelessWidget with GetItMixin {
     );
   }
 
-  MySquareTile showAppleSignIn() {
+  MySquareTile showAppleSignIn(bool isLoading) {
     return MySquareTile(
       imagePath: 'assets/images/apple.png',
       onTap: () {
-        _signInViewmodel.signInWithApple();
+        if (!isLoading) {
+          _signInViewmodel.signInWithApple();
+        }
       },
     );
   }
 
-  MySquareTile showGoogleSignIn() {
+  MySquareTile showGoogleSignIn(bool isLoading) {
     return MySquareTile(
       imagePath: 'assets/images/google.png',
       onTap: () {
-        _signInViewmodel.signInWithGoogle();
+        if (!isLoading) {
+          _signInViewmodel.signInWithGoogle();
+        }
       },
     );
   }

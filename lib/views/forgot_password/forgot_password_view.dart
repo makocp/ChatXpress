@@ -51,8 +51,9 @@ class ForgotPasswordView extends StatelessWidget {
   MyTextfield showEmailInput() {
     return MyTextfield(
         controller: _emailController,
-        hintText: 'Email',
+        labelText: 'Email',
         obscureText: false,
+        isError: false,
         icon: Icons.email_outlined);
   }
 }
