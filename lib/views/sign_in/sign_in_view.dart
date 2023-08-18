@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
+import 'package:chatXpress/components/button_components/my_button_loading.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
 import 'package:chatXpress/components/button_components/my_squaretile.dart';
 import 'package:chatXpress/components/textfield_components/my_textfield.dart';
@@ -19,6 +20,7 @@ class SignInView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    // to show the progress indicator
     final bool isLoading = watchOnly((SignInViewmodel x) => x.isLoading);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -34,7 +36,7 @@ class SignInView extends StatelessWidget with GetItMixin {
         const SizedBox(height: 10),
         showForgotPassword(context),
         const SizedBox(height: 25),
-        showSignInButton(context),
+        showSignInButton(isLoading),
         const SizedBox(height: 25),
         showDivider(),
         const SizedBox(height: 25),
@@ -99,8 +101,8 @@ class SignInView extends StatelessWidget with GetItMixin {
     );
   }
 
-  MyButton showSignInButton(BuildContext context) {
-    return MyButton(
+  showSignInButton(bool isLoading) {
+    return isLoading ? const MyButtonLoading() : MyButton(
       onPressed: () => {
         _signInViewmodel.signInAndSetToDb(
             _emailController.text, _passwordController.text),
