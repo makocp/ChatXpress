@@ -22,36 +22,43 @@ class SignInView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    // to show the progress indicator
+    // to show the progress indicator and block user interaction while loading
     final bool isLoading = watchOnly((SignInViewmodel vm) => vm.isLoading);
-    final String errorMessage =
-        watchOnly((SignInViewmodel vm) => vm.errorMessage);
-    bool isError() => errorMessage.isNotEmpty;
+    final String messageEmail =
+        watchOnly((SignInViewmodel vm) => vm.messageEmail);
+    final String messagePassword =
+        watchOnly((SignInViewmodel vm) => vm.messagePassword);
+    bool isErrorEmail() => messageEmail.isNotEmpty;
+    bool isErrorPassword() => messagePassword.isNotEmpty;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+    // Absorbpointer true, only if loading -> no user interaction possible, to avoid bugs.
+    return AbsorbPointer(
+      absorbing: isLoading,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: MyContainerSignInAndUp(listViewContent: [
+          showEmailInput(_emailController, isErrorEmail()),
+          isErrorEmail()
+              ? MyInfoBox(message: messageEmail, isError: true)
+              : const SizedBox(height: 25),
+          showPasswordInput(_passwordController, isErrorPassword()),
+          const SizedBox(height: 10),
+          showForgotPassword(context, isLoading),
+          const SizedBox(height: 25),
+          showSignInButton(isLoading, context),
+          const SizedBox(height: 25),
+          showDivider(),
+          const SizedBox(height: 25),
+          showAlternativeSignIn(isLoading),
+          const SizedBox(height: 25),
+          showRegisterText(context, isLoading),
+        ]),
       ),
-      body: MyContainerSignInAndUp(listViewContent: [
-        showEmailInput(_emailController, isError()),
-        isError()
-            ? MyInfoBox(message: errorMessage, isError: true)
-            : const SizedBox(height: 25),
-        showPasswordInput(_passwordController, isError()),
-        const SizedBox(height: 10),
-        showForgotPassword(context, isLoading),
-        const SizedBox(height: 25),
-        showSignInButton(isLoading, context),
-        const SizedBox(height: 25),
-        showDivider(),
-        const SizedBox(height: 25),
-        showAlternativeSignIn(isLoading),
-        const SizedBox(height: 25),
-        showRegisterText(context, isLoading),
-      ]),
     );
   }
 
@@ -67,7 +74,7 @@ class SignInView extends StatelessWidget with GetItMixin {
           onTap: () {
             if (!isLoading) {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SignUpView()));
+                  MaterialPageRoute(builder: (context) => SignUpView()));
             }
           },
           child: const Text(
@@ -114,11 +121,8 @@ class SignInView extends StatelessWidget with GetItMixin {
   showSignInButton(bool isLoading, BuildContext context) {
     return MyButton(
       onPressed: () => {
-        if (!isLoading)
-          {
-            _signInViewmodel.handleSignInInput(
-                _emailController.text.trim(), _passwordController.text.trim()),
-          }
+        _signInViewmodel.handleSignInInput(
+            _emailController.text.trim(), _passwordController.text.trim()),
       },
       buttonText: MyStrings.buttonSignInLogin,
       isLoading: isLoading,
@@ -167,9 +171,7 @@ class SignInView extends StatelessWidget with GetItMixin {
     return MySquareTile(
       imagePath: MyImagePaths.appleIconPath,
       onTap: () {
-        if (!isLoading) {
-          _signInViewmodel.signInWithApple();
-        }
+        _signInViewmodel.signInWithApple();
       },
     );
   }
@@ -178,9 +180,7 @@ class SignInView extends StatelessWidget with GetItMixin {
     return MySquareTile(
       imagePath: MyImagePaths.googleIconPath,
       onTap: () {
-        if (!isLoading) {
-          _signInViewmodel.signInWithGoogle();
-        }
+        _signInViewmodel.signInWithGoogle();
       },
     );
   }
