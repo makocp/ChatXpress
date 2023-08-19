@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:email_validator/email_validator.dart';
@@ -15,7 +16,7 @@ class ForgotPasswordViewmodel extends ChangeNotifier {
 
     if (validatedMailInput(email)) {
       // Only sends an email, if user is registered
-      // -> throws an exception, if user not registered.
+      // -> throws an exception and catches it with onerror, if user not registered.
       // -> user does not see this via UI for security reasons.
       await resetPassword(email).onError((error, stackTrace) => null);
     }
@@ -26,11 +27,11 @@ class ForgotPasswordViewmodel extends ChangeNotifier {
 
   bool validatedMailInput(String email) {
     if (EmailValidator.validate(email)) {
-      successMessage = 'Please check your mail inbox.';
+      successMessage = MyStrings.validationSuccessReset;
       errorMessage = '';
       return true;
     } else {
-      errorMessage = 'Invalid Email. Please try another one.';
+      errorMessage = MyStrings.validationInvalidEmail;
       return false;
     }
   }

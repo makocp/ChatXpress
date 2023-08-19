@@ -1,5 +1,6 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/assets/colors/my_image_paths.dart';
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/views/start/start_view.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class _SplashViewState extends State<SplashView> {
                 fontSize: 24,
                 color: Colors.white,
               ),
-              child: Text("ChatXpress"))
+              child: Text(MyStrings.appName))
         ],
       ),
     );

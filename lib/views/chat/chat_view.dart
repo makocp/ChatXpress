@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class ChatView extends StatelessWidget with GetItMixin {
       backgroundColor: const Color(0xff40414f),
       appBar: AppBar(
         backgroundColor: MyColors.greenDefaultColor,
-        title: const Text("ChatXpress"),
+        title: const Text(MyStrings.appName),
       ),
       drawer: MenuView(),
       // to unfocus the ChatView, to dismiss the keyboard, after opening the drawer.
@@ -75,7 +76,7 @@ class ChatView extends StatelessWidget with GetItMixin {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomTextInput(
-                          hintText: "Send a message", controller: _controller),
+                          hintText: MyStrings.inputSendMessage, controller: _controller),
                       IconButton(
                         onPressed: () => _handleSendMessage(),
                         icon: const Icon(Icons.send),

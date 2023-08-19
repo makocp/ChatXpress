@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/box_components/my_infobox.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
@@ -23,33 +24,33 @@ class ForgotPasswordView extends StatelessWidget with GetItMixin {
         watchOnly((ForgotPasswordViewmodel vm) => vm.successMessage);
     bool isError() => errorMessage.isNotEmpty;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+    // Absorbpointer true, only if loading -> no user interaction possible, to avoid bugs.
+    return AbsorbPointer(
+      absorbing: isLoading,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: MyContainerSignInAndUp(listViewContent: [
+          showEmailInput(isError()),
+          isError()
+              ? MyInfoBox(message: errorMessage, isError: true)
+              : MyInfoBox(message: successMessage, isError: false),
+          showResetPasswordButton(context, isLoading),
+        ]),
       ),
-      body: MyContainerSignInAndUp(listViewContent: [
-        showEmailInput(isError()),
-        isError()
-            ? MyInfoBox(message: errorMessage, isError: true)
-            : MyInfoBox(message: successMessage, isError: false),
-        showResetPasswordButton(context, isLoading),
-      ]),
     );
   }
 
   MyButton showResetPasswordButton(BuildContext context, bool isLoading) {
     return MyButton(
       onPressed: () => {
-        if (!isLoading)
-          {
-            _forgotPasswordViewmodel
-                .handleResetInput(_emailController.text.trim())
-          }
+        _forgotPasswordViewmodel.handleResetInput(_emailController.text.trim())
       },
-      buttonText: 'Reset Password',
+      buttonText: MyStrings.buttonResetPassword,
       isLoading: isLoading,
     );
   }
@@ -57,7 +58,7 @@ class ForgotPasswordView extends StatelessWidget with GetItMixin {
   MyTextfield showEmailInput(bool isError) {
     return MyTextfield(
         controller: _emailController,
-        labelText: 'Email',
+        labelText: MyStrings.inputEmail,
         obscureText: false,
         isError: isError,
         icon: Icons.email_outlined);

@@ -1,29 +1,40 @@
-import 'dart:developer';
-
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-
 import '../../services/firestore_service.dart';
 
 class SignInViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
   final db = serviceContainer<FirestoreService>();
   bool isLoading = false;
-  String errorMessage = '';
+  String messageEmail = '';
+  String messagePassword = '';
 
   // To sign the user in, checks before client and server side validation of email and password.
   // -> sets errormessages as state to UI for the user.
   handleSignInInput(String email, String password) async {
-    isLoading = true;
-    errorMessage = '';
-    notifyListeners();
+    setLoadingState();
+
+    // to reset message strings => state for new validation.
+    messageEmail = '';
+    messagePassword = '';
 
     // Clientside validation.
-    if (validatedMailInput(email)) {
-      try {
+    if (validatedMailInput(email) && validatedPasswordInput(password)) {
+      // Serverside validation.
+      await validateAndSignIn(email, password);
+    }
+
+    unsetLoadingState();
+  }
+
+  // serverside validation, if successful -> sign user in.
+  // otherwise set string messages for UI state.
+  validateAndSignIn(String email, String password) async{
+    try {
         await signInWithEmailAndPassword(email, password).then((value) {
           // To create the user, if it does not exist, but a Auth Acc exists.
           // Just in case, if there was an error in SignUp with account creation in Db.
@@ -36,59 +47,74 @@ class SignInViewmodel extends ChangeNotifier {
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case 'invalid-email':
-            errorMessage = 'Invalid Email. Please try another one.';
+            messageEmail = MyStrings.validationInvalidEmail;
             break;
           case 'user-disabled':
-            errorMessage = 'This user is disabled. Please contact support.';
+            messageEmail = MyStrings.validationUserDisabled;
             break;
           case 'user-not-found':
-            errorMessage = 'Wrong email or password.';
+            messageEmail = MyStrings.validationWrongEmailPassword;
+            messagePassword = MyStrings.validationWrongEmailPassword;
             break;
           case 'wrong-password':
-            errorMessage = 'Wrong email or password.';
+            messageEmail = MyStrings.validationWrongEmailPassword;
+            messagePassword = MyStrings.validationWrongEmailPassword;
             break;
         }
       }
-    }
-    isLoading = false;
-    notifyListeners();
   }
 
   bool validatedMailInput(String email) {
     if (EmailValidator.validate(email)) {
       return true;
     } else {
-      errorMessage = 'Invalid Email. Please try another one.';
+      messageEmail = MyStrings.validationInvalidEmail;
       return false;
     }
   }
 
   bool validatedPasswordInput(String password) {
     if (password.contains(' ')) {
-      errorMessage = 'Wrong email or password.';
+      messageEmail = MyStrings.validationWrongEmailPassword;
+      messagePassword = MyStrings.validationWrongEmailPassword;
       return false;
     }
     if (password.length < 8) {
-      errorMessage = 'Wrong email or password.';
+      messageEmail = MyStrings.validationWrongEmailPassword;
+      messagePassword = MyStrings.validationWrongEmailPassword;
       return false;
     }
     return true;
   }
 
+// here no set and unloading state implemented, because signin gets only called in handle input method, where this action is already performed.
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
     return await authService.signInWithEmailAndPassword(email, password);
   }
 
+// Sets loading state for apple and google sign in to block user interactions while performing.
   Future<UserCredential> signInWithGoogle() async {
-    return await authService.signInWithGoogle();
+    setLoadingState();
+    return await authService.signInWithGoogle().whenComplete(() => unsetLoadingState());
   }
 
   Future<UserCredential> signInWithApple() async {
-    return await authService.signInWithApple();
+    setLoadingState();
+    return await authService.signInWithApple().whenComplete(() => unsetLoadingState());
   }
 
   Future<void> setUserToDB(String email) async {
     return await db.setUser(email);
+  }
+
+  void setLoadingState(){
+    isLoading = true;
+    notifyListeners();
+  }
+
+  void unsetLoadingState(){
+    isLoading = false;
+    notifyListeners();
   }
 }
