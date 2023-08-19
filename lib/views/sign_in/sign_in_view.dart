@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/components/box_components/my_infobox.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
-import 'package:chatXpress/components/button_components/my_button_loading.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
 import 'package:chatXpress/components/button_components/my_squaretile.dart';
 import 'package:chatXpress/components/textfield_components/my_textfield.dart';
@@ -36,7 +36,7 @@ class SignInView extends StatelessWidget with GetItMixin {
       body: MyContainerSignInAndUp(listViewContent: [
         showEmailInput(_emailController, isError()),
         isError()
-            ? showErrorBox(errorMessage)
+            ? MyInfoBox(message: errorMessage, isError: true)
             : const SizedBox(height: 25),
         showPasswordInput(_passwordController, isError()),
         const SizedBox(height: 10),
@@ -50,19 +50,6 @@ class SignInView extends StatelessWidget with GetItMixin {
         const SizedBox(height: 25),
         showRegisterText(context, isLoading),
       ]),
-    );
-  }
-
-  showErrorBox(String errorMessage) {
-    return SizedBox(
-      height: 25,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8, top: 2),
-        child: Text(
-          errorMessage,
-          style: const TextStyle(color: Colors.red, fontSize: 12),
-        ),
-      ),
     );
   }
 
@@ -123,19 +110,17 @@ class SignInView extends StatelessWidget with GetItMixin {
   }
 
   showSignInButton(bool isLoading, BuildContext context) {
-    return isLoading
-        ? const MyButtonLoading()
-        : MyButton(
-            onPressed: () => {
-              if (!isLoading)
-                {
-                  _signInViewmodel.signInAndSetToDb(
-                      _emailController.text.trim(),
-                      _passwordController.text.trim()),
-                }
-            },
-            buttonText: 'Login',
-          );
+    return MyButton(
+      onPressed: () => {
+        if (!isLoading)
+          {
+            _signInViewmodel.handleSignInInput(
+                _emailController.text.trim(), _passwordController.text.trim()),
+          }
+      },
+      buttonText: 'Login',
+      isLoading: isLoading,
+    );
   }
 
   showEmailInput(TextEditingController emailController, bool isErrorEmail) {
@@ -147,8 +132,7 @@ class SignInView extends StatelessWidget with GetItMixin {
         icon: Icons.email_outlined);
   }
 
-  showPasswordInput(
-      TextEditingController passwordController, bool isError) {
+  showPasswordInput(TextEditingController passwordController, bool isError) {
     return MyTextfield(
         controller: passwordController,
         labelText: 'Password',

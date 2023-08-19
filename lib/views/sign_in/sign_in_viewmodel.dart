@@ -16,7 +16,7 @@ class SignInViewmodel extends ChangeNotifier {
 
   // To sign the user in, checks before client and server side validation of email and password.
   // -> sets errormessages as state to UI for the user.
-  signInAndSetToDb(String email, String password) async {
+  handleSignInInput(String email, String password) async {
     isLoading = true;
     errorMessage = '';
     notifyListeners();
@@ -39,14 +39,13 @@ class SignInViewmodel extends ChangeNotifier {
             errorMessage = 'Invalid Email. Please try another one.';
             break;
           case 'user-disabled':
-            errorMessage =
-                'This user is disabled. Please contact support.';
+            errorMessage = 'This user is disabled. Please contact support.';
             break;
           case 'user-not-found':
-            errorMessage = 'Wrong email or password. Please try again.';
+            errorMessage = 'Wrong email or password.';
             break;
           case 'wrong-password':
-            errorMessage = 'Wrong email or password. Please try again.';
+            errorMessage = 'Wrong email or password.';
             break;
         }
       }
@@ -66,11 +65,11 @@ class SignInViewmodel extends ChangeNotifier {
 
   bool validatedPasswordInput(String password) {
     if (password.contains(' ')) {
-      errorMessage = 'Wrong email or password. Please try again.';
+      errorMessage = 'Wrong email or password.';
       return false;
     }
     if (password.length < 8) {
-      errorMessage = 'Wrong email or password. Please try again.';
+      errorMessage = 'Wrong email or password.';
       return false;
     }
     return true;
