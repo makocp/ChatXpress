@@ -69,11 +69,12 @@ class _SignUpViewState extends State<SignUpView> {
       onPressed: () => {
         if (_passwordController.text == _passwordConfirmationController.text)
           {
-            _signUpViewmodel.createAccountAndSignIn(_emailController.text,
-                _passwordController.text, _popView)
+            _signUpViewmodel.createAccountAndSignIn(
+                _emailController.text, _passwordController.text, _popView)
           },
       },
       buttonText: 'Create Account',
+      isLoading: false,
     );
   }
 
@@ -84,24 +85,27 @@ class _SignUpViewState extends State<SignUpView> {
   MyTextfield showConfirmationPasswordInput() {
     return MyTextfield(
         controller: _passwordConfirmationController,
-        hintText: 'Confirm Password',
+        labelText: 'Confirm Password',
         obscureText: true,
+        isError: false,
         icon: Icons.lock_outline);
   }
 
   MyTextfield showPasswordInput() {
     return MyTextfield(
         controller: _passwordController,
-        hintText: 'Password',
+        labelText: 'Password',
         obscureText: true,
+        isError: false,
         icon: Icons.lock_outline);
   }
 
   MyTextfield showEmailInput() {
     return MyTextfield(
         controller: _emailController,
-        hintText: 'Email',
+        labelText: 'Email',
         obscureText: false,
+        isError: false,
         icon: Icons.email_outlined);
   }
 }
