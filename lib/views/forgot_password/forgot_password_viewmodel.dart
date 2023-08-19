@@ -16,7 +16,7 @@ class ForgotPasswordViewmodel extends ChangeNotifier {
 
     if (validatedMailInput(email)) {
       // Only sends an email, if user is registered
-      // -> throws an exception, if user not registered.
+      // -> throws an exception and catches it with onerror, if user not registered.
       // -> user does not see this via UI for security reasons.
       await resetPassword(email).onError((error, stackTrace) => null);
     }

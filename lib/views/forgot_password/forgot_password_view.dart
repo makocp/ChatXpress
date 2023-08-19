@@ -24,31 +24,31 @@ class ForgotPasswordView extends StatelessWidget with GetItMixin {
         watchOnly((ForgotPasswordViewmodel vm) => vm.successMessage);
     bool isError() => errorMessage.isNotEmpty;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+    // Absorbpointer true, only if loading -> no user interaction possible, to avoid bugs.
+    return AbsorbPointer(
+      absorbing: isLoading,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: MyContainerSignInAndUp(listViewContent: [
+          showEmailInput(isError()),
+          isError()
+              ? MyInfoBox(message: errorMessage, isError: true)
+              : MyInfoBox(message: successMessage, isError: false),
+          showResetPasswordButton(context, isLoading),
+        ]),
       ),
-      body: MyContainerSignInAndUp(listViewContent: [
-        showEmailInput(isError()),
-        isError()
-            ? MyInfoBox(message: errorMessage, isError: true)
-            : MyInfoBox(message: successMessage, isError: false),
-        showResetPasswordButton(context, isLoading),
-      ]),
     );
   }
 
   MyButton showResetPasswordButton(BuildContext context, bool isLoading) {
     return MyButton(
       onPressed: () => {
-        if (!isLoading)
-          {
-            _forgotPasswordViewmodel
-                .handleResetInput(_emailController.text.trim())
-          }
+        _forgotPasswordViewmodel.handleResetInput(_emailController.text.trim())
       },
       buttonText: MyStrings.buttonResetPassword,
       isLoading: isLoading,
