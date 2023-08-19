@@ -33,4 +33,9 @@ class MyStrings {
   static const String validationUserDisabled = 'This user is disabled. Please contact support.';
   static const String validationWrongEmailPassword = 'Wrong Email or Password.';
   static const String validationSuccessReset = 'Please check your Mail inbox.';
+  static const String validationPasswordMatch = 'Password does not match.';
+  static const String validationPasswordLength = 'Password must have at least 8 characters.';
+  static const String validationPasswordSpaces = 'Password must be without spaces.';
+  static const String validationPermissionDenied = 'Permission denied. Please contact support.';
+  static const String validationPasswordWeak = 'Password weak. Please choose a stronger one.';
 }
