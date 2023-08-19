@@ -1,11 +1,10 @@
-import 'dart:developer';
 
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-
 import '../../services/firestore_service.dart';
 
 class SignInViewmodel extends ChangeNotifier {
@@ -36,16 +35,16 @@ class SignInViewmodel extends ChangeNotifier {
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case 'invalid-email':
-            errorMessage = 'Invalid Email. Please try another one.';
+            errorMessage = MyStrings.validationInvalidEmail;
             break;
           case 'user-disabled':
-            errorMessage = 'This user is disabled. Please contact support.';
+            errorMessage = MyStrings.validationUserDisabled;
             break;
           case 'user-not-found':
-            errorMessage = 'Wrong email or password.';
+            errorMessage = MyStrings.validationWrongEmailPassword;
             break;
           case 'wrong-password':
-            errorMessage = 'Wrong email or password.';
+            errorMessage = MyStrings.validationWrongEmailPassword;
             break;
         }
       }
@@ -58,18 +57,18 @@ class SignInViewmodel extends ChangeNotifier {
     if (EmailValidator.validate(email)) {
       return true;
     } else {
-      errorMessage = 'Invalid Email. Please try another one.';
+      errorMessage = MyStrings.validationInvalidEmail;
       return false;
     }
   }
 
   bool validatedPasswordInput(String password) {
     if (password.contains(' ')) {
-      errorMessage = 'Wrong email or password.';
+      errorMessage = MyStrings.validationWrongEmailPassword;
       return false;
     }
     if (password.length < 8) {
-      errorMessage = 'Wrong email or password.';
+      errorMessage = MyStrings.validationWrongEmailPassword;
       return false;
     }
     return true;

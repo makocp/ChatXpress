@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:email_validator/email_validator.dart';
@@ -26,11 +27,11 @@ class ForgotPasswordViewmodel extends ChangeNotifier {
 
   bool validatedMailInput(String email) {
     if (EmailValidator.validate(email)) {
-      successMessage = 'Please check your mail inbox.';
+      successMessage = MyStrings.validationSuccessReset;
       errorMessage = '';
       return true;
     } else {
-      errorMessage = 'Invalid Email. Please try another one.';
+      errorMessage = MyStrings.validationInvalidEmail;
       return false;
     }
   }

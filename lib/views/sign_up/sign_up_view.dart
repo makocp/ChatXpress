@@ -1,4 +1,5 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
 import 'package:chatXpress/components/textfield_components/my_textfield.dart';
@@ -46,7 +47,7 @@ class _SignUpViewState extends State<SignUpView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          'Already a member? ',
+          MyStrings.signUpAlreadyMember,
           style: TextStyle(color: MyColors.greenDefaultColor),
         ),
         GestureDetector(
@@ -54,7 +55,7 @@ class _SignUpViewState extends State<SignUpView> {
             Navigator.pop(context);
           },
           child: const Text(
-            'Sign In.',
+            MyStrings.signUpSignInField,
             style: TextStyle(
                 color: MyColors.greenDefaultColorDark,
                 fontWeight: FontWeight.bold),
@@ -73,7 +74,7 @@ class _SignUpViewState extends State<SignUpView> {
                 _emailController.text, _passwordController.text, _popView)
           },
       },
-      buttonText: 'Create Account',
+      buttonText: MyStrings.buttonSignUpCreate,
       isLoading: false,
     );
   }
@@ -85,7 +86,7 @@ class _SignUpViewState extends State<SignUpView> {
   MyTextfield showConfirmationPasswordInput() {
     return MyTextfield(
         controller: _passwordConfirmationController,
-        labelText: 'Confirm Password',
+        labelText: MyStrings.inputConfirmPassword,
         obscureText: true,
         isError: false,
         icon: Icons.lock_outline);
@@ -94,7 +95,7 @@ class _SignUpViewState extends State<SignUpView> {
   MyTextfield showPasswordInput() {
     return MyTextfield(
         controller: _passwordController,
-        labelText: 'Password',
+        labelText: MyStrings.inputPassword,
         obscureText: true,
         isError: false,
         icon: Icons.lock_outline);
@@ -103,7 +104,7 @@ class _SignUpViewState extends State<SignUpView> {
   MyTextfield showEmailInput() {
     return MyTextfield(
         controller: _emailController,
-        labelText: 'Email',
+        labelText: MyStrings.inputEmail,
         obscureText: false,
         isError: false,
         icon: Icons.email_outlined);

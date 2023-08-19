@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/box_components/my_infobox.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
@@ -49,7 +50,7 @@ class ForgotPasswordView extends StatelessWidget with GetItMixin {
                 .handleResetInput(_emailController.text.trim())
           }
       },
-      buttonText: 'Reset Password',
+      buttonText: MyStrings.buttonResetPassword,
       isLoading: isLoading,
     );
   }
@@ -57,7 +58,7 @@ class ForgotPasswordView extends StatelessWidget with GetItMixin {
   MyTextfield showEmailInput(bool isError) {
     return MyTextfield(
         controller: _emailController,
-        labelText: 'Email',
+        labelText: MyStrings.inputEmail,
         obscureText: false,
         isError: isError,
         icon: Icons.email_outlined);
