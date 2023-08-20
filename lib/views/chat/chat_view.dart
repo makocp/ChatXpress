@@ -3,6 +3,8 @@ import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
+import 'package:chatXpress/models/message.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
 import '../../components/chat_components/chat_message_view.dart';
 import 'package:chatXpress/components/chat_components/text_field.dart';
 import 'package:chatXpress/views/menu/menu_view.dart';
@@ -13,16 +15,15 @@ class ChatView extends StatelessWidget with GetItMixin {
   final TextEditingController _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _chatViewmodel = serviceContainer<ChatViewmodel>();
+  late List<ChatMessageView> uiMessages;
+  late double lastMessageOpacity;
 
   ChatView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<MessageViewModel> messages =
-        watchOnly((ChatViewmodel m) => m.messages);
     final bool requestWaiting =
         watchOnly((ChatViewmodel m) => m.requestWaiting);
-
     return Scaffold(
       backgroundColor: const Color(0xff40414f),
       appBar: AppBar(
@@ -30,7 +31,6 @@ class ChatView extends StatelessWidget with GetItMixin {
         title: const Text(MyStrings.appName),
       ),
       drawer: MenuView(),
-      // to unfocus the ChatView, to dismiss the keyboard, after opening the drawer.
       onDrawerChanged: (isOpened) =>
           FocusManager.instance.primaryFocus?.unfocus(),
       body: SafeArea(
@@ -38,56 +38,72 @@ class ChatView extends StatelessWidget with GetItMixin {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  reverse: true,
-                  controller: _scrollController,
-                  itemCount: messages.length + 1,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: index > 0
-                          ? ChatMessageView(
-                              message: messages[index - 1],
-                            )
-                          : requestWaiting
-                              ? const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      height: 20.0,
-                                      width: 20.0,
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ],
-                                )
-                              : const SizedBox(
-                                  height: 0,
-                                ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomTextInput(
-                          hintText: MyStrings.inputSendMessage, controller: _controller),
-                      IconButton(
-                        onPressed: () => _handleSendMessage(),
-                        icon: const Icon(Icons.send),
-                        color: MyColors.greenDefaultColor,
-                      )
-                    ],
-                  ))
+              Expanded(child: _buildMessagesList(requestWaiting)),
+              _buildInputRow(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMessagesList(bool requestWaiting) {
+    return StreamBuilder<List<MessageViewModel>>(
+      stream: _chatViewmodel.messageStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          uiMessages =
+              snapshot.data!.map((e) => ChatMessageView(message: e)).toList();
+          return ListView.builder(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            reverse: true,
+            controller: _scrollController,
+            itemCount: snapshot.data!.length + 1,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: index > 0
+                  ? index == 1
+                      ? uiMessages[index - 1]
+                      : uiMessages[index - 1]
+                  : requestWaiting
+                      ? _showProgressIndicator()
+                      : const SizedBox(height: 0),
+            ),
+          );
+        } else {
+          return Center(child: _showProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _buildInputRow() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomTextInput(hintText: "Send a message", controller: _controller),
+          IconButton(
+            onPressed: () => _handleSendMessage(),
+            icon: const Icon(Icons.send),
+            color: MyColors.greenDefaultColor,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showProgressIndicator() {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 20.0,
+          width: 20.0,
+          child: CircularProgressIndicator(),
+        ),
+      ],
     );
   }
 
@@ -100,6 +116,7 @@ class ChatView extends StatelessWidget with GetItMixin {
     if (prompt.isNotEmpty) {
       _sendMessage(prompt);
       _controller.clear();
+      _scrollToBottom();
     }
   }
 
