@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/views/menu/menu_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -85,9 +86,7 @@ class MenuView extends StatelessWidget {
                     ),
                     title: const Text(MyStrings.menuLogout,
                         style: TextStyle(color: Colors.white)),
-                    onTap: () => {
-                      showConformationDialog(context)
-                    },
+                    onTap: () => {showConformationDialog(context)},
                   ),
                 ],
               ),
@@ -101,11 +100,19 @@ class MenuView extends StatelessWidget {
   showConformationDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
-      onPressed: () {},
+      child: const Text(
+        "Cancel",
+        style: TextStyle(color: MyColors.greenDefaultColorDark),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
-    Widget continueButton = TextButton(
-      child: const Text("Continue"),
+    Widget continueButton = ElevatedButton(
+      style: ButtonStyle(
+          backgroundColor:
+              MaterialStateProperty.all<Color>(MyColors.redForDeleteButton)),
+      child: const Text("Log out", style: TextStyle(color: Colors.white)),
       onPressed: () {
         _menuViewmodel.logOut().then((value) {
           Navigator.popUntil(context, (route) => route.isFirst);
@@ -115,9 +122,13 @@ class MenuView extends StatelessWidget {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: const Text("AlertDialog"),
-      content: const Text(
-          "are you sure you would like to log out?"),
+      backgroundColor: const Color(0xff202123),
+      title: const Text(
+        "Log out",
+        style: TextStyle(color: Colors.white),
+      ),
+      content: const Text("Sure you want to log out?",
+          style: TextStyle(color: Colors.white)),
       actions: [
         cancelButton,
         continueButton,
@@ -133,4 +144,3 @@ class MenuView extends StatelessWidget {
     );
   }
 }
-
