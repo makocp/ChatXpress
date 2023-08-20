@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services/gpt_service.dart';

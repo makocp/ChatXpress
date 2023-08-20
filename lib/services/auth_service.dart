@@ -12,7 +12,7 @@ class AuthService {
     // get auth details for request
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 
-    // create credidential for user
+    // create credential for user
     final credential = GoogleAuthProvider.credential(
       accessToken: gAuth.accessToken,
       idToken: gAuth.idToken,
@@ -48,6 +48,19 @@ class AuthService {
       String email, String password) async {
     return await firebaseAuthInstance.createUserWithEmailAndPassword(
         email: email, password: password);
+  }
+
+  Future<String> updatePassword(String newPassword) async {
+    try {
+      await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
+      return "Successfully changed password";
+    } catch (e) {
+      String errorMessage = "An error occurred";
+      if (e is FirebaseAuthException) {
+        errorMessage = e.code;
+      }
+      return errorMessage;
+    }
   }
 
   Future<void> logOut() async {
