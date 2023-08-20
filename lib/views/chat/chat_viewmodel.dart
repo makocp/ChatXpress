@@ -19,7 +19,7 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   final StreamController<List<MessageViewModel>> _messageController =
-      StreamController<List<MessageViewModel>>();
+      StreamController<List<MessageViewModel>>.broadcast();
   late Stream<List<MessageViewModel>> messageStream = _messageController.stream;
 
   @override

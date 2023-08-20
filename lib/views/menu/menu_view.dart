@@ -85,10 +85,8 @@ class MenuView extends StatelessWidget {
                     ),
                     title: const Text(MyStrings.menuLogout,
                         style: TextStyle(color: Colors.white)),
-                    onTap: () {
-                      _menuViewmodel.logOut().then((value) {
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      });
+                    onTap: () => {
+                      showConformationDialog(context)
                     },
                   ),
                 ],
@@ -99,4 +97,40 @@ class MenuView extends StatelessWidget {
       ),
     );
   }
+
+  showConformationDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {},
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Continue"),
+      onPressed: () {
+        _menuViewmodel.logOut().then((value) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        });
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("AlertDialog"),
+      content: const Text(
+          "are you sure you would like to log out?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
+
