@@ -7,7 +7,6 @@ import '../../services_provider/service_container.dart';
 class MenuViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
 
-
   final StreamController<bool> _requestProgressingController =
       StreamController<bool>.broadcast();
   late Stream<bool> progressStream = _requestProgressingController.stream;
