@@ -25,6 +25,7 @@ dependencies:
   fluttertoast: ^8.2.2
   get_it_mixin: ^4.2.0
   email_validator: ^2.1.17
+  modal_bottom_sheet: ^2.1.2
 
 dev_dependencies:
   flutter_test:
