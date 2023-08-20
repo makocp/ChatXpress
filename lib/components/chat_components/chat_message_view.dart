@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/colors/my_image_paths.dart';
 import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class ChatMessageView extends StatelessWidget {
   Widget _buildAvatar(String sender) {
     if (sender == "ChatGpt") {
       return const CircleAvatar(
-        backgroundImage: ExactAssetImage('assets/images/chatXpress.png'),
+        backgroundImage: ExactAssetImage(MyImagePaths.iconPath),
         radius: 15,
         backgroundColor: MyColors.greenDefaultColorDark,
       );

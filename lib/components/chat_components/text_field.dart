@@ -1,10 +1,9 @@
-import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextInput extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
-  const CustomTextInput({
+  const CustomTextInput({super.key, 
     required this.hintText,
     required this.controller
   });
@@ -21,7 +20,7 @@ class CustomTextInput extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
         ),
-        padding: EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(left: 10),
         width: MediaQuery.of(context).size.width * 0.75,
         child: TextField(
           keyboardType: TextInputType.text,
@@ -33,7 +32,7 @@ class CustomTextInput extends StatelessWidget {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hintText,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               fontFamily: 'Poppins',
             ),
           ),

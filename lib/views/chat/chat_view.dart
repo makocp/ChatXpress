@@ -1,3 +1,6 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
+import 'package:chatXpress/models/message.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:chatXpress/models/message.dart';
@@ -25,7 +28,7 @@ class ChatView extends StatelessWidget with GetItMixin {
       backgroundColor: const Color(0xff40414f),
       appBar: AppBar(
         backgroundColor: MyColors.greenDefaultColor,
-        title: const Text("ChatXpress"),
+        title: const Text(MyStrings.appName),
       ),
       drawer: MenuView(),
       onDrawerChanged: (isOpened) =>

@@ -1,5 +1,5 @@
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/views/menu/menu_viewmodel.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MenuView extends StatelessWidget {
@@ -24,7 +24,7 @@ class MenuView extends StatelessWidget {
                       color: Colors.white,
                     ),
                     title: const Text(
-                      'New chat',
+                      MyStrings.menuNewChat,
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
@@ -44,7 +44,7 @@ class MenuView extends StatelessWidget {
                         Icons.chat_bubble_outline,
                         color: Colors.white,
                       ),
-                      title: const Text('Flutter Development',
+                      title: const Text(MyStrings.menuPlaceholder,
                           style: TextStyle(color: Colors.white)),
                       onTap: () {
                         _menuViewmodel.openChat();
@@ -61,7 +61,7 @@ class MenuView extends StatelessWidget {
                   ListTile(
                     leading:
                         const Icon(Icons.delete_outline, color: Colors.red),
-                    title: const Text('Clean history',
+                    title: const Text(MyStrings.menuCleanHistory,
                         style: TextStyle(color: Colors.red)),
                     onTap: () {
                       _menuViewmodel.cleanHistory();
@@ -72,7 +72,7 @@ class MenuView extends StatelessWidget {
                       Icons.lock_reset_outlined,
                       color: Colors.white,
                     ),
-                    title: const Text('Reset password',
+                    title: const Text(MyStrings.menuResetPassword,
                         style: TextStyle(color: Colors.white)),
                     onTap: () {
                       _menuViewmodel.resetPassword();
@@ -83,7 +83,7 @@ class MenuView extends StatelessWidget {
                       Icons.logout_outlined,
                       color: Colors.white,
                     ),
-                    title: const Text('Logout',
+                    title: const Text(MyStrings.menuLogout,
                         style: TextStyle(color: Colors.white)),
                     onTap: () {
                       _menuViewmodel.logOut().then((value) {
