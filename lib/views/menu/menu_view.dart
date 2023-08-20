@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/views/menu/menu_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -85,11 +86,7 @@ class MenuView extends StatelessWidget {
                     ),
                     title: const Text(MyStrings.menuLogout,
                         style: TextStyle(color: Colors.white)),
-                    onTap: () {
-                      _menuViewmodel.logOut().then((value) {
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      });
-                    },
+                    onTap: () => {showConformationDialog(context)},
                   ),
                 ],
               ),
@@ -97,6 +94,53 @@ class MenuView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  showConformationDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text(
+        "Cancel",
+        style: TextStyle(color: MyColors.greenDefaultColorDark),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = ElevatedButton(
+      style: ButtonStyle(
+          backgroundColor:
+              MaterialStateProperty.all<Color>(MyColors.redForDeleteButton)),
+      child: const Text("Log out", style: TextStyle(color: Colors.white)),
+      onPressed: () {
+        _menuViewmodel.logOut().then((value) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        });
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      backgroundColor: const Color(0xff202123),
+      title: const Text(
+        "Log out",
+        style: TextStyle(color: Colors.white),
+      ),
+      content: const Text("Sure you want to log out?",
+          style: TextStyle(color: Colors.white)),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
