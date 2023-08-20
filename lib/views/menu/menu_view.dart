@@ -72,7 +72,11 @@ class MenuView extends StatelessWidget with GetItMixin {
                     title: const Text(MyStrings.menuCleanHistory,
                         style: TextStyle(color: Colors.red)),
                     onTap: () {
-                      _menuViewmodel.cleanHistory();
+                      showConformationDialog(
+                          context,
+                          "Do you surely want to clear history",
+                          "clear history",
+                          () => {_menuViewmodel.cleanHistory()});
                     },
                   ),
                   ListTile(
@@ -93,7 +97,18 @@ class MenuView extends StatelessWidget with GetItMixin {
                     ),
                     title: const Text(MyStrings.menuLogout,
                         style: TextStyle(color: Colors.white)),
-                    onTap: () => {showConformationDialog(context)},
+                    onTap: () => {
+                      showConformationDialog(
+                          context,
+                          "Sure you want to log out?",
+                          "Logout",
+                          () => {
+                                _menuViewmodel.logOut().then((value) {
+                                  Navigator.popUntil(
+                                      context, (route) => route.isFirst);
+                                })
+                              })
+                    },
                   ),
                 ],
               ),
@@ -104,7 +119,8 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  showConformationDialog(BuildContext context) {
+  showConformationDialog(BuildContext context, String confirmationMessage,
+      String actionDescription, Function action) {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: const Text(
@@ -119,23 +135,22 @@ class MenuView extends StatelessWidget with GetItMixin {
       style: ButtonStyle(
           backgroundColor:
               MaterialStateProperty.all<Color>(MyColors.redForDeleteButton)),
-      child: const Text("Log out", style: TextStyle(color: Colors.white)),
+      child:
+          Text(actionDescription, style: const TextStyle(color: Colors.white)),
       onPressed: () {
-        _menuViewmodel.logOut().then((value) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-        });
+        action();
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: const Color(0xff202123),
-      title: const Text(
-        "Log out",
-        style: TextStyle(color: Colors.white),
+      title: Text(
+        actionDescription,
+        style: const TextStyle(color: Colors.white),
       ),
-      content: const Text("Sure you want to log out?",
-          style: TextStyle(color: Colors.white)),
+      content: Text(confirmationMessage,
+          style: const TextStyle(color: Colors.white)),
       actions: [
         cancelButton,
         continueButton,
@@ -226,21 +241,18 @@ class MenuView extends StatelessWidget with GetItMixin {
 
   Widget _buildChangePasswordButton(MenuViewmodel menuViewModel) {
     return StreamBuilder<bool>(
-      stream: _menuViewmodel.progressStream,
-      builder: (context, snapshot) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(15, 30, 15, 8),
-          child: MyButton(
-            onPressed: () {
-              menuViewModel.updatePassword(newPasswordController.text);
-            },
-            buttonText: 'change password',
-            // 2 stunden gebraucht um auf diese Zeile zu kommen :)
-            // kannst du mich bitte umbringen? danke
-            isLoading: snapshot.data ?? false,
-          ),
-        );
-      }
-    );
+        stream: _menuViewmodel.progressStream,
+        builder: (context, snapshot) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(15, 30, 15, 8),
+            child: MyButton(
+              onPressed: () {
+                menuViewModel.updatePassword(newPasswordController.text);
+              },
+              buttonText: 'change password',
+              isLoading: snapshot.data ?? false,
+            ),
+          );
+        });
   }
 }

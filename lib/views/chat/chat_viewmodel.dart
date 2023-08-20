@@ -44,7 +44,6 @@ class ChatViewmodel extends ChangeNotifier {
 
     _addResponseToChat(response);
     _messageController.add(messages);
-
   }
 
   void _addQuestionChat(String prompt) {
