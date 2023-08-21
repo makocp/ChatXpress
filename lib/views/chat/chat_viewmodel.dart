@@ -1,25 +1,25 @@
 import 'dart:async';
 import 'package:chatXpress/enum/message_type.dart';
-import 'package:chatXpress/models/message.dart';
+import 'package:chatXpress/models/message_model.dart';
 import 'package:chatXpress/services/gpt_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/foundation.dart';
 
 class ChatViewmodel extends ChangeNotifier {
-  List<MessageViewModel> _messages = [];
+  List<MessageModel> _messages = [];
 
-  List<MessageViewModel> get messages => _messages;
+  List<MessageModel> get messages => _messages;
 
   // werden wir brauchen wenn wir außerhalb des Viewmodels den Chat zuweisen
   // Wenn wir beispielweise bei Menu den CurrentChat setzen
-  set messages(List<MessageViewModel> value) {
+  set messages(List<MessageModel> value) {
     _messages = value;
     notifyListeners();
   }
 
-  final StreamController<List<MessageViewModel>> _messageController =
-      StreamController<List<MessageViewModel>>.broadcast();
-  late Stream<List<MessageViewModel>> messageStream = _messageController.stream;
+  final StreamController<List<MessageModel>> _messageController =
+      StreamController<List<MessageModel>>.broadcast();
+  late Stream<List<MessageModel>> messageStream = _messageController.stream;
 
   @override
   void dispose() {
@@ -47,7 +47,7 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   void _addQuestionChat(String prompt) {
-    var message = MessageViewModel(
+    var message = MessageModel(
         content: prompt,
         date: DateTime.now(),
         sender: "user",
@@ -59,7 +59,7 @@ class ChatViewmodel extends ChangeNotifier {
   void _addResponseToChat(String response) {
     var messageType =
         response[0] == "*" ? MessageType.error : MessageType.response;
-    var message = MessageViewModel(
+    var message = MessageModel(
         content: response,
         date: DateTime.now(),
         sender: "ChatGpt",

@@ -1,12 +1,12 @@
 import 'package:chatXpress/enum/message_type.dart';
 
-class MessageViewModel{
+class MessageModel{
   final String content;
   final DateTime date;
   final String sender;
   final MessageType messageType;
 
-  const MessageViewModel({
+  const MessageModel({
     required this.content,
     required this.date,
     required this.sender,

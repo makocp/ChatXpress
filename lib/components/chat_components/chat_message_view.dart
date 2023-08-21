@@ -1,12 +1,12 @@
 import 'package:chatXpress/assets/colors/my_image_paths.dart';
 import 'package:chatXpress/enum/message_type.dart';
-import 'package:chatXpress/models/message.dart';
+import 'package:chatXpress/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 
-class ChatMessageView extends StatelessWidget {
-  const ChatMessageView({Key? key, required this.message}) : super(key: key);
-  final MessageViewModel message;
+class ChatMessage extends StatelessWidget {
+  const ChatMessage({Key? key, required this.message}) : super(key: key);
+  final MessageModel message;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ChatMessageView extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildMessageWidgets(MessageViewModel message) {
+  List<Widget> _buildMessageWidgets(MessageModel message) {
     final isChatGpt = message.sender == "ChatGpt";
 
     return [
