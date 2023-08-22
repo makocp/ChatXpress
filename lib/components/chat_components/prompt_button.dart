@@ -1,20 +1,21 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/services_provider/service_container.dart';
+import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class PromptButton extends StatelessWidget {
-  const PromptButton(
-      {super.key, required this.sendMessage, required this.messageSuggestion});
+  PromptButton(
+      {super.key, required this.messageSuggestion});
 
-  final void Function(String) sendMessage;
   final String messageSuggestion;
-
+  final chatViewModel = serviceContainer<ChatViewmodel>();
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: OutlinedButton(
-        onPressed: () => sendMessage(messageSuggestion),
+        onPressed: () => chatViewModel.sendMessage(messageSuggestion),
         style: ButtonStyle(
           minimumSize: MaterialStateProperty.all(const Size(300, 50)),
           maximumSize: MaterialStateProperty.all(const Size(300, 50)),

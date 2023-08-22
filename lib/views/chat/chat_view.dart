@@ -1,5 +1,6 @@
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/chat_components/prompt_button.dart';
+import 'package:chatXpress/components/chat_components/prompt_list.dart';
 import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/material.dart';
@@ -71,37 +72,7 @@ class ChatView extends StatelessWidget with GetItMixin {
             ),
           );
         } else {
-          return Center(
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 90.0, bottom: 16.0),
-                  child: Text(
-                    "Chat Express",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white24),
-                  ),
-                ),
-                PromptButton(
-                        sendMessage: _sendMessage,
-                        messageSuggestion: "who is the first US president?")
-                    .animate()
-                    .slide(delay: const Duration(milliseconds: 300)),
-                PromptButton(
-                        sendMessage: _sendMessage,
-                        messageSuggestion: "write a message for my Cousin")
-                    .animate()
-                    .slide(delay: const Duration(milliseconds: 200)),
-                PromptButton(
-                        sendMessage: _sendMessage,
-                        messageSuggestion: "what is the highest mountain?")
-                    .animate()
-                    .fadeIn(delay: const Duration(milliseconds: 200)),
-              ],
-            ),
-          );
+          return const PromptsList();
         }
       },
     );
