@@ -39,6 +39,8 @@ class SignInViewmodel extends ChangeNotifier {
           // To create the user, if it does not exist, but a Auth Acc exists.
           // Just in case, if there was an error in SignUp with account creation in Db.
           // Does NOT overwrite current user -> see origin db method (merge true).
+          // TODO: think about another solution for failed DB creating, BUT successful user creation in SignUp. (to avoid unnecassery reads in db).
+          // e.g. disallow auth creation, if db creation fails.
           // - onError is necassery, so the method continues, otherwise it would stop at an Exception.
           setUserToDB(email).onError((error, stackTrace) => null);
         });
