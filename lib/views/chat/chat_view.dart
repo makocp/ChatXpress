@@ -82,7 +82,8 @@ class ChatView extends StatelessWidget with GetItMixin {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomTextInput(hintText: MyStrings.inputSendMessage, controller: _controller),
+          CustomTextInput(
+              hintText: MyStrings.inputSendMessage, controller: _controller),
           IconButton(
             onPressed: () => _handleSendMessage(),
             icon: const Icon(Icons.send),

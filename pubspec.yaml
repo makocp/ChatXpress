@@ -26,6 +26,7 @@ dependencies:
   get_it_mixin: ^4.2.0
   email_validator: ^2.1.17
   modal_bottom_sheet: ^2.1.2
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
