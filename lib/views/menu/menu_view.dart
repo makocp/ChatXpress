@@ -37,6 +37,8 @@ class MenuView extends StatelessWidget with GetItMixin {
                     ),
                     onTap: () {
                       _menuViewmodel.createNewChat();
+                      // to close the drawer to get to the new chat.
+                      Navigator.pop(context);
                     },
                   ),
                   const Divider(

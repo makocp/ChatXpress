@@ -1,17 +1,22 @@
 import 'dart:async';
 
 import 'package:chatXpress/services/auth_service.dart';
+import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import '../../services_provider/service_container.dart';
 
 class MenuViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
+  final chatViewModel = serviceContainer<ChatViewmodel>();
 
   final StreamController<bool> _requestProgressingController =
       StreamController<bool>.broadcast();
   late Stream<bool> progressStream = _requestProgressingController.stream;
 
-  void createNewChat() {}
+  void createNewChat() {
+    chatViewModel.setDefaultChatState();
+
+  }
 
   void openChat() {}
 
@@ -21,7 +26,7 @@ class MenuViewmodel extends ChangeNotifier {
     _requestProgressingController.add(true);
     var message = "";
     var response = await authService.updatePassword(newPassword);
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     _requestProgressingController.add(false);
 
     switch (response) {
@@ -51,6 +56,8 @@ class MenuViewmodel extends ChangeNotifier {
   }
 
   Future<void> logOut() async {
-    return authService.logOut();
+    return authService.logOut()
+    // to set the chat state to default, if user log outs and opens new chat -> new state, new chat ID, new chat view.
+    .then((value) => chatViewModel.setDefaultChatState());
   }
 }
