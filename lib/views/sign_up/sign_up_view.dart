@@ -13,6 +13,7 @@ class SignUpView extends StatelessWidget with GetItMixin {
   SignUpView({super.key});
 
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmationController = TextEditingController();
   final _signUpViewmodel = serviceContainer<SignUpViewmodel>();
@@ -41,22 +42,24 @@ class SignUpView extends StatelessWidget with GetItMixin {
           elevation: 0,
         ),
         body: MyContainerSignInAndUp(listViewContent: [
+          showUsernameInput(_usernameController, false),
+          const SizedBox(height: 20),
           showEmailInput(_emailController, isErrorEmail()),
           isErrorEmail()
               ? MyInfoBox(message: messageEmail, isError: true)
-              : const SizedBox(height: 25),
+              : const SizedBox(height: 20),
           showPasswordInput(_passwordController, isErrorPassword()),
           isErrorPassword()
               ? MyInfoBox(message: messagePassword, isError: true)
-              : const SizedBox(height: 25),
+              : const SizedBox(height: 20),
           showConfirmationPasswordInput(
               _passwordConfirmationController, isErrorConfirmation()),
           isErrorConfirmation()
               ? MyInfoBox(message: messageConfirmation, isError: true)
-              : const SizedBox(height: 25),
-          const SizedBox(height: 25),
+              : const SizedBox(height: 20),
+          const SizedBox(height: 20),
           showSignUpButton(context, isLoading),
-          const SizedBox(height: 25),
+          const SizedBox(height: 20),
           showSignInText(context)
         ]),
       ),
@@ -123,6 +126,14 @@ class SignUpView extends StatelessWidget with GetItMixin {
     return MyTextfield(
         controller: emailController,
         labelText: MyStrings.inputEmail,
+        obscureText: false,
+        isError: isError,
+        icon: Icons.email_outlined);
+  }
+  showUsernameInput(TextEditingController usernameController, bool isError) {
+    return MyTextfield(
+        controller: usernameController,
+        labelText: MyStrings.inputUsername,
         obscureText: false,
         isError: isError,
         icon: Icons.email_outlined);
