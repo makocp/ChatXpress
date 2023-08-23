@@ -112,7 +112,8 @@ class SignInViewmodel extends ChangeNotifier {
   }
 
   Future<void> setUserToDB(String email) async {
-    return await db.setUser(email);
+    // TODO
+    // return await db.setUser(email);
   }
 
   void setLoadingState() {
