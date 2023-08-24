@@ -1,4 +1,5 @@
 import 'package:chatXpress/assets/strings/my_strings.dart';
+import 'package:chatXpress/models/message_model.dart';
 import 'package:chatXpress/components/chat_components/prompt_button.dart';
 import 'package:chatXpress/components/chat_components/prompt_list.dart';
 import 'package:chatXpress/models/message.dart';
@@ -7,16 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import '../../components/chat_components/chat_message_view.dart';
-import 'package:chatXpress/components/chat_components/text_field.dart';
+import 'package:chatXpress/components/chat_components/custom_text_input.dart';
 import 'package:chatXpress/views/menu/menu_view.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 
+// ignore: must_be_immutable
 class ChatView extends StatelessWidget with GetItMixin {
   final TextEditingController _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _chatViewmodel = serviceContainer<ChatViewmodel>();
-  late List<ChatMessageView> uiMessages;
+  late List<ChatMessage> uiMessages;
   late double lastMessageOpacity;
 
   ChatView({super.key});
@@ -26,7 +28,7 @@ class ChatView extends StatelessWidget with GetItMixin {
     final bool requestWaiting =
         watchOnly((ChatViewmodel m) => m.requestWaiting);
     return Scaffold(
-      backgroundColor: const Color(0xff40414f),
+      backgroundColor: MyColors.greyChatBackground,
       appBar: AppBar(
         backgroundColor: MyColors.greenDefaultColor,
         title: const Text(MyStrings.appName),
@@ -49,12 +51,12 @@ class ChatView extends StatelessWidget with GetItMixin {
   }
 
   Widget _buildMessagesList(bool requestWaiting) {
-    return StreamBuilder<List<MessageViewModel>>(
+    return StreamBuilder<List<MessageModel>>(
       stream: _chatViewmodel.messageStream,
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           uiMessages =
-              snapshot.data!.map((e) => ChatMessageView(message: e)).toList();
+              snapshot.data!.map((e) => ChatMessage(message: e)).toList();
           return ListView.builder(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             reverse: true,
@@ -84,7 +86,8 @@ class ChatView extends StatelessWidget with GetItMixin {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomTextInput(hintText: "Send a message", controller: _controller),
+          CustomTextInput(
+              hintText: MyStrings.inputSendMessage, controller: _controller),
           IconButton(
             onPressed: () => _handleSendMessage(),
             icon: const Icon(Icons.send),

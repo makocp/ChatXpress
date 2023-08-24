@@ -4,6 +4,7 @@ import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/textfield_components/my_passwordfield.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:chatXpress/views/menu/menu_viewmodel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -18,104 +19,143 @@ class MenuView extends StatelessWidget with GetItMixin {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: const Color(0xff202123),
+      backgroundColor: MyColors.greyMenuBackground,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Column(
             children: [
-              Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                    title: const Text(
-                      MyStrings.menuNewChat,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      _menuViewmodel.createNewChat();
-                    },
-                  ),
-                  const Divider(
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: ListView(
-                  children: [
-                    ListTile(
-                      leading: const Icon(
-                        Icons.chat_bubble_outline,
-                        color: Colors.white,
-                      ),
-                      title: const Text(MyStrings.menuPlaceholder,
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () {
-                        _menuViewmodel.openChat();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  const Divider(
-                    color: Colors.white,
-                  ),
-                  ListTile(
-                    leading:
-                        const Icon(Icons.delete_outline, color: Colors.red),
-                    title: const Text(MyStrings.menuCleanHistory,
-                        style: TextStyle(color: Colors.red)),
-                    onTap: () {
-                      showConformationDialog(
-                          context,
-                          "Do you surely want to clear history",
-                          "clear history",
-                          () => {_menuViewmodel.cleanHistory()});
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.lock_reset_outlined,
-                      color: Colors.white,
-                    ),
-                    title: const Text(MyStrings.menuResetPassword,
-                        style: TextStyle(color: Colors.white)),
-                    onTap: () {
-                      showModalDialog(context, _menuViewmodel);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.logout_outlined,
-                      color: Colors.white,
-                    ),
-                    title: const Text(MyStrings.menuLogout,
-                        style: TextStyle(color: Colors.white)),
-                    onTap: () => {
-                      showConformationDialog(
-                          context,
-                          "Sure you want to log out?",
-                          "Logout",
-                          () => {
-                                _menuViewmodel.logOut().then((value) {
-                                  Navigator.popUntil(
-                                      context, (route) => route.isFirst);
-                                })
-                              })
-                    },
-                  ),
-                ],
-              ),
+              showTopSection(context),
+              buildChatList(),
+              showBottomSection(context),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildChatList() {
+    return Expanded(
+      child: FutureBuilder(
+          future: _menuViewmodel.getCurrentUserChats(),
+          builder: (context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapchot) {
+            if (snapchot.connectionState == ConnectionState.done) {
+              return ListView.builder(
+                  // shrinkWrap: true,
+                  itemCount: snapchot.data?.docs.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const Icon(
+                        Icons.chat_bubble_outline,
+                        color: Colors.white,
+                      ),
+                      // contentPadding: const EdgeInsets.all(8.0),
+                      title: Text(
+                        snapchot.data?.docs[index].data()['title'],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        // TODO: chat id senden und chat state öffnen zu dem chat.
+                        // ist in snapchat.data.docs (liste von chats) drin. Mit index iterieren.
+                        _menuViewmodel.openChat();
+                      },
+                    );
+                  });
+            }
+            return const Center(child: CircularProgressIndicator());
+          }),
+    );
+  }
+
+  Column showTopSection(BuildContext context) {
+    return Column(
+      children: [
+        showNewChatButton(context),
+        const Divider(color: Colors.white),
+      ],
+    );
+  }
+
+  Column showBottomSection(BuildContext context) {
+    return Column(
+      children: [
+        const Divider(color: Colors.white),
+        showDeleteHistoryButton(context),
+        showResetPasswordButton(context),
+        showLogoutButton(context),
+      ],
+    );
+  }
+
+  ListTile showLogoutButton(BuildContext context) {
+    return ListTile(
+      leading: const Icon(
+        Icons.logout_outlined,
+        color: Colors.white,
+      ),
+      title: const Text(MyStrings.menuLogout,
+          style: TextStyle(color: Colors.white)),
+      onTap: () => {
+        showConformationDialog(
+            context,
+            "Sure you want to log out?",
+            "Logout",
+            () => {
+                  _menuViewmodel.logOut().then((value) {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  })
+                })
+      },
+    );
+  }
+
+  ListTile showResetPasswordButton(BuildContext context) {
+    return ListTile(
+      leading: const Icon(
+        Icons.lock_reset_outlined,
+        color: Colors.white,
+      ),
+      title: const Text(MyStrings.menuResetPassword,
+          style: TextStyle(color: Colors.white)),
+      onTap: () {
+        showModalDialog(context, _menuViewmodel);
+      },
+    );
+  }
+
+  ListTile showDeleteHistoryButton(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.delete_outline, color: Colors.red),
+      title: const Text(MyStrings.menuDeleteHistory,
+          style: TextStyle(color: Colors.red)),
+      onTap: () {
+        showConformationDialog(
+            context,
+            MyStrings.menuDeleteHistoryText,
+            MyStrings.menuDeleteHistoryTitle,
+            () => {_menuViewmodel.deleteHistory()});
+      },
+    );
+  }
+
+  ListTile showNewChatButton(BuildContext context) {
+    return ListTile(
+      leading: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+      title: const Text(
+        MyStrings.menuNewChat,
+        style: TextStyle(color: Colors.white),
+      ),
+      onTap: () {
+        // to set the chat state to default in chatViewmodel
+        _menuViewmodel.createNewChat();
+        // to close the drawer to get to the new chat.
+        Navigator.pop(context);
+      },
     );
   }
 
