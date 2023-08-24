@@ -35,16 +35,11 @@ class FirestoreService {
         {'title': title, 'userId': currentUserID()}, SetOptions(merge: true));
   }
 
-  // getChats() async {
-  //   return await db
-  //       .collection('users')
-  //       .doc(currentUserID())
-  //       .collection('chats')
-  //       .get()
-  //       .then((querySnapshot) {
-  //     for (var docSnapchat in querySnapshot.docs) {
-  //       log('${docSnapchat.id} => ${docSnapchat.data()}');
-  //     }
-  //   });
-  // }
+  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
+    return await db
+        .collection('chats')
+        .where('userId', isEqualTo: currentUserID())
+        // GetOptions -> by default ServerAndCache. Loads data from Cache, if exists.
+        .get();
+  }
 }

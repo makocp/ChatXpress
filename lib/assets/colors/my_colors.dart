@@ -6,4 +6,5 @@ class MyColors {
   static const Color greenForNavigationBar= Color.fromARGB(255, 119, 197, 179);
   static const Color redForDeleteButton = Color.fromARGB(255, 239, 65, 70);
   static const Color greyChatBackground = Color.fromARGB(255, 64, 65, 79);
+  static const Color greyMenuBackground = Color.fromARGB(255, 32, 33, 35);
 }
