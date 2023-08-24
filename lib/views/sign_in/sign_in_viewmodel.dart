@@ -33,37 +33,38 @@ class SignInViewmodel extends ChangeNotifier {
 
   // serverside validation, if successful -> sign user in.
   // otherwise set string messages for UI state.
-  validateAndSignIn(String email, String password) async{
+  validateAndSignIn(String email, String password) async {
     try {
-        await signInWithEmailAndPassword(email, password).then((value) {
-          // To create the user, if it does not exist, but a Auth Acc exists.
-          // Just in case, if there was an error in SignUp with account creation in Db.
-          // Does NOT overwrite current user -> see origin db method (merge true).
-          // TODO: think about another solution for failed DB creating, BUT successful user creation in SignUp. (to avoid unnecassery reads in db).
-          // e.g. disallow auth creation, if db creation fails.
-          // - onError is necassery, so the method continues, otherwise it would stop at an Exception.
-          setUserToDB(email).onError((error, stackTrace) => null);
-        });
-        // Serverside validation already there by Firebase.
-        // Catches the error messages and sets it as state for UI to show it to the user.
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case 'invalid-email':
-            messageEmail = MyStrings.validationInvalidEmail;
-            break;
-          case 'user-disabled':
-            messageEmail = MyStrings.validationUserDisabled;
-            break;
-          case 'user-not-found':
-            messageEmail = MyStrings.validationWrongEmailPassword;
-            messagePassword = MyStrings.validationWrongEmailPassword;
-            break;
-          case 'wrong-password':
-            messageEmail = MyStrings.validationWrongEmailPassword;
-            messagePassword = MyStrings.validationWrongEmailPassword;
-            break;
-        }
+      await signInWithEmailAndPassword(email, password).then((value) {
+        resetValidation();
+
+        // To create the user, if it does not exist, but a Auth Acc exists.
+        // Just in case, if there was an error in SignUp with account creation in Db.
+        // Does NOT overwrite current user -> see origin db method (merge true).
+        // - onError is necassery, so the method continues, otherwise it would stop at an Exception.
+        setUserToDB(email).onError((error, stackTrace) => null);
+
+      });
+      // Serverside validation already there by Firebase.
+      // Catches the error messages and sets it as state for UI to show it to the user.
+    } on FirebaseAuthException catch (error) {
+      switch (error.code) {
+        case 'invalid-email':
+          messageEmail = MyStrings.validationInvalidEmail;
+          break;
+        case 'user-disabled':
+          messageEmail = MyStrings.validationUserDisabled;
+          break;
+        case 'user-not-found':
+          messageEmail = MyStrings.validationWrongEmailPassword;
+          messagePassword = MyStrings.validationWrongEmailPassword;
+          break;
+        case 'wrong-password':
+          messageEmail = MyStrings.validationWrongEmailPassword;
+          messagePassword = MyStrings.validationWrongEmailPassword;
+          break;
       }
+    }
   }
 
   bool validatedMailInput(String email) {
@@ -98,25 +99,35 @@ class SignInViewmodel extends ChangeNotifier {
 // Sets loading state for apple and google sign in to block user interactions while performing.
   Future<UserCredential> signInWithGoogle() async {
     setLoadingState();
-    return await authService.signInWithGoogle().whenComplete(() => unsetLoadingState());
+    return await authService
+        .signInWithGoogle()
+        .whenComplete(() => unsetLoadingState());
   }
 
   Future<UserCredential> signInWithApple() async {
     setLoadingState();
-    return await authService.signInWithApple().whenComplete(() => unsetLoadingState());
+    return await authService
+        .signInWithApple()
+        .whenComplete(() => unsetLoadingState());
   }
 
   Future<void> setUserToDB(String email) async {
     return await db.setUser(email);
   }
 
-  void setLoadingState(){
+  void setLoadingState() {
     isLoading = true;
     notifyListeners();
   }
 
-  void unsetLoadingState(){
+  void unsetLoadingState() {
     isLoading = false;
     notifyListeners();
+  }
+
+  void resetValidation() {
+    // to reset message strings => state for new validation.
+    messageEmail = '';
+    messagePassword = '';
   }
 }

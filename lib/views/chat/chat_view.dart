@@ -1,7 +1,11 @@
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/models/message_model.dart';
+import 'package:chatXpress/components/chat_components/prompt_button.dart';
+import 'package:chatXpress/components/chat_components/prompt_list.dart';
+import 'package:chatXpress/models/message.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import '../../components/chat_components/chat_message_view.dart';
 import 'package:chatXpress/components/chat_components/custom_text_input.dart';
@@ -70,7 +74,7 @@ class ChatView extends StatelessWidget with GetItMixin {
             ),
           );
         } else {
-          return Center(child: _showProgressIndicator());
+          return const PromptsList();
         }
       },
     );

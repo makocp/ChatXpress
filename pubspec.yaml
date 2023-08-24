@@ -27,6 +27,7 @@ dependencies:
   email_validator: ^2.1.17
   modal_bottom_sheet: ^2.1.2
   uuid: ^3.0.7
+  flutter_animate: ^4.2.0+1
 
 dev_dependencies:
   flutter_test:

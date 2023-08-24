@@ -16,6 +16,7 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 
 class SignInView extends StatelessWidget with GetItMixin {
   SignInView({super.key});
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _signInViewmodel = serviceContainer<SignInViewmodel>();
@@ -171,7 +172,9 @@ class SignInView extends StatelessWidget with GetItMixin {
     return MySquareTile(
       imagePath: MyImagePaths.appleIconPath,
       onTap: () {
-        _signInViewmodel.signInWithApple();
+        _signInViewmodel
+            .signInWithApple()
+            .then((value) => _signInViewmodel.resetValidation());
       },
     );
   }
@@ -180,7 +183,9 @@ class SignInView extends StatelessWidget with GetItMixin {
     return MySquareTile(
       imagePath: MyImagePaths.googleIconPath,
       onTap: () {
-        _signInViewmodel.signInWithGoogle();
+        _signInViewmodel
+            .signInWithGoogle()
+            .then((value) => _signInViewmodel.resetValidation());
       },
     );
   }
