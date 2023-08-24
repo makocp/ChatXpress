@@ -13,9 +13,11 @@ class MyStrings {
 
   static const String menuNewChat = 'New Chat';
   static const String menuPlaceholder = 'Flutmaker';
-  static const String menuCleanHistory = 'Clean History';
+  static const String menuDeleteHistory = 'Delete History';
   static const String menuResetPassword = 'Reset Password';
   static const String menuLogout = 'Logout';
+  static const String menuDeleteHistoryTitle = 'Delete History';
+  static const String menuDeleteHistoryText = 'Are you sure?';
   
   // Buttons
   static const String buttonSignUpCreate = 'Create Account';

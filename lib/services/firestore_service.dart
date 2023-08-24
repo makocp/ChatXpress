@@ -42,4 +42,16 @@ class FirestoreService {
         // GetOptions -> by default ServerAndCache (Loads from Server, but from Cache, if Server not available).
         .get();
   }
+
+  Future deleteChats() async {
+    await db
+        .collection('chats')
+        .where('userId', isEqualTo: currentUserID())
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
 }

@@ -26,23 +26,6 @@ class MenuView extends StatelessWidget with GetItMixin {
           child: Column(
             children: [
               showTopSection(context),
-              // Expanded(
-              //   child: ListView(
-              //     children: [
-              //       ListTile(
-              //         leading: const Icon(
-              //           Icons.chat_bubble_outline,
-              //           color: Colors.white,
-              //         ),
-              //         title: const Text(MyStrings.menuPlaceholder,
-              //             style: TextStyle(color: Colors.white)),
-              //         onTap: () {
-              //           _menuViewmodel.openChat();
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
               buildChatList(),
               showBottomSection(context),
             ],
@@ -69,16 +52,18 @@ class MenuView extends StatelessWidget with GetItMixin {
                         color: Colors.white,
                       ),
                       // contentPadding: const EdgeInsets.all(8.0),
-                      title: Text(snapchot.data?.docs[index].data()['title'], style: const TextStyle(color: Colors.white),),
+                      title: Text(
+                        snapchot.data?.docs[index].data()['title'],
+                        style: const TextStyle(color: Colors.white),
+                      ),
                       onTap: () {
                         // TODO: chat id senden und chat state öffnen zu dem chat.
                         // ist in snapchat.data.docs (liste von chats) drin. Mit index iterieren.
+                        _menuViewmodel.openChat();
                       },
                     );
                   });
             }
-            // else if (snapchot.connectionState == ConnectionState.waiting) {
-            // }
             return const Center(child: CircularProgressIndicator());
           }),
     );
@@ -97,7 +82,7 @@ class MenuView extends StatelessWidget with GetItMixin {
     return Column(
       children: [
         const Divider(color: Colors.white),
-        showCleanHistoryButton(context),
+        showDeleteHistoryButton(context),
         showResetPasswordButton(context),
         showLogoutButton(context),
       ],
@@ -140,14 +125,17 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  ListTile showCleanHistoryButton(BuildContext context) {
+  ListTile showDeleteHistoryButton(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.delete_outline, color: Colors.red),
-      title: const Text(MyStrings.menuCleanHistory,
+      title: const Text(MyStrings.menuDeleteHistory,
           style: TextStyle(color: Colors.red)),
       onTap: () {
-        showConformationDialog(context, "Do you surely want to clear history",
-            "clear history", () => {_menuViewmodel.cleanHistory()});
+        showConformationDialog(
+            context,
+            MyStrings.menuDeleteHistoryText,
+            MyStrings.menuDeleteHistoryTitle,
+            () => {_menuViewmodel.deleteHistory()});
       },
     );
   }

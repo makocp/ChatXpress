@@ -29,7 +29,9 @@ class MenuViewmodel extends ChangeNotifier {
 
   void openChat() {}
 
-  void cleanHistory() {}
+  void deleteHistory() {
+    firestoreService.deleteChats();
+  }
 
   Future<String> updatePassword(String newPassword) async {
     _requestProgressingController.add(true);
