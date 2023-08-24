@@ -64,18 +64,22 @@ class MenuView extends StatelessWidget with GetItMixin {
                   itemCount: snapchot.data?.docs.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      contentPadding: const EdgeInsets.all(8.0),
-                      title: Text(snapchot.data?.docs[index].data()['title']),
+                      leading: const Icon(
+                        Icons.chat_bubble_outline,
+                        color: Colors.white,
+                      ),
+                      // contentPadding: const EdgeInsets.all(8.0),
+                      title: Text(snapchot.data?.docs[index].data()['title'], style: const TextStyle(color: Colors.white),),
                       onTap: () {
                         // TODO: chat id senden und chat state öffnen zu dem chat.
                         // ist in snapchat.data.docs (liste von chats) drin. Mit index iterieren.
                       },
                     );
                   });
-            } 
+            }
             // else if (snapchot.connectionState == ConnectionState.waiting) {
             // }
-              return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }),
     );
   }

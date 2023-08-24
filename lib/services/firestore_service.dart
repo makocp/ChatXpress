@@ -39,7 +39,7 @@ class FirestoreService {
     return await db
         .collection('chats')
         .where('userId', isEqualTo: currentUserID())
-        // GetOptions -> by default ServerAndCache. Loads data from Cache, if exists.
+        // GetOptions -> by default ServerAndCache (Loads from Server, but from Cache, if Server not available).
         .get();
   }
 }
