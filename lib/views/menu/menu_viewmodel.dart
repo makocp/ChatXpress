@@ -22,12 +22,16 @@ class MenuViewmodel extends ChangeNotifier {
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
-    QuerySnapshot<Map<String, dynamic>> test = await firestoreService.getCurrentUserChats();
+    QuerySnapshot<Map<String, dynamic>> test =
+        await firestoreService.getCurrentUserChats();
     log('is from cache: ${test.metadata.isFromCache.toString()}');
     return test;
   }
 
-  void openChat() {}
+  void openChat(String chatId) {
+    // set UI state ChatViewmodel
+    chatViewModel.setChatState(chatId);
+  }
 
   void deleteHistory() {
     firestoreService.deleteChats();

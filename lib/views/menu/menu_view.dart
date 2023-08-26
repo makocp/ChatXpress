@@ -35,17 +35,24 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
+  // to build the chatlist in MenuView
   Widget buildChatList() {
     return Expanded(
       child: FutureBuilder(
+          // gets all chats for the current user
           future: _menuViewmodel.getCurrentUserChats(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapchot) {
             if (snapchot.connectionState == ConnectionState.done) {
+              // gets the length of the list
+              int chatCount = snapchot.data!.docs.length;
               return ListView.builder(
-                  // shrinkWrap: true,
-                  itemCount: snapchot.data?.docs.length,
+                  itemCount: chatCount,
                   itemBuilder: (context, index) {
+                    // gets the chattitle and chatid for the chat to load chat data with chatid, if clicked on it
+                    String chatTitle = snapchot.data!.docs[index].data()['title'];
+                    String chatId = snapchot.data!.docs[index].id;
+                    // builds a listtile for each chat
                     return ListTile(
                       leading: const Icon(
                         Icons.chat_bubble_outline,
@@ -53,13 +60,12 @@ class MenuView extends StatelessWidget with GetItMixin {
                       ),
                       // contentPadding: const EdgeInsets.all(8.0),
                       title: Text(
-                        snapchot.data?.docs[index].data()['title'],
+                        chatTitle,
                         style: const TextStyle(color: Colors.white),
                       ),
                       onTap: () {
-                        // TODO: chat id senden und chat state öffnen zu dem chat.
-                        // ist in snapchat.data.docs (liste von chats) drin. Mit index iterieren.
-                        _menuViewmodel.openChat();
+                        _menuViewmodel.openChat(chatId);
+                        Navigator.pop(context);
                       },
                     );
                   });
