@@ -2,7 +2,6 @@ import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class PromptButton extends StatelessWidget {
   PromptButton(
