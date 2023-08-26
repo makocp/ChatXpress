@@ -28,7 +28,7 @@ class MyContainerSignInAndUp extends StatelessWidget {
                 image: AssetImage(MyImagePaths.iconPath),
                 height: 100,
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView(
                   // To hide the keyboard, when swipe -> better usability.

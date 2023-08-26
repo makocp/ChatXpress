@@ -29,6 +29,7 @@ class MyStrings {
   static const String inputPassword = 'Password';
   static const String inputEmail = 'Email';
   static const String inputSendMessage = 'Send Message';
+  static const String inputUsername = 'Username';
 
   // Validation Messages
   static const String validationInvalidEmail = 'Invalid Email. Please try another one.';

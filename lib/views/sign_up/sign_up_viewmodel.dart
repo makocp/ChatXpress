@@ -1,9 +1,11 @@
 import 'package:chatXpress/assets/strings/my_strings.dart';
+import 'package:chatXpress/models/user_viewmodel.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class SignUpViewmodel extends ChangeNotifier {
@@ -15,41 +17,35 @@ class SignUpViewmodel extends ChangeNotifier {
   bool isLoading = false;
 
 // To validate the user input, clientside.
-  handleInput(String email, String password, String confirmation,
-      Function popView) async {
+  bool handleInput(String email, String password, String confirmPassword) {
     setLoadingState();
 
 // to reset message strings => state for new validation.
-    messageEmail = '';
-    messagePassword = '';
-    messageConfirmation = '';
+    resetValidation();
 
 // Clientside validation
-    if (validatedEmail(email) && validatedPassword(password, confirmation)) {
-      // Serverside validation.
-      await validateAndCreateUser(email, password);
+    if (validatedEmail(email) && validatedPassword(password, confirmPassword)) {
+      unsetLoadingState();
+      return true;
+      // await validateAndCreateUser(email, password);
+    } else {
+      unsetLoadingState();
+      return false;
     }
-
-// only true, if everything successful (no error messages client+server) -> starts signIn.
-    if (messageEmail.isEmpty &&
-        messagePassword.isEmpty &&
-        messageConfirmation.isEmpty) {
-      await signInWithEmailAndPassword(email, password);
-      // Pops the SignUp View to get to the Chat View (gets reloaded instead of SignIn by Streambuilder AuthChanges in StartView)
-      // TODO: find better solution for this pop method. currently best way.
-      popView();
-    }
-
-    unsetLoadingState();
   }
 
 // validates user input directly with Auth createuser method.
 // catches respective exception and sets error string for UI state.
 // if method successful -> user gets created in Auth and then in DB.
-  validateAndCreateUser(String email, String password) async {
+  Future<void> validateAndCreateUser(UserViewmodel userViewmodel) async {
     try {
-      await createUserWithEmailAndPassword(email, password).then((value) {
-        setUserToDB(email);
+      setLoadingState();
+
+      await createUserWithEmailAndPassword(
+              userViewmodel.email, userViewmodel.password)
+          .then((value) {
+        setUserToDB(userViewmodel.email, userViewmodel.username);
+        unsetLoadingState();
       });
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
@@ -66,6 +62,7 @@ class SignUpViewmodel extends ChangeNotifier {
           messagePassword = MyStrings.validationPasswordWeak;
           break;
       }
+      unsetLoadingState();
     }
   }
 
@@ -82,7 +79,7 @@ class SignUpViewmodel extends ChangeNotifier {
 
 // return true if password is valid.
 // otherwise message string get set for UI state.
-  bool validatedPassword(String password, String confirmation) {
+  bool validatedPassword(String password, String confirmPassword) {
     if (password.length < 8) {
       messagePassword = MyStrings.validationPasswordLength;
       return false;
@@ -91,8 +88,8 @@ class SignUpViewmodel extends ChangeNotifier {
       messagePassword = MyStrings.validationPasswordSpaces;
       return false;
     }
-    if (password != confirmation) {
-      messageConfirmation = MyStrings.validationPasswordMatch;
+    if (password != confirmPassword) {
+      messagePassword = MyStrings.validationPasswordMatch;
       return false;
     }
     return true;
@@ -105,11 +102,12 @@ class SignUpViewmodel extends ChangeNotifier {
 
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
+    setLoadingState();
     return await authService.signInWithEmailAndPassword(email, password);
   }
 
-  Future<void> setUserToDB(String email) async {
-    return await db.setUser(email);
+  Future<void> setUserToDB(String email, String username) async {
+    return await db.setUser(email, username);
   }
 
   void setLoadingState() {
@@ -120,5 +118,11 @@ class SignUpViewmodel extends ChangeNotifier {
   void unsetLoadingState() {
     isLoading = false;
     notifyListeners();
+  }
+
+  void resetValidation() {
+    messageEmail = '';
+    messagePassword = '';
+    messageConfirmation = '';
   }
 }
