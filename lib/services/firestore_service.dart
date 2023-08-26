@@ -9,6 +9,7 @@ class FirestoreService {
   currentUserID() =>
       authService.firebaseAuthInstance.currentUser?.uid.toString();
 
+  // CREATE / UPDATE
   // Creates a new user, if it does not exist.
   // If it DOES exist it updates the sent fields, without deleting the others (merge true).
   // This merge option is only, if something failed during account creation -> user gets created after new sign in, just in case.
@@ -19,30 +20,41 @@ class FirestoreService {
         .set({"email": email}, SetOptions(merge: true));
   }
 
-  Future<void> deleteUser() async {}
-
-  Future<void> getUser() async {}
-
+  // CREATE
   // to add a message to the db with chatId as mapping to a chat.
   addMessage(MessageModel message) async {
     await db.collection('messages').add(message.mapToDB());
   }
 
+  // CREATE / UPDATE
   // to set a chat to the db.
   // gets updated, if document exists, but field changes (e.g. title) -> Setoptions merge: true (same as update, but creates document, if does not exist -> update would throw error).
   setChat(String chatId, String title) async {
     await db.collection('chats').doc(chatId).set(
-        {'title': title, 'userId': currentUserID()}, SetOptions(merge: true));
+        {'title': title, 'userId': currentUserID(), 'date': DateTime.now()}, SetOptions(merge: true));
   }
 
+  // READ
   Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
     return await db
         .collection('chats')
+        .orderBy('date', descending: true)
         .where('userId', isEqualTo: currentUserID())
         // GetOptions -> by default ServerAndCache (Loads from Server, but from Cache, if Server not available).
         .get();
   }
 
+  // READ
+  Future<QuerySnapshot<Map<String, dynamic>>> getChatMessages(
+      String chatId) async {
+    return await db
+        .collection('messages')
+        .orderBy('date', descending: false)
+        .where('chatId', isEqualTo: chatId)
+        .get();
+  }
+
+  // DELETE
   Future deleteChats() async {
     await db
         .collection('chats')
