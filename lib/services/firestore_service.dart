@@ -6,14 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreService {
   final db = FirebaseFirestore.instance;
   final authService = serviceContainer<AuthService>();
-
   currentUserID() =>
       authService.firebaseAuthInstance.currentUser?.uid.toString();
 
-  // CREATE / UPDATE
-  // Creates a new user, if it does not exist.
-  // If it DOES exist it updates the sent fields, without deleting the others (merge true).
-  // This merge option is only, if something failed during account creation -> user gets created after new sign in, just in case.
+  
   Future<void> setUser(String email, String username) async {
     // Check if the user with the given email already exists
     QuerySnapshot userSnapshot =
@@ -40,8 +36,7 @@ class FirestoreService {
   // gets updated, if document exists, but field changes (e.g. title) -> Setoptions merge: true (same as update, but creates document, if does not exist -> update would throw error).
   setChat(String chatId, String title) async {
     await db.collection('chats').doc(chatId).set(
-        {'title': title, 'userId': currentUserID(), 'date': DateTime.now()},
-        SetOptions(merge: true));
+        {'title': title, 'userId': currentUserID(), 'date': DateTime.now()}, SetOptions(merge: true));
   }
 
   // READ

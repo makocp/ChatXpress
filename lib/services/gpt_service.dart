@@ -2,6 +2,7 @@ import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:chatXpress/secrets.dart';
 
 class GptService {
+  // list for chat context.
   final List<Messages> messages = [];
 
   final openAI = OpenAI.instance.build(

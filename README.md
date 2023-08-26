@@ -46,6 +46,12 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 ### Login Validation
 - There is only one error message to hint, that email OR password are incorrect. Otherwise a  malicious user could potentially brute force the password from another user or see if a given email is registered or not.
 
+### Firestore
+- Data Structure: In this case, we decided to go with the rule "Shape your data like your queries". That means, data hierarchy of the data in the app is mirrored in the data structure in Firestore, for simplicity reasons.
+- Because each chat is directly assignable to an user (1-n), we chose the nested data structure. In case of many to many relation, it would make sense, to save the chats in a separate collection at root.
+- Important: Each Read/Write gets billed -> minimize as much as possible.
+- Important: Load only data, which is needed at the moment for the user, to avoid massive, unnecassery data load. (e.g.: load only title to display and if user clicks on it, then load the rest data for this object).
+
 ## References/Info
 
 - [Mitch Koko](https://www.youtube.com/@createdbykoko)
