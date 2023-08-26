@@ -4,6 +4,7 @@ import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../services/firestore_service.dart';
 
 class SignInViewmodel extends ChangeNotifier {
@@ -37,12 +38,6 @@ class SignInViewmodel extends ChangeNotifier {
     try {
       await signInWithEmailAndPassword(email, password).then((value) {
         resetValidation();
-
-        // To create the user, if it does not exist, but a Auth Acc exists.
-        // Just in case, if there was an error in SignUp with account creation in Db.
-        // Does NOT overwrite current user -> see origin db method (merge true).
-        // - onError is necassery, so the method continues, otherwise it would stop at an Exception.
-        setUserToDB(email).onError((error, stackTrace) => null);
 
       });
       // Serverside validation already there by Firebase.
@@ -97,11 +92,13 @@ class SignInViewmodel extends ChangeNotifier {
   }
 
 // Sets loading state for apple and google sign in to block user interactions while performing.
-  Future<UserCredential> signInWithGoogle() async {
+  Future<GoogleSignInAccount> signInWithGoogle() async {
     setLoadingState();
-    return await authService
+    var gUser = await authService
         .signInWithGoogle()
         .whenComplete(() => unsetLoadingState());
+    setUserToDB(gUser.email, gUser.displayName ?? "");
+    return gUser;
   }
 
   Future<UserCredential> signInWithApple() async {
@@ -111,9 +108,8 @@ class SignInViewmodel extends ChangeNotifier {
         .whenComplete(() => unsetLoadingState());
   }
 
-  Future<void> setUserToDB(String email) async {
-    // TODO
-    // return await db.setUser(email);
+  Future<void> setUserToDB(String email, String username) async {
+     return await db.setUser(email,username);
   }
 
   void setLoadingState() {
