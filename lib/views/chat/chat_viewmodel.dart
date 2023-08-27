@@ -24,12 +24,14 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   // to generate a random id for chat to set in db.
   // STATE of current Chat
   String _chatId = const Uuid().v1();
   List<MessageModel> _messages = [];
+
   List<MessageModel> get messages => _messages;
 
   // sets a new chatId and messages to empty -> for state, new chat.
@@ -41,7 +43,7 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   // to set the loading state for response, for the UI to show the progress indicator.
-  setLoadingState(bool loading){
+  setLoadingState(bool loading) {
     _isLoading = loading;
     notifyListeners();
   }
@@ -82,7 +84,7 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   sendMessage(String prompt) async {
-   setLoadingState(true);
+    setLoadingState(true);
 
     // in case of empty messages -> new chat, needs to be created in DB.
     if (_messages.isEmpty) {
@@ -98,6 +100,10 @@ class ChatViewmodel extends ChangeNotifier {
     MessageModel messageResponse = createNewMessageModel(response, false);
     _addMessageToChat(messageResponse);
     _addMessageToDB(messageResponse);
+
+    if (messages.length == 2 || messages.length == 4) {
+      generateChatTitle();
+    }
 
     setLoadingState(false);
   }
@@ -141,5 +147,10 @@ class ChatViewmodel extends ChangeNotifier {
   // to add message to DB
   _addMessageToDB(MessageModel message) {
     firestoreService.addMessage(message);
+  }
+
+  void generateChatTitle() async {
+    var title = await gptService.generateChatTitle();
+    firestoreService.updateChatTitle(_chatId, title);
   }
 }
