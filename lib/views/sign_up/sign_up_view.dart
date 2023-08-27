@@ -3,6 +3,7 @@ import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/box_components/my_infobox.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
+import 'package:chatXpress/components/textfield_components/my_passwordfield.dart';
 import 'package:chatXpress/components/textfield_components/my_textfield.dart';
 import 'package:chatXpress/models/user_viewmodel.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
@@ -123,24 +124,20 @@ class SignUpView extends StatelessWidget with GetItMixin {
     );
   }
 
-  MyTextfield showConfirmationPasswordInput(
+  MyPasswordfield showConfirmationPasswordInput(
       TextEditingController passwordConfirmationController, bool isError) {
-    return MyTextfield(
+    return MyPasswordfield(
         controller: passwordConfirmationController,
         labelText: MyStrings.inputConfirmPassword,
-        obscureText: true,
-        isError: isError,
-        icon: Icons.lock_outline);
+        isError: isError);
   }
 
-  MyTextfield showPasswordInput(
+  MyPasswordfield showPasswordInput(
       TextEditingController passwordController, bool isError) {
-    return MyTextfield(
+    return MyPasswordfield(
         controller: passwordController,
         labelText: MyStrings.inputPassword,
-        obscureText: true,
-        isError: isError,
-        icon: Icons.lock_outline);
+        isError: isError);
   }
 
   showEmailInput(TextEditingController emailController, bool isError) {
