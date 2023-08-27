@@ -39,7 +39,6 @@ class GptService {
     return message;
   }
 
-
   void _addResponseToChat(String response) {
     messages.add(Messages(
       role: Role.assistant,
@@ -52,5 +51,19 @@ class GptService {
       role: Role.user,
       content: prompt,
     ));
+  }
+
+  Future<String> generateChatTitle() async {
+    var summaryMessage =
+        Messages(role:Role.user, content: "summerize the conversation in 3 words");
+    messages.add(summaryMessage);
+    final request = ChatCompleteText(
+      messages: messages,
+      maxToken: 10,
+      model: GptTurboChatModel(),
+    );
+    var message = await _handleRequest(request);
+    messages.remove(summaryMessage);
+    return message;
   }
 }

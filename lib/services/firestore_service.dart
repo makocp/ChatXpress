@@ -71,4 +71,9 @@ class FirestoreService {
       }
     });
   }
+
+  Future<void> updateChatTitle(String chatId,String title) async{
+    await db.collection('chats').doc(chatId).set(
+        {'title': title}, SetOptions(merge: true));
+  }
 }
