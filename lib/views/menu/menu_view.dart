@@ -106,8 +106,8 @@ class MenuView extends StatelessWidget with GetItMixin {
       onTap: () => {
         showConformationDialog(
             context,
-            "Sure you want to log out?",
-            "Logout",
+            MyStrings.logOutConfirmationString,
+            MyStrings.logOut,
             () => {
                   _menuViewmodel.logOut().then((value) {
                     Navigator.popUntil(context, (route) => route.isFirst);
@@ -170,7 +170,7 @@ class MenuView extends StatelessWidget with GetItMixin {
     // set up the buttons
     Widget cancelButton = TextButton(
       child: const Text(
-        "Cancel",
+        MyStrings.cancel,
         style: TextStyle(color: MyColors.greenDefaultColorDark),
       ),
       onPressed: () {
@@ -245,11 +245,11 @@ class MenuView extends StatelessWidget with GetItMixin {
           _buildTitle(),
           _buildPasswordField(
             controller: newPasswordController,
-            labelText: "enter new password",
+            labelText: MyStrings.enterNewPassword,
           ),
           _buildPasswordField(
             controller: repeatNewPasswordController,
-            labelText: "repeat new password",
+            labelText: MyStrings.repeatNewPassword,
           ),
           _buildChangePasswordButton(menuViewModel),
         ],
@@ -275,7 +275,7 @@ class MenuView extends StatelessWidget with GetItMixin {
     return const Padding(
       padding: EdgeInsets.fromLTRB(15, 30, 15, 8),
       child: Text(
-        "change password",
+        MyStrings.changePassword,
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -295,7 +295,7 @@ class MenuView extends StatelessWidget with GetItMixin {
               onPressed: () {
                 menuViewModel.updatePassword(newPasswordController.text);
               },
-              buttonText: 'change password',
+              buttonText: MyStrings.buttonChangePassword,
               isLoading: snapshot.data ?? false,
             ),
           );
