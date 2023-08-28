@@ -167,6 +167,7 @@ class MenuView extends StatelessWidget with GetItMixin {
 
   showConformationDialog(BuildContext context, String confirmationMessage,
       String actionDescription, Function action) {
+
     // set up the buttons
     Widget cancelButton = TextButton(
       child: const Text(
@@ -185,6 +186,7 @@ class MenuView extends StatelessWidget with GetItMixin {
           Text(actionDescription, style: const TextStyle(color: Colors.white)),
       onPressed: () {
         action();
+        Navigator.pop(context);
       },
     );
 
