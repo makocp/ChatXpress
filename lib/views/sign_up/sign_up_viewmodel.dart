@@ -1,5 +1,4 @@
 import 'package:chatXpress/assets/strings/my_strings.dart';
-import 'package:chatXpress/models/user_viewmodel.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
@@ -17,35 +16,40 @@ class SignUpViewmodel extends ChangeNotifier {
   bool isLoading = false;
 
 // To validate the user input, clientside.
-  bool handleInput(String email, String password, String confirmPassword) {
+  handleInput(String email, String password, String confirmation,
+      Function popView) async {
     setLoadingState();
 
 // to reset message strings => state for new validation.
-    resetValidation();
+    messageEmail = '';
+    messagePassword = '';
+    messageConfirmation = '';
 
 // Clientside validation
-    if (validatedEmail(email) && validatedPassword(password, confirmPassword)) {
-      unsetLoadingState();
-      return true;
-      // await validateAndCreateUser(email, password);
-    } else {
-      unsetLoadingState();
-      return false;
+    if (validatedEmail(email) && validatedPassword(password, confirmation)) {
+      // Serverside validation.
+      await validateAndCreateUser(email, password);
     }
+
+// only true, if everything successful (no error messages client+server) -> starts signIn.
+    if (messageEmail.isEmpty &&
+        messagePassword.isEmpty &&
+        messageConfirmation.isEmpty) {
+      await signInWithEmailAndPassword(email, password);
+      // Pops the SignUp View to get to the Chat View (gets reloaded instead of SignIn by Streambuilder AuthChanges in StartView)
+      popView();
+    }
+
+    unsetLoadingState();
   }
 
 // validates user input directly with Auth createuser method.
 // catches respective exception and sets error string for UI state.
 // if method successful -> user gets created in Auth and then in DB.
-  Future<void> validateAndCreateUser(UserViewmodel userViewmodel) async {
+  validateAndCreateUser(String email, String password) async {
     try {
-      setLoadingState();
-
-      await createUserWithEmailAndPassword(
-              userViewmodel.email, userViewmodel.password)
-          .then((value) {
-        setUserToDB(userViewmodel.email, userViewmodel.username);
-        unsetLoadingState();
+      await createUserWithEmailAndPassword(email, password).then((value) {
+        setUserToDB(email);
       });
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
@@ -62,7 +66,6 @@ class SignUpViewmodel extends ChangeNotifier {
           messagePassword = MyStrings.validationPasswordWeak;
           break;
       }
-      unsetLoadingState();
     }
   }
 
@@ -89,7 +92,7 @@ class SignUpViewmodel extends ChangeNotifier {
       return false;
     }
     if (password != confirmPassword) {
-      messagePassword = MyStrings.validationPasswordMatch;
+      messageConfirmation = MyStrings.validationPasswordMatch;
       return false;
     }
     return true;
@@ -106,8 +109,8 @@ class SignUpViewmodel extends ChangeNotifier {
     return await authService.signInWithEmailAndPassword(email, password);
   }
 
-  Future<void> setUserToDB(String email, String username) async {
-    return await db.setUser(email, username);
+  Future<void> setUserToDB(String email) async {
+    return await db.setUser(email);
   }
 
   void setLoadingState() {

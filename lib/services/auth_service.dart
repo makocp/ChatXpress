@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
   final firebaseAuthInstance = FirebaseAuth.instance;
 
-  Future<GoogleSignInAccount> signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     // Starts the interactive sign-in process.
     // null if sign in failed.
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -19,8 +19,7 @@ class AuthService {
     );
 
     // sign in
-    await firebaseAuthInstance.signInWithCredential(credential);
-    return gUser;
+    return await firebaseAuthInstance.signInWithCredential(credential);
   }
 
   Future<UserCredential> signInWithApple() async {
