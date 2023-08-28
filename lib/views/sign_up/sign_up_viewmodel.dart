@@ -45,16 +45,17 @@ class SignUpViewmodel extends ChangeNotifier {
     // Clientside validation
     if (validatedEmail(email) && validatedPassword(password, confirmation)) {
       // Serverside validation.
-      await validateAndCreateUser(email, password);
+      await createUserWithEmailAndPassword(email, password);
     }
 
     // only true, if everything successful (no error messages client+server) -> starts signIn.
     if (messageEmail.isEmpty &&
         messagePassword.isEmpty &&
         messageConfirmation.isEmpty) {
-      await signInWithEmailAndPassword(email, password);
-      // Pops the SignUp View to get to the Chat View (gets reloaded instead of SignIn by Streambuilder AuthChanges in StartView)
-      popView();
+      await signInWithEmailAndPassword(email, password)
+          // Pops the SignUp View to get to the Chat View (gets reloaded instead of SignIn by Streambuilder AuthChanges in StartView)
+          .then((value) => popView())
+          .onError((error, stackTrace) => null);
     }
 
     setLoadingState(false);
@@ -63,9 +64,11 @@ class SignUpViewmodel extends ChangeNotifier {
   // validates user input directly with Auth createuser method.
   // catches respective exception and sets error string for UI state.
   // if method successful -> user gets created in Auth and then in DB.
-  validateAndCreateUser(String email, String password) async {
+  createUserWithEmailAndPassword(String email, String password) async {
     try {
-      await createUserWithEmailAndPassword(email, password).then((value) {
+      await authService
+          .createUserWithEmailAndPassword(email, password)
+          .then((value) {
         setUserToDB(email);
       });
     } on FirebaseAuthException catch (error) {
@@ -115,17 +118,12 @@ class SignUpViewmodel extends ChangeNotifier {
     return true;
   }
 
-  Future<UserCredential> createUserWithEmailAndPassword(
-      String email, String password) async {
-    return await authService.createUserWithEmailAndPassword(email, password);
-  }
-
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
     return await authService.signInWithEmailAndPassword(email, password);
   }
 
   Future<void> setUserToDB(String email) async {
-    return await db.setUser(email);
+    return await db.setUser(email).onError((error, stackTrace) => null);
   }
 }

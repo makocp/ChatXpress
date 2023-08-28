@@ -42,7 +42,7 @@ class SignInViewmodel extends ChangeNotifier {
     // Clientside validation.
     if (validatedMailInput(email) && validatedPasswordInput(password)) {
       // Serverside validation.
-      await validateAndSignIn(email, password);
+      await signInWithEmailAndPassword(email, password);
     }
 
     setLoadingState(false);
@@ -50,14 +50,16 @@ class SignInViewmodel extends ChangeNotifier {
 
   // serverside validation, if successful -> sign user in.
   // otherwise set string messages for UI state.
-  validateAndSignIn(String email, String password) async {
+  signInWithEmailAndPassword(String email, String password) async {
     try {
-      await signInWithEmailAndPassword(email, password).then((value) {
+      await authService
+          .signInWithEmailAndPassword(email, password)
+          .then((value) {
         // To create the user, if it does not exist, but a Auth Acc exists.
         // Just in case, if there was an error in SignUp with account creation in Db.
         // Does NOT overwrite current user -> see origin db method (merge true).
         // - onError is necassery, so the method continues, otherwise it would stop at an Exception.
-        setUserToDB(email).onError((error, stackTrace) => null);
+        setUserToDB(email);
       });
       // Serverside validation already there by Firebase.
       // Catches the error messages and sets it as state for UI to show it to the user.
@@ -104,26 +106,36 @@ class SignInViewmodel extends ChangeNotifier {
     return true;
   }
 
-// here no set and unloading state implemented, because signin gets only called in handle input method, where this action is already performed.
-  Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
-    return await authService.signInWithEmailAndPassword(email, password);
-  }
-
-// Sets loading state for apple and google sign in to block user interactions while performing.
-  Future<UserCredential> signInWithGoogle() async {
+  signInWithGoogle() async {
     setLoadingState(true);
-    return await authService
-        .signInWithGoogle();
+    await authService
+        .signInWithGoogle()
+        .then((value) {
+          setUserToDB(value.user!.email.toString());
+        })
+        .onError((error, stackTrace) => null)
+        .whenComplete(() => setLoadingState(false));
   }
 
-  Future<UserCredential> signInWithApple() async {
+  signInWithApple() async {
     setLoadingState(true);
-    return await authService
-        .signInWithApple();
+    await authService
+        .signInWithApple()
+        .then((value) {
+          // To check, if email is anonymous, to avoid "null" in database.
+          String email = value.user?.email == null
+              ? "Apple Anonymous"
+              : value.user!.email.toString();
+          setUserToDB(email);
+        })
+        .onError((error, stackTrace) => null)
+        .whenComplete(() => setLoadingState(false));
   }
 
-  Future<void> setUserToDB(String email) async {
-    return await db.setUser(email);
+  // Gets called after EACH SignIn !
+  // -> Create, if NOT exist! (set method with merge:true)
+  // Otherwise you would need to check, if the user exist and then create it.
+  setUserToDB(String email) async {
+    await db.setUser(email).onError((error, stackTrace) => null);
   }
 }

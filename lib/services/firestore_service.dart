@@ -14,8 +14,8 @@ class FirestoreService {
   // Creates a new user, if it does not exist.
   // If it DOES exist it updates the sent fields, without deleting the others (merge true).
   // This merge option is only, if something failed during account creation -> user gets created after new sign in, just in case.
-  setUser(String email) async {
-    await db
+  Future<void> setUser(String email) async {
+    return await db
         .collection('users')
         .doc(authService.firebaseAuthInstance.currentUser?.uid.toString())
         .set({"email": email}, SetOptions(merge: true));
