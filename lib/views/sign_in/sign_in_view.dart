@@ -6,6 +6,7 @@ import 'package:chatXpress/components/box_components/my_infobox.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/container_components/my_container_signinandup.dart';
 import 'package:chatXpress/components/button_components/my_squaretile.dart';
+import 'package:chatXpress/components/textfield_components/my_passwordfield.dart';
 import 'package:chatXpress/components/textfield_components/my_textfield.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:chatXpress/views/forgot_password/forgot_password_view.dart';
@@ -140,12 +141,10 @@ class SignInView extends StatelessWidget with GetItMixin {
   }
 
   showPasswordInput(TextEditingController passwordController, bool isError) {
-    return MyTextfield(
+    return MyPasswordfield(
         controller: passwordController,
         labelText: MyStrings.inputPassword,
-        obscureText: true,
-        isError: isError,
-        icon: Icons.lock_outline);
+        isError: isError);
   }
 
   Align showForgotPassword(BuildContext context, bool isLoading) {

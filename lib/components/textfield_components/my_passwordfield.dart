@@ -34,11 +34,12 @@ class _MyPasswordfieldState extends State<MyPasswordfield> {
       enableSuggestions: false,
       autocorrect: false,
       decoration: InputDecoration(
+          prefixIcon: Icon(Icons.lock, color: Colors.grey[500]),
           suffixIcon: IconButton(
             icon: Icon(
               // Based on passwordVisible state choose the icon
               showPassword ? Icons.visibility_off : Icons.visibility,
-              color: Colors.black,
+              color: Colors.grey[700],
             ),
             onPressed: () {
               // Update the state i.e. toogle the state of passwordVisible variable
@@ -55,7 +56,7 @@ class _MyPasswordfieldState extends State<MyPasswordfield> {
             borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(color: borderColor()),
           ),
-          fillColor: Colors.white,
+          fillColor: Colors.white.withOpacity(0.8),
           filled: true,
           hintText: widget.labelText,
           hintStyle: TextStyle(color: Colors.grey[500])),
@@ -63,10 +64,10 @@ class _MyPasswordfieldState extends State<MyPasswordfield> {
   }
 
   borderColor() {
-    return widget.isError ? Colors.red : MyColors.greenDefaultColorDark;
+    return widget.isError ? Colors.red : Colors.white;
   }
 
   borderColorUnfocused() {
-    return widget.isError ? Colors.red :MyColors.greenDefaultColorDark;
+    return widget.isError ? Colors.red : MyColors.greenDefaultColorDark;
   }
 }
