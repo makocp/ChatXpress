@@ -123,7 +123,7 @@ class MenuView extends StatelessWidget with GetItMixin {
         Icons.lock_reset_outlined,
         color: Colors.white,
       ),
-      title: const Text(MyStrings.menuResetPassword,
+      title: const Text(MyStrings.changePassword,
           style: TextStyle(color: Colors.white)),
       onTap: () {
         showModalDialog(context, _menuViewmodel);

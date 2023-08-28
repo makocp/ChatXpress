@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/snackbars/snackbars.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/models/message_model.dart';
 import 'package:chatXpress/components/chat_components/prompt_list.dart';
@@ -22,8 +23,7 @@ class ChatView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoading =
-        watchOnly((ChatViewmodel vm) => vm.isLoading);
+    final bool isLoading = watchOnly((ChatViewmodel vm) => vm.isLoading);
     return Scaffold(
       backgroundColor: MyColors.greyChatBackground,
       appBar: AppBar(
@@ -41,7 +41,7 @@ class ChatView extends StatelessWidget with GetItMixin {
               Expanded(
                 child: _buildMessagesList(isLoading),
               ),
-              _buildInputRow(),
+              _buildInputRow(context),
             ],
           ),
         ),
@@ -79,7 +79,7 @@ class ChatView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Widget _buildInputRow() {
+  Widget _buildInputRow(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
@@ -88,8 +88,15 @@ class ChatView extends StatelessWidget with GetItMixin {
           CustomTextInput(
               hintText: MyStrings.inputSendMessage, controller: _controller),
           IconButton(
-            onPressed: () => _handleSendMessage(),
-            icon: const Icon(Icons.send),
+            onPressed: () => _chatViewmodel.isLoading
+                ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
+                : _handleSendMessage(),
+            icon: _chatViewmodel.isLoading
+                ? Icon(
+                    Icons.send,
+                    color: Colors.grey[600],
+                  )
+                : const Icon(Icons.send),
             color: MyColors.greenDefaultColor,
           ),
         ],

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/chat_components/prompt_button.dart';
 import 'package:flutter/material.dart';
 
@@ -108,7 +109,7 @@ class _PromptsListState extends State<PromptsList> {
           const Padding(
             padding: EdgeInsets.only(top: 90.0, bottom: 16.0),
             child: Text(
-              "Chat Express",
+             MyStrings.appName,
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
