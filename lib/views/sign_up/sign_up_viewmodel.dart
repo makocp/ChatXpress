@@ -10,28 +10,45 @@ import 'package:flutter/foundation.dart';
 class SignUpViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
   final db = serviceContainer<FirestoreService>();
-  String messageEmail = '';
-  String messagePassword = '';
-  String messageConfirmation = '';
-  bool isLoading = false;
+
+  // Default STATE
+  bool _isLoading = false;
+  String _messageEmail = '';
+  String _messagePassword = '';
+  String _messageConfirmation = '';
+
+  bool get isLoading => _isLoading;
+  String get messageEmail => _messageEmail;
+  String get messagePassword => _messagePassword;
+  String get messageConfirmation => _messageConfirmation;
+
+  void setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners();
+  }
+
+  void setDefaultState() {
+    _messageEmail = '';
+    _messagePassword = '';
+    _messageConfirmation = '';
+    notifyListeners();
+  }
 
 // To validate the user input, clientside.
   handleInput(String email, String password, String confirmation,
       Function popView) async {
-    setLoadingState();
+    setLoadingState(true);
 
-// to reset message strings => state for new validation.
-    messageEmail = '';
-    messagePassword = '';
-    messageConfirmation = '';
+    // to reset message strings => state for new validation.
+    setDefaultState();
 
-// Clientside validation
+    // Clientside validation
     if (validatedEmail(email) && validatedPassword(password, confirmation)) {
       // Serverside validation.
       await validateAndCreateUser(email, password);
     }
 
-// only true, if everything successful (no error messages client+server) -> starts signIn.
+    // only true, if everything successful (no error messages client+server) -> starts signIn.
     if (messageEmail.isEmpty &&
         messagePassword.isEmpty &&
         messageConfirmation.isEmpty) {
@@ -40,12 +57,12 @@ class SignUpViewmodel extends ChangeNotifier {
       popView();
     }
 
-    unsetLoadingState();
+    setLoadingState(false);
   }
 
-// validates user input directly with Auth createuser method.
-// catches respective exception and sets error string for UI state.
-// if method successful -> user gets created in Auth and then in DB.
+  // validates user input directly with Auth createuser method.
+  // catches respective exception and sets error string for UI state.
+  // if method successful -> user gets created in Auth and then in DB.
   validateAndCreateUser(String email, String password) async {
     try {
       await createUserWithEmailAndPassword(email, password).then((value) {
@@ -54,16 +71,16 @@ class SignUpViewmodel extends ChangeNotifier {
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'email-already-in-use':
-          messageEmail = MyStrings.validationInvalidEmail;
+          _messageEmail = MyStrings.validationInvalidEmail;
           break;
         case 'invalid-email':
-          messageEmail = MyStrings.validationInvalidEmail;
+          _messageEmail = MyStrings.validationInvalidEmail;
           break;
         case 'operation-not-allowed':
-          messageEmail = MyStrings.validationPermissionDenied;
+          _messageEmail = MyStrings.validationPermissionDenied;
           break;
         case 'weak-password':
-          messagePassword = MyStrings.validationPasswordWeak;
+          _messagePassword = MyStrings.validationPasswordWeak;
           break;
       }
     }
@@ -75,7 +92,7 @@ class SignUpViewmodel extends ChangeNotifier {
     if (EmailValidator.validate(email)) {
       return true;
     } else {
-      messageEmail = MyStrings.validationInvalidEmail;
+      _messageEmail = MyStrings.validationInvalidEmail;
       return false;
     }
   }
@@ -84,15 +101,15 @@ class SignUpViewmodel extends ChangeNotifier {
 // otherwise message string get set for UI state.
   bool validatedPassword(String password, String confirmPassword) {
     if (password.length < 8) {
-      messagePassword = MyStrings.validationPasswordLength;
+      _messagePassword = MyStrings.validationPasswordLength;
       return false;
     }
     if (password.contains(' ')) {
-      messagePassword = MyStrings.validationPasswordSpaces;
+      _messagePassword = MyStrings.validationPasswordSpaces;
       return false;
     }
     if (password != confirmPassword) {
-      messageConfirmation = MyStrings.validationPasswordMatch;
+      _messageConfirmation = MyStrings.validationPasswordMatch;
       return false;
     }
     return true;
@@ -105,27 +122,10 @@ class SignUpViewmodel extends ChangeNotifier {
 
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
-    setLoadingState();
     return await authService.signInWithEmailAndPassword(email, password);
   }
 
   Future<void> setUserToDB(String email) async {
     return await db.setUser(email);
-  }
-
-  void setLoadingState() {
-    isLoading = true;
-    notifyListeners();
-  }
-
-  void unsetLoadingState() {
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void resetValidation() {
-    messageEmail = '';
-    messagePassword = '';
-    messageConfirmation = '';
   }
 }
