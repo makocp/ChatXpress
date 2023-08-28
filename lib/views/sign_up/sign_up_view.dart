@@ -92,7 +92,7 @@ class SignUpView extends StatelessWidget with GetItMixin {
         _signUpViewmodel.handleInput(
             _emailController.text.trim(),
             _passwordController.text.trim(),
-            _passwordConfirmationController.text.trim(), () => Navigator.pop(context))
+            _passwordConfirmationController.text.trim())
       },
       buttonText: MyStrings.buttonSignUpCreate,
       isLoading: isLoading,

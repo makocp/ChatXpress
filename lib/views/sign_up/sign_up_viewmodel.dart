@@ -35,8 +35,7 @@ class SignUpViewmodel extends ChangeNotifier {
   }
 
 // To validate the user input, clientside.
-  handleInput(String email, String password, String confirmation,
-      Function popView) async {
+  handleInput(String email, String password, String confirmation) async {
     setLoadingState(true);
 
     // to reset message strings => state for new validation.
@@ -52,10 +51,7 @@ class SignUpViewmodel extends ChangeNotifier {
     if (messageEmail.isEmpty &&
         messagePassword.isEmpty &&
         messageConfirmation.isEmpty) {
-      await signInWithEmailAndPassword(email, password)
-          // Pops the SignUp View to get to the Chat View (gets reloaded instead of SignIn by Streambuilder AuthChanges in StartView)
-          .then((value) => popView())
-          .onError((error, stackTrace) => null);
+      await signInWithEmailAndPassword(email, password);
     }
 
     setLoadingState(false);

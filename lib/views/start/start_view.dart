@@ -9,7 +9,6 @@ class StartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // Gets called on first start on App -> start SignIn.
     // Listen on SignIn/SignOut event from Authentication and recalls builder
     // -> If user signs in/out it reloads the corresponding View (directly Chat or SignIn).
@@ -18,7 +17,15 @@ class StartView extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          unregisterAuthServices();
+          // Gets called, after ChatView is rendered.
+          // !! otherwise it would pop and unregister, but the ChatView is not loaded yet -> error.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // to pop SignUpView, if user creates account successfully
+            // otherwise it would "overwrite" the ChatView
+            Navigator.popUntil(context, (route) => route.isFirst);
+            // to unregister all AuthServices, because no longer needed after SignIn.
+            unregisterAuthServices();
+          });
           return ChatView();
         } else {
           registerAuthServices();
