@@ -22,8 +22,7 @@ class ChatView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoading =
-        watchOnly((ChatViewmodel vm) => vm.isLoading);
+    final bool isLoading = watchOnly((ChatViewmodel vm) => vm.isLoading);
     return Scaffold(
       backgroundColor: MyColors.greyChatBackground,
       appBar: AppBar(
@@ -31,8 +30,10 @@ class ChatView extends StatelessWidget with GetItMixin {
         title: const Text(MyStrings.appName),
       ),
       drawer: MenuView(),
-      onDrawerChanged: (isOpened) =>
-          FocusManager.instance.primaryFocus?.unfocus(),
+      onDrawerChanged: (isOpened) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        _chatViewmodel.loadCurrentUserchatsFromDB();
+      },
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

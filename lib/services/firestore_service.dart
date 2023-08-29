@@ -36,7 +36,7 @@ class FirestoreService {
   }
 
   // READ
-  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
+  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserchats() async {
     return await db
         .collection('chats')
         .orderBy('date', descending: true)

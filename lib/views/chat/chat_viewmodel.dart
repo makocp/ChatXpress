@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:chatXpress/enum/message_type.dart';
 import 'package:chatXpress/models/message_model.dart';
+import 'package:chatXpress/models/userchat_model.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/services/gpt_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
@@ -10,28 +11,39 @@ import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatViewmodel extends ChangeNotifier {
-  final gptService = serviceContainer<GptService>();
-  final firestoreService = serviceContainer<FirestoreService>();
-
-  final StreamController<List<MessageModel>> _messageController =
-      StreamController<List<MessageModel>>.broadcast();
-  late Stream<List<MessageModel>> messageStream = _messageController.stream;
-
   @override
   void dispose() {
     _messageController.close();
     super.dispose();
   }
 
-  bool _isLoading = false;
+  // Services
+  final gptService = serviceContainer<GptService>();
+  final firestoreService = serviceContainer<FirestoreService>();
 
-  bool get isLoading => _isLoading;
+  // Streams for UI
+  final StreamController<List<MessageModel>> _messageController =
+      StreamController<List<MessageModel>>.broadcast();
+  late Stream<List<MessageModel>> messageStream = _messageController.stream;
 
-  // to generate a random id for chat to set in db.
+  final StreamController<List<UserchatModel>> _userchatController =
+      StreamController<List<UserchatModel>>.broadcast();
+  late Stream<List<UserchatModel>> userchatStream = _userchatController.stream;
+
   // STATE of current Chat
   String _chatId = const Uuid().v1();
   List<MessageModel> _messages = [];
 
+  // STATE of Userchats
+  bool _isLoadingChats = false;
+  bool _initializedUserchats = false;
+  String _currentUserInitialized = '';
+  List<UserchatModel> currentUserchats = [];
+
+  // Getters for UI
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  bool get isLoadingChats => _isLoadingChats;
   List<MessageModel> get messages => _messages;
 
   // sets a new chatId and messages to empty -> for state, new chat.
@@ -40,6 +52,15 @@ class ChatViewmodel extends ChangeNotifier {
     _messages = [];
     // to reset the stream -> triggers streambuilder in UI, which resets the listView.
     _messageController.add([]);
+  }
+
+  // sets userchats to default
+  // -> after Logout.
+  setDefaultUserchatsState() {
+    _isLoadingChats = false;
+    _initializedUserchats = false;
+    _currentUserInitialized = '';
+    currentUserchats = [];
   }
 
   // to set the loading state for response, for the UI to show the progress indicator.
@@ -83,12 +104,45 @@ class ChatViewmodel extends ChangeNotifier {
     });
   }
 
+  // to indicate the loading of Userchats from db
+  setLoadingUserchatState(bool isLoadingChats) {
+    _isLoadingChats = isLoadingChats;
+    notifyListeners();
+  }
+
+  // to initially load userchats from db and add them to internal state as list
+  // get loaded, when opening menu drawer.
+  loadCurrentUserchatsFromDB() async {
+    // to set the userId for which the list is initialized.
+    // -> if another user logs in, the list gets reloaded again for the new user.
+    String currentUserLoggedIn = firestoreService.currentUserID();
+    // initialized bool to load the chat only once from db
+    if (!_initializedUserchats ||
+        _currentUserInitialized != currentUserLoggedIn) {
+      setLoadingUserchatState(true);
+      _currentUserInitialized = currentUserLoggedIn;
+      await firestoreService.getCurrentUserchats().then((chatsSnapshot) {
+        // to map userchats.
+        for (var doc in chatsSnapshot.docs) {
+          currentUserchats.add(createUserchatModel(doc.id, doc.data()));
+        }
+        _initializedUserchats = true;
+      }).onError((error, stackTrace) {
+        log(error.toString());
+      }).whenComplete(() {
+        setLoadingUserchatState(false);
+        // Adds loaded list to stream, which gets shown in UI via StreamBuilder.
+        _userchatController.add(currentUserchats);
+      });
+    }
+  }
+
   sendMessage(String prompt) async {
     setLoadingState(true);
 
     // in case of empty messages -> new chat, needs to be created in DB.
     if (_messages.isEmpty) {
-      setChatToDB(_chatId, 'New Chat');
+      createNewChat(_chatId, 'New Chat');
     }
 
     MessageModel messageRequest = createNewMessageModel(prompt, true);
@@ -108,8 +162,7 @@ class ChatViewmodel extends ChangeNotifier {
     setLoadingState(false);
   }
 
-  //
-  setChatToDB(String chatId, String title) {
+  createNewChat(String chatId, String title) {
     firestoreService.setChat(chatId, title);
   }
 
@@ -126,6 +179,15 @@ class ChatViewmodel extends ChangeNotifier {
             : messageText[0] == "*"
                 ? MessageType.error
                 : MessageType.response);
+  }
+
+  UserchatModel createUserchatModel(
+      String chatId, Map<String, dynamic> chatData) {
+    return UserchatModel(
+        chatId: chatId,
+        date: (chatData['date'] as Timestamp).toDate(),
+        title: chatData['title'],
+        userId: chatData['userId']);
   }
 
   MessageModel mapMessageModel(String chatId, String messageText, DateTime date,

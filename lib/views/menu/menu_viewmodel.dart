@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import '../../services_provider/service_container.dart';
 
@@ -17,15 +15,8 @@ class MenuViewmodel extends ChangeNotifier {
       StreamController<bool>.broadcast();
   late Stream<bool> progressStream = _requestProgressingController.stream;
 
-  void createNewChat() {
+  void openNewChat() {
     chatViewModel.setDefaultChatState();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
-    QuerySnapshot<Map<String, dynamic>> test =
-        await firestoreService.getCurrentUserChats();
-    log('is from cache: ${test.metadata.isFromCache.toString()}');
-    return test;
   }
 
   void openChat(String chatId) {
@@ -74,6 +65,9 @@ class MenuViewmodel extends ChangeNotifier {
     return authService
         .logOut()
         // to set the chat state to default, if user log outs and opens new chat -> new state, new chat ID, new chat view.
-        .then((value) => chatViewModel.setDefaultChatState());
+        .then((value) {
+      chatViewModel.setDefaultChatState();
+      chatViewModel.setDefaultUserchatsState();
+    });
   }
 }

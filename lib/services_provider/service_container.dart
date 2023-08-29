@@ -14,7 +14,7 @@ final serviceContainer = GetIt.instance;
 void initServiceLocator() {
   serviceContainer.registerSingleton<AuthService>(AuthService());
   serviceContainer.registerSingleton<ToastService>(ToastService());
-  
+
   serviceContainer.registerSingleton<GptService>(GptService());
   serviceContainer.registerSingleton<FirestoreService>(FirestoreService());
   serviceContainer.registerSingleton<ChatViewmodel>(ChatViewmodel());
