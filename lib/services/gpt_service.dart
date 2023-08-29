@@ -16,7 +16,7 @@ class GptService {
 
     final request = ChatCompleteText(
       messages: messages,
-      maxToken: 200,
+      maxToken: 600,
       model: GptTurboChatModel(),
     );
     var message = await _handleRequest(request);
@@ -54,8 +54,8 @@ class GptService {
   }
 
   Future<String> generateChatTitle() async {
-    var summaryMessage =
-        Messages(role:Role.user, content: "summerize the conversation in 3 words");
+    var summaryMessage = Messages(
+        role: Role.user, content: "summerize the conversation in 3 words");
     messages.add(summaryMessage);
     final request = ChatCompleteText(
       messages: messages,
