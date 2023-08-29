@@ -1,7 +1,7 @@
 class UserchatModel {
   final String chatId;
   final DateTime date;
-  final String title;
+  String title;
   final String userId;
 
   UserchatModel({

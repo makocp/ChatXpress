@@ -31,8 +31,9 @@ class ChatViewmodel extends ChangeNotifier {
   late Stream<List<UserchatModel>> userchatStream = _userchatController.stream;
 
   // STATE of current Chat
-  String _chatId = const Uuid().v1();
   List<MessageModel> _messages = [];
+  // gets only assigned, if chat state gets set or if a new chat gets created.
+  String _chatId = '';
 
   // STATE of Userchats
   bool _isLoadingChats = false;
@@ -48,7 +49,7 @@ class ChatViewmodel extends ChangeNotifier {
 
   // sets a new chatId and messages to empty -> for state, new chat.
   setDefaultChatState() {
-    _chatId = const Uuid().v1();
+    _chatId = '';
     _messages = [];
     // to reset the stream -> triggers streambuilder in UI, which resets the listView.
     _messageController.add([]);
@@ -130,7 +131,7 @@ class ChatViewmodel extends ChangeNotifier {
       await firestoreService.getCurrentUserchats().then((chatsSnapshot) {
         // to map userchats.
         for (var doc in chatsSnapshot.docs) {
-          currentUserchats.add(createUserchatModel(doc.id, doc.data()));
+          currentUserchats.add(mapUserchatModel(doc.id, doc.data()));
         }
         _initializedUserchats = true;
       }).onError((error, stackTrace) {
@@ -146,37 +147,56 @@ class ChatViewmodel extends ChangeNotifier {
   sendMessage(String prompt) async {
     setLoadingState(true);
 
-    // in case of empty messages -> new chat, needs to be created in DB.
+    // in case of empty messages -> new chat gets created and added to UI + DB.
     if (_messages.isEmpty) {
-      createNewChat(_chatId, 'New Chat');
+      createNewChat();
     }
 
-    MessageModel messageRequest = createNewMessageModel(prompt, true);
-    _addMessageToChat(messageRequest);
+    MessageModel messageRequest = createNewMessageModel(prompt, true, _chatId);
+    _addMessageToUI(messageRequest);
     _addMessageToDB(messageRequest);
 
     var response = await gptService.sendRequest(prompt);
 
-    MessageModel messageResponse = createNewMessageModel(response, false);
-    _addMessageToChat(messageResponse);
+    MessageModel messageResponse = createNewMessageModel(response, false, _chatId);
+    _addMessageToUI(messageResponse);
     _addMessageToDB(messageResponse);
 
     if (messages.length == 2 || messages.length == 4) {
-      generateChatTitle();
+      generateChatTitle(_chatId);
     }
 
     setLoadingState(false);
   }
 
-  createNewChat(String chatId, String title) {
-    firestoreService.setChat(chatId, title);
+  createNewChat() {
+    String chatId = const Uuid().v1();
+    // assign chatId to global state.
+    _chatId = chatId;
+    DateTime date = DateTime.now();
+    String title = 'New Chat';
+    String userId = firestoreService.currentUserID();
+    _addChatToUI(chatId, date, title, userId);
+    _addChatToDB(chatId, title, date);
+  }
+
+  _addChatToUI(String chatId, DateTime date, String title, String userId) {
+    UserchatModel userchatModel =
+        UserchatModel(chatId: chatId, date: date, title: title, userId: userId);
+    currentUserchats.add(userchatModel);
+    _userchatController.add(currentUserchats);
+  }
+
+  _addChatToDB(String chatId, String title, DateTime date) {
+    firestoreService.setChat(chatId, title, date);
   }
 
   // to convert the request/response string to a MessageModel object for further use (set to Chat UI, insert into DB)
   // isRequest parameter gets passed, to define sender and messagetype.
-  MessageModel createNewMessageModel(String messageText, bool isRequest) {
+  MessageModel createNewMessageModel(
+      String messageText, bool isRequest, String chatId) {
     return MessageModel(
-        chatId: _chatId,
+        chatId: chatId,
         content: messageText,
         date: DateTime.now(),
         sender: isRequest ? "user" : "ChatGpt",
@@ -187,8 +207,7 @@ class ChatViewmodel extends ChangeNotifier {
                 : MessageType.response);
   }
 
-  UserchatModel createUserchatModel(
-      String chatId, Map<String, dynamic> chatData) {
+  UserchatModel mapUserchatModel(String chatId, Map<String, dynamic> chatData) {
     return UserchatModel(
         chatId: chatId,
         date: (chatData['date'] as Timestamp).toDate(),
@@ -207,7 +226,7 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   // to add message to list and controller, which notifies the stream (for UI display)
-  _addMessageToChat(MessageModel message) {
+  _addMessageToUI(MessageModel message) {
     _messages.insert(0, message);
     _messageController.add(messages);
   }
@@ -217,8 +236,13 @@ class ChatViewmodel extends ChangeNotifier {
     firestoreService.addMessage(message);
   }
 
-  void generateChatTitle() async {
+  void generateChatTitle(String chatId) async {
     var title = await gptService.generateChatTitle();
-    firestoreService.updateChatTitle(_chatId, title);
+    // set new title to db.
+    firestoreService.updateChatTitle(chatId, title);
+    // set new title to UI chat list.
+    final userchatIndex = currentUserchats.indexWhere((chat) => chat.chatId == chatId);
+    currentUserchats[userchatIndex].title = title;
+    _userchatController.add(currentUserchats);
   }
 }

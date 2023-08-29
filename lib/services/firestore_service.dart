@@ -30,9 +30,9 @@ class FirestoreService {
   // CREATE / UPDATE
   // to set a chat to the db.
   // gets updated, if document exists, but field changes (e.g. title) -> Setoptions merge: true (same as update, but creates document, if does not exist -> update would throw error).
-  setChat(String chatId, String title) async {
+  setChat(String chatId, String title, DateTime date) async {
     await db.collection('chats').doc(chatId).set(
-        {'title': title, 'userId': currentUserID(), 'date': DateTime.now()}, SetOptions(merge: true));
+        {'title': title, 'userId': currentUserID(), 'date': date}, SetOptions(merge: true));
   }
 
   // READ
