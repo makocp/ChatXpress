@@ -61,6 +61,12 @@ class ChatViewmodel extends ChangeNotifier {
     _initializedUserchats = false;
     _currentUserInitialized = '';
     currentUserchats = [];
+    _userchatController.add([]);
+  }
+
+  deleteUserchatsState() {
+    currentUserchats = [];
+    _userchatController.add([]);
   }
 
   // to set the loading state for response, for the UI to show the progress indicator.
