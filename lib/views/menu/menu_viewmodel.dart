@@ -27,6 +27,7 @@ class MenuViewmodel extends ChangeNotifier {
   void deleteHistory() {
     firestoreService.deleteChats();
     chatViewModel.deleteUserchatsState();
+    chatViewModel.setDefaultChatState();
   }
 
   Future<String> updatePassword(String newPassword) async {

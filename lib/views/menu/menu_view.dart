@@ -1,4 +1,5 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/assets/snackbars/snackbars.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/textfield_components/my_passwordfield.dart';
@@ -19,8 +20,9 @@ class MenuView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoadingChats =
-        watchOnly((ChatViewmodel vm) => vm.isLoadingChats);
+    bool isLoadingChats = watchOnly((ChatViewmodel vm) => vm.isLoadingChats);
+    bool isLoadingRequestResponse =
+        watchOnly((ChatViewmodel vm) => vm.isLoading);
     return Drawer(
       backgroundColor: MyColors.greyMenuBackground,
       child: SafeArea(
@@ -28,9 +30,9 @@ class MenuView extends StatelessWidget with GetItMixin {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Column(
             children: [
-              showTopSection(context),
-              buildUserChats(isLoadingChats),
-              showBottomSection(context),
+              showTopSection(context, isLoadingRequestResponse),
+              buildUserChats(isLoadingChats, isLoadingRequestResponse),
+              showBottomSection(context, isLoadingRequestResponse),
             ],
           ),
         ),
@@ -38,7 +40,7 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Widget buildUserChats(bool isLoadingChats) {
+  Widget buildUserChats(bool isLoadingChats, bool isLoadingRequestResponse) {
     return Expanded(
         child: StreamBuilder(
       stream: _chatViewmodel.userchatStream,
@@ -62,7 +64,10 @@ class MenuView extends StatelessWidget with GetItMixin {
                     style: const TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    _menuViewmodel.openChat(chatId);
+                    isLoadingRequestResponse
+                        ? MySnackBars.showSnackBar(
+                            context, MySnackBars.ongoingRequest)
+                        : _menuViewmodel.openChat(chatId);
                     Navigator.pop(context);
                   },
                 );
@@ -84,20 +89,21 @@ class MenuView extends StatelessWidget with GetItMixin {
     ));
   }
 
-  Column showTopSection(BuildContext context) {
+  Column showTopSection(BuildContext context, bool isLoadingRequestResponse) {
     return Column(
       children: [
-        showNewChatButton(context),
+        showNewChatButton(context, isLoadingRequestResponse),
         const Divider(color: Colors.white),
       ],
     );
   }
 
-  Column showBottomSection(BuildContext context) {
+  Column showBottomSection(
+      BuildContext context, bool isLoadingRequestResponse) {
     return Column(
       children: [
         const Divider(color: Colors.white),
-        showDeleteHistoryButton(context),
+        showDeleteHistoryButton(context, isLoadingRequestResponse),
         showResetPasswordButton(context),
         showLogoutButton(context),
       ],
@@ -140,7 +146,8 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  ListTile showDeleteHistoryButton(BuildContext context) {
+  ListTile showDeleteHistoryButton(
+      BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
       leading: const Icon(Icons.delete_outline, color: Colors.red),
       title: const Text(MyStrings.menuDeleteHistory,
@@ -150,12 +157,19 @@ class MenuView extends StatelessWidget with GetItMixin {
             context,
             MyStrings.menuDeleteHistoryText,
             MyStrings.menuDeleteHistoryTitle,
-            () => {_menuViewmodel.deleteHistory()});
+            () => isLoadingRequestResponse
+                ? {
+                    MySnackBars.showSnackBar(
+                        context, MySnackBars.ongoingRequest),
+                    Navigator.pop(context)
+                  }
+                : {_menuViewmodel.deleteHistory(), Navigator.pop(context)});
       },
     );
   }
 
-  ListTile showNewChatButton(BuildContext context) {
+  ListTile showNewChatButton(
+      BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
       leading: const Icon(
         Icons.add,
@@ -165,11 +179,14 @@ class MenuView extends StatelessWidget with GetItMixin {
         MyStrings.menuNewChat,
         style: TextStyle(color: Colors.white),
       ),
-      onTap: () {
-        // to set the chat state to default in chatViewmodel
-        _menuViewmodel.openNewChat();
+      onTap: () => {
+        isLoadingRequestResponse
+            ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
+            :
+            // to set the chat state to default in chatViewmodel
+            _menuViewmodel.openNewChat(),
         // to close the drawer to get to the new chat.
-        Navigator.pop(context);
+        Navigator.pop(context),
       },
     );
   }

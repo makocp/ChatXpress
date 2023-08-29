@@ -144,6 +144,7 @@ class ChatViewmodel extends ChangeNotifier {
     }
   }
 
+  // note: 
   sendMessage(String prompt) async {
     setLoadingState(true);
 
@@ -152,13 +153,18 @@ class ChatViewmodel extends ChangeNotifier {
       createNewChat();
     }
 
-    MessageModel messageRequest = createNewMessageModel(prompt, true, _chatId);
+    // In case user changes chat, but response is not loaded yet
+    // -> same chatId gets saved to DB.
+    // solution for UI Streambuilder: block loading new chatId / chat state, until response finished (see MenuView snackbars)
+    String chatId = _chatId;
+
+    MessageModel messageRequest = createNewMessageModel(prompt, true, chatId);
     _addMessageToUI(messageRequest);
     _addMessageToDB(messageRequest);
 
     var response = await gptService.sendRequest(prompt);
 
-    MessageModel messageResponse = createNewMessageModel(response, false, _chatId);
+    MessageModel messageResponse = createNewMessageModel(response, false, chatId);
     _addMessageToUI(messageResponse);
     _addMessageToDB(messageResponse);
 

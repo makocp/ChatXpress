@@ -43,7 +43,7 @@ class ChatView extends StatelessWidget with GetItMixin {
               Expanded(
                 child: _buildMessagesList(isLoading),
               ),
-              _buildInputRow(context),
+              _buildInputRow(context, isLoading),
             ],
           ),
         ),
@@ -81,7 +81,7 @@ class ChatView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Widget _buildInputRow(BuildContext context) {
+  Widget _buildInputRow(BuildContext context, bool isLoading) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
@@ -90,10 +90,10 @@ class ChatView extends StatelessWidget with GetItMixin {
           CustomTextInput(
               hintText: MyStrings.inputSendMessage, controller: _controller),
           IconButton(
-            onPressed: () => _chatViewmodel.isLoading
+            onPressed: () => isLoading
                 ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
                 : _handleSendMessage(),
-            icon: _chatViewmodel.isLoading
+            icon: isLoading
                 ? Icon(
                     Icons.send,
                     color: Colors.grey[600],
