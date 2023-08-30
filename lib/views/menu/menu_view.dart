@@ -1,6 +1,7 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/assets/snackbars/snackbars.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
+import 'package:chatXpress/components/box_components/my_infobox.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
 import 'package:chatXpress/components/textfield_components/my_passwordfield.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
@@ -12,8 +13,8 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 class MenuView extends StatelessWidget with GetItMixin {
   MenuView({super.key});
 
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController repeatNewPasswordController =
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _newPasswordConfirmationController =
       TextEditingController();
   final _menuViewmodel = serviceContainer<MenuViewmodel>();
   final _chatViewmodel = serviceContainer<ChatViewmodel>();
@@ -23,6 +24,10 @@ class MenuView extends StatelessWidget with GetItMixin {
     bool isLoadingChats = watchOnly((ChatViewmodel vm) => vm.isLoadingChats);
     bool isLoadingRequestResponse =
         watchOnly((ChatViewmodel vm) => vm.isLoading);
+    bool isLoadingChangePassword =
+        watchOnly((MenuViewmodel vm) => vm.isLoadingChangePassword);
+    String changePasswordMessage =
+        watchOnly((MenuViewmodel vm) => vm.changePasswordMessage);
     return Drawer(
       backgroundColor: MyColors.greyMenuBackground,
       child: SafeArea(
@@ -32,7 +37,8 @@ class MenuView extends StatelessWidget with GetItMixin {
             children: [
               showTopSection(context, isLoadingRequestResponse),
               buildUserChats(isLoadingChats, isLoadingRequestResponse),
-              showBottomSection(context, isLoadingRequestResponse),
+              showBottomSection(context, isLoadingRequestResponse,
+                  isLoadingChangePassword, changePasswordMessage),
             ],
           ),
         ),
@@ -75,7 +81,7 @@ class MenuView extends StatelessWidget with GetItMixin {
             );
           } else {
             return const Center(
-                child: Text('No chats created yet.',
+                child: Text(MyStrings.menuNoChatsCreated,
                     style: TextStyle(
                       color: Colors.grey,
                     )));
@@ -98,13 +104,14 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Column showBottomSection(
-      BuildContext context, bool isLoadingRequestResponse) {
+  Column showBottomSection(BuildContext context, bool isLoadingRequestResponse,
+      bool isLoadingChangePassword, String changePasswordMessage) {
     return Column(
       children: [
         const Divider(color: Colors.white),
         showDeleteHistoryButton(context, isLoadingRequestResponse),
-        showResetPasswordButton(context),
+        showChangePasswordButton(context, isLoadingChangePassword,
+            changePasswordMessage, isLoadingRequestResponse),
         showLogoutButton(context),
       ],
     );
@@ -114,10 +121,10 @@ class MenuView extends StatelessWidget with GetItMixin {
     return ListTile(
       leading: const Icon(
         Icons.logout_outlined,
-        color: Colors.white,
+        color: Colors.red,
       ),
-      title: const Text(MyStrings.menuLogout,
-          style: TextStyle(color: Colors.white)),
+      title:
+          const Text(MyStrings.menuLogout, style: TextStyle(color: Colors.red)),
       onTap: () => {
         showConformationDialog(
             context,
@@ -132,7 +139,11 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  ListTile showResetPasswordButton(BuildContext context) {
+  ListTile showChangePasswordButton(
+      BuildContext context,
+      bool isLoadingChangePassword,
+      String changePasswordMessage,
+      bool isLoadingRequestResponse) {
     return ListTile(
       leading: const Icon(
         Icons.lock_reset_outlined,
@@ -140,18 +151,24 @@ class MenuView extends StatelessWidget with GetItMixin {
       ),
       title: const Text(MyStrings.changePassword,
           style: TextStyle(color: Colors.white)),
-      onTap: () {
-        showModalDialog(context, _menuViewmodel);
-      },
+      onTap: isLoadingRequestResponse
+          ? () {
+              Navigator.pop(context);
+              MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest);
+            }
+          : () {
+              showModalDialog(context, _menuViewmodel, isLoadingChangePassword,
+                  changePasswordMessage);
+            },
     );
   }
 
   ListTile showDeleteHistoryButton(
       BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
-      leading: const Icon(Icons.delete_outline, color: Colors.red),
+      leading: const Icon(Icons.delete_outline, color: Colors.white),
       title: const Text(MyStrings.menuDeleteHistory,
-          style: TextStyle(color: Colors.red)),
+          style: TextStyle(color: Colors.white)),
       onTap: () {
         showConformationDialog(
             context,
@@ -239,11 +256,13 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  void showModalDialog(BuildContext context, MenuViewmodel menuViewModel) {
+  void showModalDialog(BuildContext context, MenuViewmodel menuViewModel,
+      bool isLoadingChangePassword, String changePasswordMessage) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
-      builder: (context) => _buildBottomSheetContent(context, menuViewModel),
+      builder: (context) => _buildBottomSheetContent(context, menuViewModel,
+          isLoadingChangePassword, changePasswordMessage),
     );
   }
 
@@ -262,24 +281,36 @@ class MenuView extends StatelessWidget with GetItMixin {
   }
 
   Widget _buildBottomSheetContent(
-      BuildContext context, MenuViewmodel menuViewModel) {
+      BuildContext context,
+      MenuViewmodel menuViewModel,
+      bool isLoadingChangePassword,
+      String changePasswordMessage) {
     return Container(
       color: const Color(0xff202123),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          _buildTitle(),
-          _buildPasswordField(
-            controller: newPasswordController,
-            labelText: MyStrings.enterNewPassword,
-          ),
-          _buildPasswordField(
-            controller: repeatNewPasswordController,
-            labelText: MyStrings.repeatNewPassword,
-          ),
-          _buildChangePasswordButton(menuViewModel),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 35),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildTitle(),
+            const SizedBox(
+              height: 25,
+            ),
+            _buildPasswordField(
+              controller: _newPasswordController,
+              labelText: MyStrings.enterNewPassword,
+            ),
+            changePasswordMessage.isNotEmpty
+                ? MyInfoBox(message: changePasswordMessage, isError: true)
+                : const SizedBox(height: 25),
+            _buildPasswordField(
+              controller: _newPasswordConfirmationController,
+              labelText: MyStrings.repeatNewPassword,
+            ),
+            _buildChangePasswordButton(menuViewModel, isLoadingChangePassword),
+          ],
+        ),
       ),
     );
   }
@@ -289,7 +320,7 @@ class MenuView extends StatelessWidget with GetItMixin {
     required String labelText,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 30, 15, 8),
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: MyPasswordfield(
         controller: controller,
         labelText: labelText,
@@ -312,20 +343,20 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Widget _buildChangePasswordButton(MenuViewmodel menuViewModel) {
-    return StreamBuilder<bool>(
-        stream: _menuViewmodel.progressStream,
-        builder: (context, snapshot) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(15, 30, 15, 8),
-            child: MyButton(
-              onPressed: () {
-                menuViewModel.updatePassword(newPasswordController.text);
-              },
-              buttonText: MyStrings.buttonChangePassword,
-              isLoading: snapshot.data ?? false,
-            ),
+  Widget _buildChangePasswordButton(
+      MenuViewmodel menuViewModel, bool isLoadingChangePassword) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 30, 15, 8),
+      child: MyButton(
+        onPressed: () {
+          menuViewModel.updatePassword(
+            _newPasswordController.text.trim(),
+            _newPasswordConfirmationController.text.trim(),
           );
-        });
+        },
+        buttonText: MyStrings.buttonChangePassword,
+        isLoading: isLoadingChangePassword,
+      ),
+    );
   }
 }

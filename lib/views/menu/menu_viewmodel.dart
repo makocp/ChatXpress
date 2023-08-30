@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import '../../services_provider/service_container.dart';
 
@@ -11,9 +13,16 @@ class MenuViewmodel extends ChangeNotifier {
   final firestoreService = serviceContainer<FirestoreService>();
   final chatViewModel = serviceContainer<ChatViewmodel>();
 
-  final StreamController<bool> _requestProgressingController =
-      StreamController<bool>.broadcast();
-  late Stream<bool> progressStream = _requestProgressingController.stream;
+  bool _isLoadingChangePassword = false;
+  bool get isLoadingChangePassword => _isLoadingChangePassword;
+
+  String _changePasswordMessage = '';
+  String get changePasswordMessage => _changePasswordMessage;
+
+  setLoadingChangePasswordState(bool isLoadingChangePassword) {
+    _isLoadingChangePassword = isLoadingChangePassword;
+    notifyListeners();
+  }
 
   void openNewChat() {
     chatViewModel.setDefaultChatState();
@@ -30,37 +39,43 @@ class MenuViewmodel extends ChangeNotifier {
     chatViewModel.setDefaultChatState();
   }
 
-  Future<String> updatePassword(String newPassword) async {
-    _requestProgressingController.add(true);
-    var message = "";
-    var response = await authService.updatePassword(newPassword);
-    await Future.delayed(const Duration(seconds: 3));
-    _requestProgressingController.add(false);
-
-    switch (response) {
-      case "An error occurred":
-        message = "An error occurred";
-        break;
-      case "weak-password":
-        message = "The password provided is too weak.";
-        break;
-      case "requires-recent-login":
-        message =
-            "This operation requires recent authentication. Log in again before retrying this request.";
-        break;
-      case "user-not-found":
-        message = "User not found. Please check your authentication.";
-        break;
-      case "user-disabled":
-        message = "The user account has been disabled by an administrator.";
-        break;
-      case "wrong-password":
-        message = "The old password is incorrect.";
-        break;
-      default:
-        message = "Successfully changed password";
+  updatePassword(String newPassword, String newConfirmationPassword) async {
+    setLoadingChangePasswordState(true);
+    // Clientside validation
+    if (validatedPassword(newPassword, newConfirmationPassword)) {
+      try {
+        await authService.updatePassword(newPassword);
+        // Serverside Validation, catches error.
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case 'weak-password':
+            _changePasswordMessage = MyStrings.validationPasswordWeak;
+            break;
+          case 'requires-recent-login':
+            _changePasswordMessage = MyStrings.validationReauthentication;
+            break;
+        }
+      }
     }
-    return message;
+    setLoadingChangePasswordState(false);
+  }
+
+  // return true if password is valid.
+  // otherwise message string get set for UI state.
+  bool validatedPassword(String newPassword, String newConfirmationPassword) {
+    if (newPassword.length < 8) {
+      _changePasswordMessage = MyStrings.validationPasswordLength;
+      return false;
+    }
+    if (newPassword.contains(' ')) {
+      _changePasswordMessage = MyStrings.validationPasswordSpaces;
+      return false;
+    }
+    if (newPassword != newConfirmationPassword) {
+      _changePasswordMessage = MyStrings.validationPasswordMatch;
+      return false;
+    }
+    return true;
   }
 
   Future<void> logOut() async {

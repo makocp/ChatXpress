@@ -17,6 +17,7 @@ class MyStrings {
   static const String menuLogout = 'Logout';
   static const String menuDeleteHistoryTitle = 'Delete History';
   static const String menuDeleteHistoryText = 'Are you sure?';
+  static const String menuNoChatsCreated = 'No chats created yet.';
 
   // Buttons
   static const String buttonSignUpCreate = 'Create Account';
@@ -30,8 +31,8 @@ class MyStrings {
   static const String inputEmail = 'Email';
   static const String inputSendMessage = 'Send Message';
   static const String inputUsername = 'Username';
-  static const String enterNewPassword = "enter new password";
-  static const String repeatNewPassword = "repeat new password";
+  static const String enterNewPassword = "New Password";
+  static const String repeatNewPassword = "Confirm Password";
 
   // Validation Messages
   static const String validationInvalidEmail =
@@ -48,12 +49,13 @@ class MyStrings {
   static const String validationPermissionDenied =
       'Permission denied. Please contact support.';
   static const String validationPasswordWeak =
-      'Password weak. Please choose a stronger one.';
+      'Password weak. Please choose a safer one.';
+  static const String validationReauthentication = 'Reauthentication needed. Please Logout and Login again.';
 
   // Dialogs
-  static const String changePassword = "Change password";
-  static const String logOutConfirmationString = "Sure you want to log out?";
-  static const String logOut = "Log out";
+  static const String changePassword = "Change Password";
+  static const String logOutConfirmationString = "Sure you want to logout?";
+  static const String logOut = "Logout";
   static const String cancel = "Cancel";
 
   // SnackBars
