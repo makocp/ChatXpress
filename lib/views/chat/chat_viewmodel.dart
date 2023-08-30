@@ -139,7 +139,7 @@ class ChatViewmodel extends ChangeNotifier {
         log(error.toString());
       }).whenComplete(() {
         setLoadingUserchatState(false);
-        // Adds loaded list to stream, which gets shown in UI via StreamBuilder.
+        // Adds loaded list in date descending order (reversed) to stream, which gets shown in UI via StreamBuilder.
         _userchatController.add(currentUserchats);
       });
     }
@@ -192,7 +192,8 @@ class ChatViewmodel extends ChangeNotifier {
   _addChatToUI(String chatId, DateTime date, String title, String userId) {
     UserchatModel userchatModel =
         UserchatModel(chatId: chatId, date: date, title: title, userId: userId);
-    currentUserchats.add(userchatModel);
+    // insert to add the new chat on top
+    currentUserchats.insert(0, userchatModel);
     _userchatController.add(currentUserchats);
   }
 
