@@ -100,13 +100,14 @@ class ChatViewmodel extends ChangeNotifier {
             mapMessageModel(chatId, messageText, date, sender, messageType);
 
         // to insert the messages in the list for the messageController.
-        _messages.insert(0, messageModel);
+        _messages.add(messageModel);
       }
     }).onError((error, stackTrace) {
       log(error.toString());
     }).whenComplete(() {
-      // to add the finished message list to the stream (to display in UI / ChatView)
-      _messageController.add(_messages);
+      // send new messageslist to messagecontroller, to display in streambuilder in UI
+      // reversed to show chat messages from last bottom to first top
+      _messageController.add(_messages.reversed.toList());
       setLoadingState(false);
     });
   }
@@ -159,17 +160,19 @@ class ChatViewmodel extends ChangeNotifier {
     String chatId = _chatId;
 
     MessageModel messageRequest = createNewMessageModel(prompt, true, chatId);
-    _addMessageToUI(messageRequest);
+    _addMessageToMessagesState(messageRequest);
     _addMessageToDB(messageRequest);
 
-    var response = await gptService.sendRequest(prompt);
+    // whole list gets passed, to generate a response based on context of chat history.
+    String response = await gptService.generateResponse(messages);
 
     MessageModel messageResponse = createNewMessageModel(response, false, chatId);
-    _addMessageToUI(messageResponse);
+    _addMessageToMessagesState(messageResponse);
     _addMessageToDB(messageResponse);
 
-    if (messages.length == 2 || messages.length == 4) {
-      generateChatTitle(_chatId);
+    // to generate a chat title after some conversation.
+    if (messages.length == 2 || messages.length == 4 || messages.length == 8 || messages.length == 16) {
+      _generateChatTitle(_chatId, messages);
     }
 
     setLoadingState(false);
@@ -232,9 +235,12 @@ class ChatViewmodel extends ChangeNotifier {
   }
 
   // to add message to list and controller, which notifies the stream (for UI display)
-  _addMessageToUI(MessageModel message) {
-    _messages.insert(0, message);
-    _messageController.add(messages);
+  _addMessageToMessagesState(MessageModel message) {
+    // adds new messages to message list (state)
+    _messages.add(message);
+    // send new messageslist to messagecontroller, to display in streambuilder in UI
+    // reversed to show chat messages from last bottom to first top
+    _messageController.add(messages.reversed.toList());
   }
 
   // to add message to DB
@@ -242,8 +248,8 @@ class ChatViewmodel extends ChangeNotifier {
     firestoreService.addMessage(message);
   }
 
-  void generateChatTitle(String chatId) async {
-    var title = await gptService.generateChatTitle();
+  void _generateChatTitle(String chatId, List<MessageModel> messages) async {
+    var title = await gptService.generateChatTitle(messages);
     // set new title to db.
     firestoreService.updateChatTitle(chatId, title);
     // set new title to UI chat list.
