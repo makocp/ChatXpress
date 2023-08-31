@@ -99,12 +99,13 @@ class MenuView extends StatelessWidget with GetItMixin {
       children: [
         const Divider(color: Colors.white),
         showDeleteHistoryButton(context, isLoadingRequestResponse),
-        showLogoutButton(context),
+        showLogoutButton(context, isLoadingRequestResponse),
       ],
     );
   }
 
-  ListTile showLogoutButton(BuildContext context) {
+  ListTile showLogoutButton(
+      BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
       leading: const Icon(
         Icons.logout_outlined,
@@ -117,11 +118,17 @@ class MenuView extends StatelessWidget with GetItMixin {
             context,
             MyStrings.logOutConfirmationString,
             MyStrings.logOut,
-            () => {
-                  _menuViewmodel.logOut().then((value) {
-                    Navigator.popUntil(context, (route) => route.isFirst);
+            isLoadingRequestResponse
+                ? () {
+                    Navigator.pop(context);
+                    MySnackBars.showSnackBar(
+                        context, MySnackBars.ongoingRequest);
+                  }
+                : () {
+                    _menuViewmodel.logOut().then((value) {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    });
                   })
-                })
       },
     );
   }
