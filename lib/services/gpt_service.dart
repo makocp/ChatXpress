@@ -6,7 +6,7 @@ import 'package:chatXpress/secrets.dart';
 class GptService {
   final openAI = OpenAI.instance.build(
     token: OPENAI_API_KEY,
-    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 15)),
+    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
     enableLog: true,
   );
 
