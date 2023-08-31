@@ -10,19 +10,15 @@ class FirestoreService {
       authService.firebaseAuthInstance.currentUser?.uid.toString();
 
   
-  Future<void> setUser(String email, String username) async {
-    // Check if the user with the given email already exists
-    QuerySnapshot userSnapshot =
-        await db.collection('users').where('email', isEqualTo: email).get();
-
-    // If a user with the given email exists, update their information
-    if (userSnapshot.docs.isEmpty) {
-      // If no user with the given email exists, create a new user document
-      await db.collection('users').add({
-        "email": email,
-        "username": username.split(" ")[0],
-      });
-    }
+  // CREATE
+  // Creates a new user, if it does not exist.
+  // If it DOES exist it updates the sent fields, without deleting the others (merge true).
+  // This merge option is only, if something failed during account creation -> user gets created after new sign in, just in case.
+  Future<void> setUser(String email) async {
+    return await db
+        .collection('users')
+        .doc(authService.firebaseAuthInstance.currentUser?.uid.toString())
+        .set({"email": email}, SetOptions(merge: true));
   }
 
   // CREATE
@@ -34,13 +30,13 @@ class FirestoreService {
   // CREATE / UPDATE
   // to set a chat to the db.
   // gets updated, if document exists, but field changes (e.g. title) -> Setoptions merge: true (same as update, but creates document, if does not exist -> update would throw error).
-  setChat(String chatId, String title) async {
+  setChat(String chatId, String title, DateTime date) async {
     await db.collection('chats').doc(chatId).set(
-        {'title': title, 'userId': currentUserID(), 'date': DateTime.now()}, SetOptions(merge: true));
+        {'title': title, 'userId': currentUserID(), 'date': date}, SetOptions(merge: true));
   }
 
   // READ
-  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
+  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserchats() async {
     return await db
         .collection('chats')
         .orderBy('date', descending: true)

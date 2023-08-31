@@ -1,5 +1,4 @@
 import 'package:chatXpress/assets/strings/my_strings.dart';
-import 'package:chatXpress/models/user_viewmodel.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
@@ -11,58 +10,78 @@ import 'package:flutter/foundation.dart';
 class SignUpViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
   final db = serviceContainer<FirestoreService>();
-  String messageEmail = '';
-  String messagePassword = '';
-  String messageConfirmation = '';
-  bool isLoading = false;
 
-// To validate the user input, clientside.
-  bool handleInput(String email, String password, String confirmPassword) {
-    setLoadingState();
+  // Default STATE
+  bool _isLoading = false;
+  String _messageEmail = '';
+  String _messagePassword = '';
+  String _messageConfirmation = '';
 
-// to reset message strings => state for new validation.
-    resetValidation();
+  bool get isLoading => _isLoading;
+  String get messageEmail => _messageEmail;
+  String get messagePassword => _messagePassword;
+  String get messageConfirmation => _messageConfirmation;
 
-// Clientside validation
-    if (validatedEmail(email) && validatedPassword(password, confirmPassword)) {
-      unsetLoadingState();
-      return true;
-      // await validateAndCreateUser(email, password);
-    } else {
-      unsetLoadingState();
-      return false;
-    }
+  void setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners();
   }
 
-// validates user input directly with Auth createuser method.
-// catches respective exception and sets error string for UI state.
-// if method successful -> user gets created in Auth and then in DB.
-  Future<void> validateAndCreateUser(UserViewmodel userViewmodel) async {
-    try {
-      setLoadingState();
+  void setDefaultState() {
+    _messageEmail = '';
+    _messagePassword = '';
+    _messageConfirmation = '';
+    notifyListeners();
+  }
 
-      await createUserWithEmailAndPassword(
-              userViewmodel.email, userViewmodel.password)
+// To validate the user input, clientside.
+  handleInput(String email, String password, String confirmation) async {
+    setLoadingState(true);
+
+    // to reset message strings => state for new validation.
+    setDefaultState();
+
+    // Clientside validation
+    if (validatedEmail(email) && validatedPassword(password, confirmation)) {
+      // Serverside validation.
+      await createUserWithEmailAndPassword(email, password);
+    }
+
+    // only true, if everything successful (no error messages client+server) -> starts signIn.
+    if (messageEmail.isEmpty &&
+        messagePassword.isEmpty &&
+        messageConfirmation.isEmpty) {
+      await signInWithEmailAndPassword(email, password);
+    }
+
+    setLoadingState(false);
+  }
+
+  // validates user input directly with Auth createuser method.
+  // catches respective exception and sets error string for UI state.
+  // if method successful -> user gets created in Auth and then in DB.
+  createUserWithEmailAndPassword(String email, String password) async {
+    try {
+      await authService
+          .createUserWithEmailAndPassword(email, password)
           .then((value) {
-        setUserToDB(userViewmodel.email, userViewmodel.username);
-        unsetLoadingState();
+        setUserToDB(email);
       });
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'email-already-in-use':
-          messageEmail = MyStrings.validationInvalidEmail;
+          _messageEmail = MyStrings.validationInvalidEmail;
           break;
         case 'invalid-email':
-          messageEmail = MyStrings.validationInvalidEmail;
+          _messageEmail = MyStrings.validationInvalidEmail;
           break;
         case 'operation-not-allowed':
-          messageEmail = MyStrings.validationPermissionDenied;
+          _messageEmail = MyStrings.validationPermissionDenied;
           break;
         case 'weak-password':
-          messagePassword = MyStrings.validationPasswordWeak;
+          _messagePassword = MyStrings.validationPasswordWeak;
           break;
       }
-      unsetLoadingState();
     }
   }
 
@@ -72,7 +91,7 @@ class SignUpViewmodel extends ChangeNotifier {
     if (EmailValidator.validate(email)) {
       return true;
     } else {
-      messageEmail = MyStrings.validationInvalidEmail;
+      _messageEmail = MyStrings.validationInvalidEmail;
       return false;
     }
   }
@@ -81,48 +100,26 @@ class SignUpViewmodel extends ChangeNotifier {
 // otherwise message string get set for UI state.
   bool validatedPassword(String password, String confirmPassword) {
     if (password.length < 8) {
-      messagePassword = MyStrings.validationPasswordLength;
+      _messagePassword = MyStrings.validationPasswordLength;
       return false;
     }
     if (password.contains(' ')) {
-      messagePassword = MyStrings.validationPasswordSpaces;
+      _messagePassword = MyStrings.validationPasswordSpaces;
       return false;
     }
     if (password != confirmPassword) {
-      messagePassword = MyStrings.validationPasswordMatch;
+      _messageConfirmation = MyStrings.validationPasswordMatch;
       return false;
     }
     return true;
   }
 
-  Future<UserCredential> createUserWithEmailAndPassword(
-      String email, String password) async {
-    return await authService.createUserWithEmailAndPassword(email, password);
-  }
-
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
-    setLoadingState();
     return await authService.signInWithEmailAndPassword(email, password);
   }
 
-  Future<void> setUserToDB(String email, String username) async {
-    return await db.setUser(email, username);
-  }
-
-  void setLoadingState() {
-    isLoading = true;
-    notifyListeners();
-  }
-
-  void unsetLoadingState() {
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void resetValidation() {
-    messageEmail = '';
-    messagePassword = '';
-    messageConfirmation = '';
+  Future<void> setUserToDB(String email) async {
+    return await db.setUser(email).onError((error, stackTrace) => null);
   }
 }

@@ -17,6 +17,7 @@ class MyStrings {
   static const String menuLogout = 'Logout';
   static const String menuDeleteHistoryTitle = 'Delete History';
   static const String menuDeleteHistoryText = 'Are you sure?';
+  static const String menuNoChatsCreated = 'No chats created yet.';
 
   // Buttons
   static const String buttonSignUpCreate = 'Create Account';
@@ -47,9 +48,9 @@ class MyStrings {
       'Password must be without spaces.';
   static const String validationPermissionDenied =
       'Permission denied. Please contact support.';
-  static const String validationPasswordWeak =
-      'Password weak. Please choose a stronger one.';
+  static const String validationPasswordWeak = 'Password weak. Please choose a safer one.';
   static const String validationReauthentication = 'Reauthentication needed. Please Logout and Login again.';
+
 
 
   // Dialogs

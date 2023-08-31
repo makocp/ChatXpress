@@ -16,7 +16,7 @@ class ChatView extends StatelessWidget with GetItMixin {
   final TextEditingController _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _chatViewmodel = serviceContainer<ChatViewmodel>();
-  late List<ChatMessage> uiMessages;
+  late List<ChatMessageView> uiMessages;
   late double lastMessageOpacity;
 
   ChatView({super.key});
@@ -31,8 +31,10 @@ class ChatView extends StatelessWidget with GetItMixin {
         title: const Text(MyStrings.appName),
       ),
       drawer: MenuView(),
-      onDrawerChanged: (isOpened) =>
-          FocusManager.instance.primaryFocus?.unfocus(),
+      onDrawerChanged: (isOpened) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        _chatViewmodel.loadCurrentUserchatsFromDB();
+      },
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -41,7 +43,7 @@ class ChatView extends StatelessWidget with GetItMixin {
               Expanded(
                 child: _buildMessagesList(isLoading),
               ),
-              _buildInputRow(context),
+              _buildInputRow(context, isLoading),
             ],
           ),
         ),
@@ -55,7 +57,7 @@ class ChatView extends StatelessWidget with GetItMixin {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           uiMessages =
-              snapshot.data!.map((e) => ChatMessage(message: e)).toList();
+              snapshot.data!.map((e) => ChatMessageView(message: e)).toList();
           return ListView.builder(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             reverse: true,
@@ -79,7 +81,7 @@ class ChatView extends StatelessWidget with GetItMixin {
     );
   }
 
-  Widget _buildInputRow(BuildContext context) {
+  Widget _buildInputRow(BuildContext context, bool isLoading) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
@@ -88,10 +90,10 @@ class ChatView extends StatelessWidget with GetItMixin {
           CustomTextInput(
               hintText: MyStrings.inputSendMessage, controller: _controller),
           IconButton(
-            onPressed: () => _chatViewmodel.isLoading
+            onPressed: () => isLoading
                 ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
                 : _handleSendMessage(),
-            icon: _chatViewmodel.isLoading
+            icon: isLoading
                 ? Icon(
                     Icons.send,
                     color: Colors.grey[600],
