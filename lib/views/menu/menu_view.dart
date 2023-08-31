@@ -38,7 +38,6 @@ class MenuView extends StatelessWidget with GetItMixin {
 
   Widget buildUserChats(bool isLoadingChats, bool isLoadingRequestResponse) {
     return Expanded(
-
         child: StreamBuilder(
       stream: _chatViewmodel.userchatStream,
       initialData: _chatViewmodel.currentUserchats,
@@ -101,6 +100,7 @@ class MenuView extends StatelessWidget with GetItMixin {
       children: [
         const Divider(color: Colors.white),
         showDeleteHistoryButton(context, isLoadingRequestResponse),
+        showChangePasswordButton(context, isLoadingRequestResponse),
         showLogoutButton(context, isLoadingRequestResponse),
       ],
     );
@@ -157,6 +157,17 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
+  ListTile showChangePasswordButton(
+      BuildContext context, bool isLoadingRequestResponse) {
+    return ListTile(
+        leading: const Icon(Icons.lock, color: Colors.white),
+        title: const Text(MyStrings.changePassword,
+            style: TextStyle(color: Colors.white)),
+        onTap: () {
+          showModalDialog(context, _menuViewmodel);
+        });
+  }
+
   ListTile showNewChatButton(
       BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
@@ -173,7 +184,7 @@ class MenuView extends StatelessWidget with GetItMixin {
             ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
             :
             // to set the chat state to default in chatViewmodel
-            _menuViewmodel.openNewChat(),
+            _menuViewmodel.createNewChat(),
         // to close the drawer to get to the new chat.
         Navigator.pop(context),
       },

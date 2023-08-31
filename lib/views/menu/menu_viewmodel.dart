@@ -1,11 +1,8 @@
 import 'dart:async';
-
-import 'dart:developer';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import '../../services_provider/service_container.dart';

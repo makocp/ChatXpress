@@ -35,8 +35,8 @@ class BottomSheetView extends StatelessWidget with GetItMixin {
               labelText: MyStrings.repeatNewPassword),
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-            child: Text(
-              "* $changePasswordMessage",
+            child: Text( changePasswordMessage.isNotEmpty ?
+              "* $changePasswordMessage" : "",
               style: const TextStyle(color: Colors.white60),
             ),
           ),
