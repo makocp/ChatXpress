@@ -63,7 +63,7 @@ class GptService {
         message = response.choices.last.message!.content;
       }
     }).onError((error, stackTrace) {
-      message = "* An error occurred: $error *";
+      message = "* An error occurred: Please try again. *";
     });
 
     return message;

@@ -16,7 +16,7 @@ class ChatView extends StatelessWidget with GetItMixin {
   final TextEditingController _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _chatViewmodel = serviceContainer<ChatViewmodel>();
-  late List<ChatMessage> uiMessages;
+  late List<ChatMessageView> uiMessages;
   late double lastMessageOpacity;
 
   ChatView({super.key});
@@ -57,7 +57,7 @@ class ChatView extends StatelessWidget with GetItMixin {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           uiMessages =
-              snapshot.data!.map((e) => ChatMessage(message: e)).toList();
+              snapshot.data!.map((e) => ChatMessageView(message: e)).toList();
           return ListView.builder(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             reverse: true,
