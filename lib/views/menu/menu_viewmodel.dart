@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'dart:developer';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
@@ -29,13 +30,6 @@ class MenuViewmodel extends ChangeNotifier {
 
   void createNewChat() {
     chatViewModel.setDefaultChatState();
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getCurrentUserChats() async {
-    QuerySnapshot<Map<String, dynamic>> test =
-        await firestoreService.getCurrentUserChats();
-    log('is from cache: ${test.metadata.isFromCache.toString()}');
-    return test;
   }
 
   void openChat(String chatId) {
@@ -82,12 +76,16 @@ class MenuViewmodel extends ChangeNotifier {
       return false;
     }
     return true;
+
   }
 
   Future<void> logOut() async {
     return authService
         .logOut()
         // to set the chat state to default, if user log outs and opens new chat -> new state, new chat ID, new chat view.
-        .then((value) => chatViewModel.setDefaultChatState());
+        .then((value) {
+      chatViewModel.setDefaultChatState();
+      chatViewModel.setDefaultUserchatsState();
+    });
   }
 }

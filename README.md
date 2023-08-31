@@ -52,6 +52,9 @@ The Widget Inspector is a good way to understand the Widget Tree of the App. Esp
 - Important: Each Read/Write gets billed -> minimize as much as possible.
 - Important: Load only data, which is needed at the moment for the user, to avoid massive, unnecassery data load. (e.g.: load only title to display and if user clicks on it, then load the rest data for this object).
 
+### GPT API
+- [Meaning of roles in GPT messages](https://ai.stackexchange.com/a/40308)
+
 ## References/Info
 
 - [Mitch Koko](https://www.youtube.com/@createdbykoko)

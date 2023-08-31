@@ -1,9 +1,10 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
+import 'package:chatXpress/assets/snackbars/snackbars.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/menu_components/bottom_sheet_view.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
+import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:chatXpress/views/menu/menu_viewmodel.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 
@@ -11,9 +12,13 @@ class MenuView extends StatelessWidget with GetItMixin {
   MenuView({super.key});
 
   final _menuViewmodel = serviceContainer<MenuViewmodel>();
+  final _chatViewmodel = serviceContainer<ChatViewmodel>();
 
   @override
   Widget build(BuildContext context) {
+    bool isLoadingChats = watchOnly((ChatViewmodel vm) => vm.isLoadingChats);
+    bool isLoadingRequestResponse =
+        watchOnly((ChatViewmodel vm) => vm.isLoading);
     return Drawer(
       backgroundColor: MyColors.greyMenuBackground,
       child: SafeArea(
@@ -21,9 +26,9 @@ class MenuView extends StatelessWidget with GetItMixin {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: Column(
             children: [
-              showTopSection(context),
-              buildChatList(),
-              showBottomSection(context),
+              showTopSection(context, isLoadingRequestResponse),
+              buildUserChats(isLoadingChats, isLoadingRequestResponse),
+              showBottomSection(context, isLoadingRequestResponse),
             ],
           ),
         ),
@@ -31,119 +36,129 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
-  // to build the chatlist in MenuView
-  Widget buildChatList() {
+  Widget buildUserChats(bool isLoadingChats, bool isLoadingRequestResponse) {
     return Expanded(
-      child: FutureBuilder(
-          // gets all chats for the current user
-          future: _menuViewmodel.getCurrentUserChats(),
-          builder: (context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapchot) {
-            if (snapchot.connectionState == ConnectionState.done) {
-              // gets the length of the list
-              int chatCount = snapchot.data!.docs.length;
-              return ListView.builder(
-                  itemCount: chatCount,
-                  itemBuilder: (context, index) {
-                    // gets the chattitle and chatid for the chat to load chat data with chatid, if clicked on it
-                    String chatTitle =
-                        snapchot.data!.docs[index].data()['title'];
-                    String chatId = snapchot.data!.docs[index].id;
-                    // builds a listtile for each chat
-                    return ListTile(
-                      leading: const Icon(
-                        Icons.chat_bubble_outline,
-                        color: Colors.white,
-                      ),
-                      // contentPadding: const EdgeInsets.all(8.0),
-                      title: Text(
-                        chatTitle,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      onTap: () {
-                        _menuViewmodel.openChat(chatId);
-                        Navigator.pop(context);
-                      },
-                    );
-                  });
-            }
-            return const Center(child: CircularProgressIndicator());
-          }),
-    );
+
+        child: StreamBuilder(
+      stream: _chatViewmodel.userchatStream,
+      initialData: _chatViewmodel.currentUserchats,
+      builder: (context, snapshot) {
+        // no if statement for snapshot.hasdata needed -> initialData -> always true.
+        if (!isLoadingChats) {
+          if (snapshot.data!.isNotEmpty) {
+            return ListView.builder(
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                String chatId = snapshot.data![index].chatId;
+                String chatTitle = snapshot.data![index].title;
+                return ListTile(
+                  leading: const Icon(
+                    Icons.chat_bubble_outline,
+                    color: Colors.white,
+                  ),
+                  title: Text(
+                    chatTitle,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    isLoadingRequestResponse
+                        ? MySnackBars.showSnackBar(
+                            context, MySnackBars.ongoingRequest)
+                        : _menuViewmodel.openChat(chatId);
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            );
+          } else {
+            return const Center(
+                child: Text(MyStrings.menuNoChatsCreated,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    )));
+          }
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    ));
   }
 
-  Column showTopSection(BuildContext context) {
+  Column showTopSection(BuildContext context, bool isLoadingRequestResponse) {
     return Column(
       children: [
-        showNewChatButton(context),
+        showNewChatButton(context, isLoadingRequestResponse),
         const Divider(color: Colors.white),
       ],
     );
   }
 
-  Column showBottomSection(BuildContext context) {
+  Column showBottomSection(
+      BuildContext context, bool isLoadingRequestResponse) {
     return Column(
       children: [
         const Divider(color: Colors.white),
-        showDeleteHistoryButton(context),
-        showResetPasswordButton(context),
-        showLogoutButton(context),
+        showDeleteHistoryButton(context, isLoadingRequestResponse),
+        showLogoutButton(context, isLoadingRequestResponse),
       ],
     );
   }
 
-  ListTile showLogoutButton(BuildContext context) {
+  ListTile showLogoutButton(
+      BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
       leading: const Icon(
         Icons.logout_outlined,
-        color: Colors.white,
+        color: Colors.red,
       ),
-      title: const Text(MyStrings.menuLogout,
-          style: TextStyle(color: Colors.white)),
+      title:
+          const Text(MyStrings.menuLogout, style: TextStyle(color: Colors.red)),
       onTap: () => {
         showConformationDialog(
             context,
             MyStrings.logOutConfirmationString,
             MyStrings.logOut,
-            () => {
-                  _menuViewmodel.logOut().then((value) {
-                    Navigator.popUntil(context, (route) => route.isFirst);
+            isLoadingRequestResponse
+                ? () {
+                    Navigator.pop(context);
+                    MySnackBars.showSnackBar(
+                        context, MySnackBars.ongoingRequest);
+                  }
+                : () {
+                    _menuViewmodel.logOut().then((value) {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    });
                   })
-                })
       },
     );
   }
 
-  ListTile showResetPasswordButton(BuildContext context) {
+  ListTile showDeleteHistoryButton(
+      BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
-      leading: const Icon(
-        Icons.lock_reset_outlined,
-        color: Colors.white,
-      ),
-      title: const Text(MyStrings.changePassword,
-          style: TextStyle(color: Colors.white)),
-      onTap: () {
-        showModalDialog(context, _menuViewmodel);
-      },
-    );
-  }
-
-  ListTile showDeleteHistoryButton(BuildContext context) {
-    return ListTile(
-      leading: const Icon(Icons.delete_outline, color: Colors.red),
+      leading: const Icon(Icons.delete_outline, color: Colors.white),
       title: const Text(MyStrings.menuDeleteHistory,
-          style: TextStyle(color: Colors.red)),
+          style: TextStyle(color: Colors.white)),
       onTap: () {
         showConformationDialog(
             context,
             MyStrings.menuDeleteHistoryText,
             MyStrings.menuDeleteHistoryTitle,
-            () => {_menuViewmodel.deleteHistory()});
+            () => isLoadingRequestResponse
+                ? {
+                    MySnackBars.showSnackBar(
+                        context, MySnackBars.ongoingRequest),
+                    Navigator.pop(context)
+                  }
+                : {_menuViewmodel.deleteHistory(), Navigator.pop(context)});
       },
     );
   }
 
-  ListTile showNewChatButton(BuildContext context) {
+  ListTile showNewChatButton(
+      BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
       leading: const Icon(
         Icons.add,
@@ -153,11 +168,14 @@ class MenuView extends StatelessWidget with GetItMixin {
         MyStrings.menuNewChat,
         style: TextStyle(color: Colors.white),
       ),
-      onTap: () {
-        // to set the chat state to default in chatViewmodel
-        _menuViewmodel.createNewChat();
+      onTap: () => {
+        isLoadingRequestResponse
+            ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
+            :
+            // to set the chat state to default in chatViewmodel
+            _menuViewmodel.openNewChat(),
         // to close the drawer to get to the new chat.
-        Navigator.pop(context);
+        Navigator.pop(context),
       },
     );
   }

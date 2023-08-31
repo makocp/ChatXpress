@@ -13,12 +13,35 @@ final serviceContainer = GetIt.instance;
 
 void initServiceLocator() {
   serviceContainer.registerSingleton<AuthService>(AuthService());
+  serviceContainer.registerSingleton<ToastService>(ToastService());
+
   serviceContainer.registerSingleton<GptService>(GptService());
   serviceContainer.registerSingleton<FirestoreService>(FirestoreService());
   serviceContainer.registerSingleton<ChatViewmodel>(ChatViewmodel());
   serviceContainer.registerSingleton<MenuViewmodel>(MenuViewmodel());
-  serviceContainer.registerSingleton<ToastService>(ToastService());
-  serviceContainer.registerLazySingleton<SignInViewmodel>(() => SignInViewmodel());
-  serviceContainer.registerLazySingleton<ForgotPasswordViewmodel>(() => ForgotPasswordViewmodel());
-  serviceContainer.registerLazySingleton<SignUpViewmodel>(() => SignUpViewmodel());
+}
+
+void registerAuthServices() {
+  if (!serviceContainer.isRegistered<SignInViewmodel>()) {
+    serviceContainer.registerSingleton<SignInViewmodel>(SignInViewmodel());
+  }
+  if (!serviceContainer.isRegistered<SignUpViewmodel>()) {
+    serviceContainer.registerSingleton<SignUpViewmodel>(SignUpViewmodel());
+  }
+  if (!serviceContainer.isRegistered<ForgotPasswordViewmodel>()) {
+    serviceContainer
+        .registerSingleton<ForgotPasswordViewmodel>(ForgotPasswordViewmodel());
+  }
+}
+
+void unregisterAuthServices() {
+  if (serviceContainer.isRegistered<SignInViewmodel>()) {
+    serviceContainer.unregister<SignInViewmodel>();
+  }
+  if (serviceContainer.isRegistered<SignUpViewmodel>()) {
+    serviceContainer.unregister<SignUpViewmodel>();
+  }
+  if (serviceContainer.isRegistered<ForgotPasswordViewmodel>()) {
+    serviceContainer.unregister<ForgotPasswordViewmodel>();
+  }
 }

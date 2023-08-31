@@ -5,11 +5,13 @@ class MySnackBars {
   static bool snackbarActive = false;
 
   static void showSnackBar(BuildContext context, SnackBar snackBar) {
-    snackbarActive = true;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(snackBar)
-        .closed
-        .then((value) => {snackbarActive = false});
+    if (!snackbarActive) {
+      snackbarActive = true;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar)
+          .closed
+          .then((value) => {snackbarActive = false});
+    }
   }
 
   static SnackBar ongoingRequest = const SnackBar(

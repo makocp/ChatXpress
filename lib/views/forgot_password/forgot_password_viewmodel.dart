@@ -6,13 +6,29 @@ import 'package:flutter/material.dart';
 
 class ForgotPasswordViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
-  bool isLoading = false;
-  String errorMessage = '';
-  String successMessage = '';
+
+  // Default STATE
+  bool _isLoading = false;
+  String _errorMessage = '';
+  String _successMessage = '';
+
+  bool get isLoading => _isLoading;
+  String get errorMessage => _errorMessage;
+  String get successMessage => _successMessage;
+
+  setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners();
+  }
+
+  setDefaultState() {
+    _errorMessage = '';
+    _successMessage = '';
+    notifyListeners();
+  }
 
   handleResetInput(String email) async {
-    isLoading = true;
-    notifyListeners();
+    setLoadingState(true);
 
     if (validatedMailInput(email)) {
       // Only sends an email, if user is registered
@@ -21,17 +37,16 @@ class ForgotPasswordViewmodel extends ChangeNotifier {
       await resetPassword(email).onError((error, stackTrace) => null);
     }
 
-    isLoading = false;
-    notifyListeners();
+    setLoadingState(false);
   }
 
   bool validatedMailInput(String email) {
     if (EmailValidator.validate(email)) {
-      successMessage = MyStrings.validationSuccessReset;
-      errorMessage = '';
+      _successMessage = MyStrings.validationSuccessReset;
+      _errorMessage = '';
       return true;
     } else {
-      errorMessage = MyStrings.validationInvalidEmail;
+      _errorMessage = MyStrings.validationInvalidEmail;
       return false;
     }
   }
