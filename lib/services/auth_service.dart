@@ -51,17 +51,8 @@ class AuthService {
         email: email, password: password);
   }
 
-  Future<String> updatePassword(String newPassword) async {
-    try {
-      await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
-      return "Successfully changed password";
-    } catch (e) {
-      String errorMessage = "An error occurred";
-      if (e is FirebaseAuthException) {
-        errorMessage = e.code;
-      }
-      return errorMessage;
-    }
+  Future<void> updatePassword(String newPassword) async {
+    return await firebaseAuthInstance.currentUser?.updatePassword(newPassword);
   }
 
   Future<void> logOut() async {
