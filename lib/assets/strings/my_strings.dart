@@ -48,9 +48,10 @@ class MyStrings {
       'Password must be without spaces.';
   static const String validationPermissionDenied =
       'Permission denied. Please contact support.';
-  static const String validationPasswordWeak =
-      'Password weak. Please choose a safer one.';
+  static const String validationPasswordWeak = 'Password weak. Please choose a safer one.';
   static const String validationReauthentication = 'Reauthentication needed. Please Logout and Login again.';
+
+
 
   // Dialogs
   static const String changePassword = "Change Password";

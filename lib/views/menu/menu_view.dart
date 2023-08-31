@@ -1,6 +1,7 @@
 import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:chatXpress/assets/snackbars/snackbars.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
+import 'package:chatXpress/components/menu_components/bottom_sheet_view.dart';
 import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
 import 'package:chatXpress/views/menu/menu_viewmodel.dart';
@@ -99,6 +100,7 @@ class MenuView extends StatelessWidget with GetItMixin {
       children: [
         const Divider(color: Colors.white),
         showDeleteHistoryButton(context, isLoadingRequestResponse),
+        showChangePasswordButton(context, isLoadingRequestResponse),
         showLogoutButton(context, isLoadingRequestResponse),
       ],
     );
@@ -155,6 +157,17 @@ class MenuView extends StatelessWidget with GetItMixin {
     );
   }
 
+  ListTile showChangePasswordButton(
+      BuildContext context, bool isLoadingRequestResponse) {
+    return ListTile(
+        leading: const Icon(Icons.lock, color: Colors.white),
+        title: const Text(MyStrings.changePassword,
+            style: TextStyle(color: Colors.white)),
+        onTap: () {
+          showModalDialog(context, _menuViewmodel);
+        });
+  }
+
   ListTile showNewChatButton(
       BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
@@ -171,7 +184,7 @@ class MenuView extends StatelessWidget with GetItMixin {
             ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
             :
             // to set the chat state to default in chatViewmodel
-            _menuViewmodel.openNewChat(),
+            _menuViewmodel.createNewChat(),
         // to close the drawer to get to the new chat.
         Navigator.pop(context),
       },
@@ -224,5 +237,18 @@ class MenuView extends StatelessWidget with GetItMixin {
         return alert;
       },
     );
+  }
+
+  void showModalDialog(BuildContext context, MenuViewmodel menuViewModel) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => _buildBottomSheetContent(context, menuViewModel),
+    );
+  }
+
+  Widget _buildBottomSheetContent(
+      BuildContext context, MenuViewmodel menuViewModel) {
+    return BottomSheetView();
   }
 }

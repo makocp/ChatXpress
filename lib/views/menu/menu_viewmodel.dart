@@ -1,8 +1,9 @@
 import 'dart:async';
-
+import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/services/auth_service.dart';
 import 'package:chatXpress/services/firestore_service.dart';
 import 'package:chatXpress/views/chat/chat_viewmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import '../../services_provider/service_container.dart';
 
@@ -11,7 +12,20 @@ class MenuViewmodel extends ChangeNotifier {
   final firestoreService = serviceContainer<FirestoreService>();
   final chatViewModel = serviceContainer<ChatViewmodel>();
 
-  void openNewChat() {
+  final StreamController<bool> _requestProgressingController =
+      StreamController<bool>.broadcast();
+  late Stream<bool> progressStream = _requestProgressingController.stream;
+
+  String _changePasswordMessage = '';
+
+  String get changePasswordMessage => _changePasswordMessage;
+
+  void setPasswordMessage(String message) {
+    _changePasswordMessage =  message;
+    notifyListeners();
+  }
+
+  void createNewChat() {
     chatViewModel.setDefaultChatState();
   }
 
@@ -22,8 +36,44 @@ class MenuViewmodel extends ChangeNotifier {
 
   void deleteHistory() {
     firestoreService.deleteChats();
-    chatViewModel.deleteUserchatsState();
-    chatViewModel.setDefaultChatState();
+  }
+
+  updatePassword(String newPassword, String newConfirmationPassword) async {
+    _requestProgressingController.add(true);
+    // Clientside validation
+    if (validatedPassword(newPassword, newConfirmationPassword)) {
+      try {
+        await authService.updatePassword(newPassword);
+        // Serverside Validation, catches error.
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case 'weak-password':
+            setPasswordMessage(MyStrings.validationPasswordWeak);
+            break;
+          case 'requires-recent-login':
+            setPasswordMessage(MyStrings.validationReauthentication);
+            break;
+        }
+      }
+    }
+    _requestProgressingController.add(false);
+  }
+
+  bool validatedPassword(String newPassword, String newConfirmationPassword) {
+    if (newPassword.length < 8) {
+      setPasswordMessage(MyStrings.validationPasswordLength);
+      return false;
+    }
+    if (newPassword.contains(' ')) {
+      setPasswordMessage(MyStrings.validationPasswordSpaces);
+      return false;
+    }
+    if (newPassword != newConfirmationPassword) {
+      setPasswordMessage(MyStrings.validationPasswordMatch);
+      return false;
+    }
+    return true;
+
   }
 
   Future<void> logOut() async {

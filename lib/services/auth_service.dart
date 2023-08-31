@@ -50,6 +50,11 @@ class AuthService {
         email: email, password: password);
   }
 
+  Future<void> updatePassword(String newPassword) async {
+    return await firebaseAuthInstance.currentUser?.updatePassword(newPassword);
+  }
+
+
   Future<void> logOut() async {
     await firebaseAuthInstance.signOut();
   }
