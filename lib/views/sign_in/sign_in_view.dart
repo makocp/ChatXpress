@@ -172,8 +172,7 @@ class SignInView extends StatelessWidget with GetItMixin {
       imagePath: MyImagePaths.appleIconPath,
       onTap: () {
         _signInViewmodel
-            .signInWithApple()
-            .then((value) => _signInViewmodel.resetValidation());
+            .signInWithApple();
       },
     );
   }
@@ -183,8 +182,7 @@ class SignInView extends StatelessWidget with GetItMixin {
       imagePath: MyImagePaths.googleIconPath,
       onTap: () {
         _signInViewmodel
-            .signInWithGoogle()
-            .then((value) => _signInViewmodel.resetValidation());
+            .signInWithGoogle();
       },
     );
   }

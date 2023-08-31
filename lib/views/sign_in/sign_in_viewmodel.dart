@@ -4,59 +4,80 @@ import 'package:chatXpress/services_provider/service_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../../services/firestore_service.dart';
 
 class SignInViewmodel extends ChangeNotifier {
   final authService = serviceContainer<AuthService>();
   final db = serviceContainer<FirestoreService>();
-  bool isLoading = false;
-  String messageEmail = '';
-  String messagePassword = '';
+
+  // Default STATE
+  bool _isLoading = false;
+  String _messageEmail = '';
+  String _messagePassword = '';
+
+  bool get isLoading => _isLoading;
+  String get messageEmail => _messageEmail;
+  String get messagePassword => _messagePassword;
+
+  void setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners();
+  }
+
+  void setDefaultState() {
+    _messageEmail = '';
+    _messagePassword = '';
+    notifyListeners();
+  }
 
   // To sign the user in, checks before client and server side validation of email and password.
   // -> sets errormessages as state to UI for the user.
   handleSignInInput(String email, String password) async {
-    setLoadingState();
+    setLoadingState(true);
 
     // to reset message strings => state for new validation.
-    messageEmail = '';
-    messagePassword = '';
+    _messageEmail = '';
+    _messagePassword = '';
 
     // Clientside validation.
     if (validatedMailInput(email) && validatedPasswordInput(password)) {
       // Serverside validation.
-      await validateAndSignIn(email, password);
+      await signInWithEmailAndPassword(email, password);
     }
 
-    unsetLoadingState();
+    setLoadingState(false);
   }
 
   // serverside validation, if successful -> sign user in.
   // otherwise set string messages for UI state.
-  validateAndSignIn(String email, String password) async {
+  signInWithEmailAndPassword(String email, String password) async {
     try {
-      await signInWithEmailAndPassword(email, password).then((value) {
-        resetValidation();
-
+      await authService
+          .signInWithEmailAndPassword(email, password)
+          .then((value) {
+        // To create the user, if it does not exist, but a Auth Acc exists.
+        // Just in case, if there was an error in SignUp with account creation in Db.
+        // Does NOT overwrite current user -> see origin db method (merge true).
+        // - onError is necassery, so the method continues, otherwise it would stop at an Exception.
+        setUserToDB(email);
       });
       // Serverside validation already there by Firebase.
       // Catches the error messages and sets it as state for UI to show it to the user.
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case 'invalid-email':
-          messageEmail = MyStrings.validationInvalidEmail;
+          _messageEmail = MyStrings.validationInvalidEmail;
           break;
         case 'user-disabled':
-          messageEmail = MyStrings.validationUserDisabled;
+          _messageEmail = MyStrings.validationUserDisabled;
           break;
         case 'user-not-found':
-          messageEmail = MyStrings.validationWrongEmailPassword;
-          messagePassword = MyStrings.validationWrongEmailPassword;
+          _messageEmail = MyStrings.validationWrongEmailPassword;
+          _messagePassword = MyStrings.validationWrongEmailPassword;
           break;
         case 'wrong-password':
-          messageEmail = MyStrings.validationWrongEmailPassword;
-          messagePassword = MyStrings.validationWrongEmailPassword;
+          _messageEmail = MyStrings.validationWrongEmailPassword;
+          _messagePassword = MyStrings.validationWrongEmailPassword;
           break;
       }
     }
@@ -66,65 +87,55 @@ class SignInViewmodel extends ChangeNotifier {
     if (EmailValidator.validate(email)) {
       return true;
     } else {
-      messageEmail = MyStrings.validationInvalidEmail;
+      _messageEmail = MyStrings.validationInvalidEmail;
       return false;
     }
   }
 
   bool validatedPasswordInput(String password) {
     if (password.contains(' ')) {
-      messageEmail = MyStrings.validationWrongEmailPassword;
-      messagePassword = MyStrings.validationWrongEmailPassword;
+      _messageEmail = MyStrings.validationWrongEmailPassword;
+      _messagePassword = MyStrings.validationWrongEmailPassword;
       return false;
     }
     if (password.length < 8) {
-      messageEmail = MyStrings.validationWrongEmailPassword;
-      messagePassword = MyStrings.validationWrongEmailPassword;
+      _messageEmail = MyStrings.validationWrongEmailPassword;
+      _messagePassword = MyStrings.validationWrongEmailPassword;
       return false;
     }
     return true;
   }
 
-// here no set and unloading state implemented, because signin gets only called in handle input method, where this action is already performed.
-  Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
-    return await authService.signInWithEmailAndPassword(email, password);
-  }
-
-// Sets loading state for apple and google sign in to block user interactions while performing.
-  Future<GoogleSignInAccount> signInWithGoogle() async {
-    setLoadingState();
-    var gUser = await authService
+  signInWithGoogle() async {
+    setLoadingState(true);
+    await authService
         .signInWithGoogle()
-        .whenComplete(() => unsetLoadingState());
-    setUserToDB(gUser.email, gUser.displayName ?? "");
-    return gUser;
+        .then((value) {
+          setUserToDB(value.user!.email.toString());
+        })
+        .onError((error, stackTrace) => null)
+        .whenComplete(() => setLoadingState(false));
   }
 
-  Future<UserCredential> signInWithApple() async {
-    setLoadingState();
-    return await authService
+  signInWithApple() async {
+    setLoadingState(true);
+    await authService
         .signInWithApple()
-        .whenComplete(() => unsetLoadingState());
+        .then((value) {
+          // To check, if email is anonymous, to avoid "null" in database.
+          String email = value.user?.email == null
+              ? "Apple Anonymous"
+              : value.user!.email.toString();
+          setUserToDB(email);
+        })
+        .onError((error, stackTrace) => null)
+        .whenComplete(() => setLoadingState(false));
   }
 
-  Future<void> setUserToDB(String email, String username) async {
-     return await db.setUser(email,username);
-  }
-
-  void setLoadingState() {
-    isLoading = true;
-    notifyListeners();
-  }
-
-  void unsetLoadingState() {
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void resetValidation() {
-    // to reset message strings => state for new validation.
-    messageEmail = '';
-    messagePassword = '';
+  // Gets called after EACH SignIn !
+  // -> Create, if NOT exist! (set method with merge:true)
+  // Otherwise you would need to check, if the user exist and then create it.
+  setUserToDB(String email) async {
+    await db.setUser(email).onError((error, stackTrace) => null);
   }
 }

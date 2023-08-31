@@ -4,8 +4,8 @@ import 'package:chatXpress/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chatXpress/assets/colors/my_colors.dart';
 
-class ChatMessage extends StatelessWidget {
-  const ChatMessage({Key? key, required this.message}) : super(key: key);
+class ChatMessageView extends StatelessWidget {
+  const ChatMessageView({Key? key, required this.message}) : super(key: key);
   final MessageModel message;
 
   @override
@@ -80,7 +80,7 @@ class ChatMessage extends StatelessWidget {
   Color getTextColor(MessageType messageType) {
     switch (messageType) {
       case MessageType.error:
-        return MyColors.redForDeleteButton;
+        return Colors.black;
       case MessageType.request:
         return Colors.black;
       case MessageType.response:

@@ -1,31 +1,61 @@
+import 'package:chatXpress/enum/message_type.dart';
+import 'package:chatXpress/models/message_model.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:chatXpress/secrets.dart';
 
 class GptService {
-  // list for chat context.
-  final List<Messages> messages = [];
-
   final openAI = OpenAI.instance.build(
     token: OPENAI_API_KEY,
-    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 15)),
+    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 30)),
     enableLog: true,
   );
 
-  Future<String> sendRequest(String prompt) async {
-    _addPromptToChat(prompt);
-
-    final request = ChatCompleteText(
-      messages: messages,
+  // Generates a response in context based on whole chat history, including last prompt from user.
+  Future<String> generateResponse(List<MessageModel> messages) async {
+    // maps the given chat history to generate a request object.
+    List<Messages> gptMessages = mapMessagesToGptMessages(messages);
+    // gptMessages.add(instructionMessage());
+    ChatCompleteText messagesAsRequest = ChatCompleteText(
+      messages: gptMessages,
       maxToken: 600,
       model: GptTurboChatModel(),
     );
-    var message = await _handleRequest(request);
-
-    _addResponseToChat(message);
-    return message;
+    return await _getResponse(messagesAsRequest);
   }
 
-  Future<String> _handleRequest(ChatCompleteText request) async {
+  // to generate a chat title
+  Future<String> generateChatTitle(List<MessageModel> messages) async {
+    List<Messages> gptMessages = mapMessagesToGptMessages(messages);
+    gptMessages.add(
+      instructionMessage('summerize the conversation in max. 3 words'),
+    );
+    ChatCompleteText messagesAsRequest = ChatCompleteText(
+      messages: gptMessages,
+      maxToken: 10,
+      model: GptTurboChatModel(),
+    );
+    return await _getResponse(messagesAsRequest);
+  }
+
+  // maps the messages state list to gpt messages -> to be able to generate a request
+  List<Messages> mapMessagesToGptMessages(List<MessageModel> messages) {
+    return messages.map((message) {
+      Role role = message.messageType == MessageType.request
+          ? Role.user
+          : Role.assistant;
+      return Messages(
+        role: role,
+        content: message.content,
+      );
+    }).toList();
+  }
+
+  // adds an instruction message to influence the response based on it.
+  Messages instructionMessage(String instruction) {
+    return Messages(role: Role.system, content: instruction);
+  }
+
+  Future<String> _getResponse(ChatCompleteText request) async {
     String message = "";
 
     await openAI.onChatCompletion(request: request).then((response) {
@@ -33,37 +63,9 @@ class GptService {
         message = response.choices.last.message!.content;
       }
     }).onError((error, stackTrace) {
-      message = "* An error occurred: $error *";
+      message = "* An error occurred: Please try again. *";
     });
 
-    return message;
-  }
-
-  void _addResponseToChat(String response) {
-    messages.add(Messages(
-      role: Role.assistant,
-      content: response,
-    ));
-  }
-
-  void _addPromptToChat(String prompt) {
-    messages.add(Messages(
-      role: Role.user,
-      content: prompt,
-    ));
-  }
-
-  Future<String> generateChatTitle() async {
-    var summaryMessage = Messages(
-        role: Role.user, content: "summerize the conversation in 3 words");
-    messages.add(summaryMessage);
-    final request = ChatCompleteText(
-      messages: messages,
-      maxToken: 10,
-      model: GptTurboChatModel(),
-    );
-    var message = await _handleRequest(request);
-    messages.remove(summaryMessage);
     return message;
   }
 }
