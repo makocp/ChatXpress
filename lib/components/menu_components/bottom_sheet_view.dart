@@ -1,3 +1,4 @@
+import 'package:chatXpress/assets/colors/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:chatXpress/assets/strings/my_strings.dart';
 import 'package:chatXpress/components/button_components/my_button.dart';
@@ -18,10 +19,12 @@ class BottomSheetView extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    String changePasswordMessage =
-        watchOnly((MenuViewmodel vm) => vm.changePasswordMessage);
+    String changePasswordError =
+        watchOnly((MenuViewmodel vm) => vm.changePasswordError);
+    String changePasswordSuccess =
+        watchOnly((MenuViewmodel vm) => vm.changePasswordSuccess);
     return Container(
-      color: const Color(0xff202123),
+      color: MyColors.greyMenuBackground,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -35,8 +38,12 @@ class BottomSheetView extends StatelessWidget with GetItMixin {
               labelText: MyStrings.repeatNewPassword),
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-            child: Text( changePasswordMessage.isNotEmpty ?
-              "* $changePasswordMessage" : "",
+            child: Text(
+              changePasswordError.isNotEmpty
+                  ? "* $changePasswordError"
+                  : changePasswordSuccess.isNotEmpty
+                      ? "* $changePasswordSuccess"
+                      : "",
               style: const TextStyle(color: Colors.white60),
             ),
           ),

@@ -16,12 +16,24 @@ class MenuViewmodel extends ChangeNotifier {
       StreamController<bool>.broadcast();
   late Stream<bool> progressStream = _requestProgressingController.stream;
 
-  String _changePasswordMessage = '';
+  String _changePasswordError = '';
+  String get changePasswordError => _changePasswordError;
+  String _changePasswordSuccess = '';
+  String get changePasswordSuccess => _changePasswordSuccess;
 
-  String get changePasswordMessage => _changePasswordMessage;
+  void setErrorMessage(String message) {
+    _changePasswordError =  message;
+    notifyListeners();
+  }
 
-  void setPasswordMessage(String message) {
-    _changePasswordMessage =  message;
+  void setSuccessMessage(String message) {
+    _changePasswordSuccess = message;
+    notifyListeners();
+  }
+
+  void setDefaultState(){
+    _changePasswordError = '';
+    _changePasswordSuccess = '';
     notifyListeners();
   }
 
@@ -40,18 +52,22 @@ class MenuViewmodel extends ChangeNotifier {
 
   updatePassword(String newPassword, String newConfirmationPassword) async {
     _requestProgressingController.add(true);
+    setDefaultState();
     // Clientside validation
     if (validatedPassword(newPassword, newConfirmationPassword)) {
       try {
-        await authService.updatePassword(newPassword);
+        await authService.updatePassword(newPassword)
+        .then((value) {
+          setSuccessMessage(MyStrings.validationSuccessChangePassword);
+        });
         // Serverside Validation, catches error.
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case 'weak-password':
-            setPasswordMessage(MyStrings.validationPasswordWeak);
+            setErrorMessage(MyStrings.validationPasswordWeak);
             break;
           case 'requires-recent-login':
-            setPasswordMessage(MyStrings.validationReauthentication);
+            setErrorMessage(MyStrings.validationReauthentication);
             break;
         }
       }
@@ -61,15 +77,15 @@ class MenuViewmodel extends ChangeNotifier {
 
   bool validatedPassword(String newPassword, String newConfirmationPassword) {
     if (newPassword.length < 8) {
-      setPasswordMessage(MyStrings.validationPasswordLength);
+      setErrorMessage(MyStrings.validationPasswordLength);
       return false;
     }
     if (newPassword.contains(' ')) {
-      setPasswordMessage(MyStrings.validationPasswordSpaces);
+      setErrorMessage(MyStrings.validationPasswordSpaces);
       return false;
     }
     if (newPassword != newConfirmationPassword) {
-      setPasswordMessage(MyStrings.validationPasswordMatch);
+      setErrorMessage(MyStrings.validationPasswordMatch);
       return false;
     }
     return true;

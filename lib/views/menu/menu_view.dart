@@ -160,7 +160,7 @@ class MenuView extends StatelessWidget with GetItMixin {
   ListTile showChangePasswordButton(
       BuildContext context, bool isLoadingRequestResponse) {
     return ListTile(
-        leading: const Icon(Icons.lock, color: Colors.white),
+        leading: const Icon(Icons.lock_outline, color: Colors.white),
         title: const Text(MyStrings.changePassword,
             style: TextStyle(color: Colors.white)),
         onTap: () {
@@ -244,7 +244,8 @@ class MenuView extends StatelessWidget with GetItMixin {
       isScrollControlled: true,
       context: context,
       builder: (context) => _buildBottomSheetContent(context, menuViewModel),
-    );
+    )
+    .whenComplete(() => menuViewModel.setDefaultState());
   }
 
   Widget _buildBottomSheetContent(
