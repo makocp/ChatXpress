@@ -14,7 +14,7 @@ class GptService {
   Future<String> generateResponse(List<MessageModel> messages) async {
     // maps the given chat history to generate a request object.
     List<Messages> gptMessages = mapMessagesToGptMessages(messages);
-    // gptMessages.add(instructionMessage());
+    gptMessages.add(instructionMessage('response in maximum 100 words'));
     ChatCompleteText messagesAsRequest = ChatCompleteText(
       messages: gptMessages,
       maxToken: 600,
