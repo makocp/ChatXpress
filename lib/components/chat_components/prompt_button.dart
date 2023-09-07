@@ -13,7 +13,7 @@ class PromptButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 17, right: 17),
       child: OutlinedButton(
         onPressed: () => chatViewModel.isLoading
             ? MySnackBars.showSnackBar(context, MySnackBars.ongoingRequest)
@@ -30,6 +30,7 @@ class PromptButton extends StatelessWidget {
         child: Text(
           messageSuggestion,
           style: const TextStyle(color: Colors.white),
+          textAlign: TextAlign.center,
         ),
       ),
     ); // runs after the above w/new duration
