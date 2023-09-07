@@ -63,7 +63,12 @@ class GptService {
         message = response.choices.last.message!.content;
       }
     }).onError((error, stackTrace) {
-      message = "* An error occurred: Please try again. *";
+      if (error.toString().contains('Incorrect API key provided')) {
+        message =
+            "* No API key set, please contact developers for more information.";
+      } else {
+        message = "* An error occurred: Please try again.";
+      }
     });
 
     return message;
