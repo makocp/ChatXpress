@@ -13,8 +13,8 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - Prompt Suggestions
 
 <p float="left" align="middle">
-  <img src="assets/screenshots/iphone14pro_chat.png" width="150" />
-  <img src="assets/screenshots/iphone14pro_suggestions.png" width="150" /> 
+  <img src="assets/screenshots/iphone14pro_chat.png" width="300" />
+  <img src="assets/screenshots/iphone14pro_suggestions.png" width="300" /> 
 </p>
 
 
@@ -25,7 +25,7 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - Chats can be deleted
 
 <p float="left" align="middle">
-  <img src="assets/screenshots/iphone14pro_menu.png" width="150" />
+  <img src="assets/screenshots/iphone14pro_menu.png" width="300" />
 </p>
 
 ### Authentication
@@ -33,9 +33,9 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - With Firebase Authentication + Firestore DB.
 
 <p float="left" align="middle">
-  <img src="assets/screenshots/iphone14pro_signin.png" width="150" />
-  <img src="assets/screenshots/iphone14pro_signup.png" width="150" /> 
-  <img src="assets/screenshots/iphone14pro_password.png" width="150" />
+  <img src="assets/screenshots/iphone14pro_signin.png" width="300" />
+  <img src="assets/screenshots/iphone14pro_signup.png" width="300" /> 
+  <img src="assets/screenshots/iphone14pro_password.png" width="300" />
 </p>
 
 ## Learnings
