@@ -12,23 +12,31 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - Request, Response with Chat context
 - Prompt Suggestions
 
-![Chat](assets/screenshots/iphone14pro_chat.png)
-![Suggestions](assets/screenshots/iphone14pro_suggestions.png)
+<p float="left" align="middle">
+  <img src="assets/screenshots/iphone14pro_chat.png" width="150" />
+  <img src="assets/screenshots/iphone14pro_suggestions.png" width="150" /> 
+</p>
+
 
 ### Firestore Database Backend (CRUD)
 - Chats get saved to DB
 - Chats can be retrieved from DB
-- Automatically generated Chat Titles
+- Automatically generate and update titles
+- Chats can be deleted
 
-![Menu](assets/screenshots/iphone14pro_menu.png)
+<p float="left" align="middle">
+  <img src="assets/screenshots/iphone14pro_menu.png" width="150" />
+</p>
 
 ### Authentication
 - SignIn, SignUp, Forgot Password, Google SignIn, Apple SignIn
 - With Firebase Authentication + Firestore DB.
 
-![SignIn](assets/screenshots/iphone14pro_signin.png)
-![SignUp](assets/screenshots/iphone14pro_signup.png)
-![Forgot Password](assets/screenshots/iphone14pro_password.png)
+<p float="left" align="middle">
+  <img src="assets/screenshots/iphone14pro_signin.png" width="150" />
+  <img src="assets/screenshots/iphone14pro_signup.png" width="150" /> 
+  <img src="assets/screenshots/iphone14pro_password.png" width="150" />
+</p>
 
 ## Learnings
 ### Firebase Authentication
