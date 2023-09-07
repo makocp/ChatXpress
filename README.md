@@ -38,6 +38,16 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
   <img src="assets/screenshots/iphone14pro_password.png" width="300" />
 </p>
 
+### Other Functionalities
+- State Management via Viewmodel Dependency Injection: GetIt + GetItMixin
+- SignIn/SignUp Validation incl. message display for user
+- Snackbars
+- Avoiding false saving to chats -> only one request at a time possible
+- Loaded Chats from DB get only loaded initially and cached afterwards
+- Navigation between Screens
+- Splash effects for Google/Apple SignIn buttons
+- Stay LoggedIn via Firebase Authentication
+
 ## Learnings
 ### Firebase Authentication
 `flutterfire configure` is a good and convenient way to implement the Firebase connection, BUT it has some problems with Android. After some time I did it like this:
