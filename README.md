@@ -6,9 +6,29 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - mako.codeproducer@gmail.com
 - jalal.codeproducer@gmail.com
 
-## Purpose of this App
-
 ## Functionalities
+
+### ChatGPT API
+- Request, Response with Chat context
+- Prompt Suggestions
+
+![Chat](assets/screenshots/iphone14pro_chat.png)
+![Suggestions](assets/screenshots/iphone14pro_suggestions.png)
+
+### Firestore Database Backend (CRUD)
+- Chats get saved to DB
+- Chats can be retrieved from DB
+- Automatically generated Chat Titles
+
+![Menu](assets/screenshots/iphone14pro_menu.png)
+
+### Authentication
+- SignIn, SignUp, Forgot Password, Google SignIn, Apple SignIn
+- With Firebase Authentication + Firestore DB.
+
+![SignIn](assets/screenshots/iphone14pro_signin.png)
+![SignUp](assets/screenshots/iphone14pro_signup.png)
+![Forgot Password](assets/screenshots/iphone14pro_password.png)
 
 ## Learnings
 ### Firebase Authentication
