@@ -50,6 +50,7 @@ class MyStrings {
       'Permission denied. Please contact support.';
   static const String validationPasswordWeak = 'Password weak. Please choose a safer one.';
   static const String validationReauthentication = 'Reauthentication needed. Please Logout and Login again.';
+  static const String validationSuccessChangePassword = 'Password successfully changed.';
 
 
 

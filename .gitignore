@@ -12,6 +12,7 @@
 .buildlog/
 .history
 .svn/
+*.env
 
 lib/secrets.dart
 

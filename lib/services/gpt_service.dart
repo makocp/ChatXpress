@@ -14,7 +14,7 @@ class GptService {
   Future<String> generateResponse(List<MessageModel> messages) async {
     // maps the given chat history to generate a request object.
     List<Messages> gptMessages = mapMessagesToGptMessages(messages);
-    // gptMessages.add(instructionMessage());
+    gptMessages.add(instructionMessage('response in maximum 100 words'));
     ChatCompleteText messagesAsRequest = ChatCompleteText(
       messages: gptMessages,
       maxToken: 600,
@@ -63,7 +63,12 @@ class GptService {
         message = response.choices.last.message!.content;
       }
     }).onError((error, stackTrace) {
-      message = "* An error occurred: Please try again. *";
+      if (error.toString().contains('Incorrect API key provided')) {
+        message =
+            "* No API key set, please contact developers for more information.";
+      } else {
+        message = "* An error occurred: Please try again.";
+      }
     });
 
     return message;
