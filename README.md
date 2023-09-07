@@ -13,8 +13,8 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - Prompt Suggestions
 
 <p float="left" align="middle">
-  <img src="assets/screenshots/iphone14pro_chat.png" width="150" />
-  <img src="assets/screenshots/iphone14pro_suggestions.png" width="150" /> 
+  <img src="assets/screenshots/iphone14pro_chat.png" width="300" />
+  <img src="assets/screenshots/iphone14pro_suggestions.png" width="300" /> 
 </p>
 
 
@@ -25,7 +25,7 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - Chats can be deleted
 
 <p float="left" align="middle">
-  <img src="assets/screenshots/iphone14pro_menu.png" width="150" />
+  <img src="assets/screenshots/iphone14pro_menu.png" width="300" />
 </p>
 
 ### Authentication
@@ -33,10 +33,20 @@ A cross-platform Flutter project with Firebase backend and ChatGPT API.
 - With Firebase Authentication + Firestore DB.
 
 <p float="left" align="middle">
-  <img src="assets/screenshots/iphone14pro_signin.png" width="150" />
-  <img src="assets/screenshots/iphone14pro_signup.png" width="150" /> 
-  <img src="assets/screenshots/iphone14pro_password.png" width="150" />
+  <img src="assets/screenshots/iphone14pro_signin.png" width="300" />
+  <img src="assets/screenshots/iphone14pro_signup.png" width="300" /> 
+  <img src="assets/screenshots/iphone14pro_password.png" width="300" />
 </p>
+
+### Other Functionalities
+- State Management via Viewmodel Dependency Injection: GetIt + GetItMixin
+- SignIn/SignUp Validation incl. message display for user
+- Snackbars
+- Avoiding false saving to chats -> only one request at a time possible
+- Loaded Chats from DB get only loaded initially and cached afterwards
+- Navigation between Screens
+- Splash effects for Google/Apple SignIn buttons
+- Stay LoggedIn via Firebase Authentication
 
 ## Learnings
 ### Firebase Authentication
